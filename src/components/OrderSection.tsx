@@ -2,15 +2,16 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
+import { Sparkles } from 'lucide-react';
 
 const OrderSection = () => {
   const [selectedQuantity, setSelectedQuantity] = useState('');
   const { addToCart } = useCart();
 
   const packages = [
-    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350 },
-    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50 },
-    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200 }
+    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false },
+    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true },
+    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false }
   ];
 
   const handleAddToCart = () => {
@@ -48,55 +49,91 @@ const OrderSection = () => {
   };
 
   return (
-    <section id="order" className="py-20 bg-gradient-to-b from-gray-900 to-black">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Ready to <span className="text-orange-500">Order?</span>
+    <section id="order" className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+
+      <div className="container mx-auto px-4 text-center relative z-10">
+        <div className="mb-4">
+          <div className="inline-block bg-gradient-to-r from-pink-500/20 to-purple-500/20 backdrop-blur-sm border border-pink-500/30 rounded-full px-6 py-2 text-pink-300 text-sm font-medium mb-6">
+            ✨ Limited Time Offers
+          </div>
+        </div>
+
+        <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+          Ready to <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Experience</span> Perfection?
         </h2>
         
-        <p className="text-gray-300 text-lg mb-12 max-w-2xl mx-auto">
-          Get your Hungarian Hot Dog Rolls delivered fresh and hot to your doorstep. 
-          Perfect for snacks, parties, or whenever you crave something delicious!
+        <p className="text-gray-300 text-xl mb-12 max-w-3xl mx-auto leading-relaxed">
+          Choose your perfect package and let us deliver authentic Hungarian flavors 
+          straight to your doorstep within 2 hours.
         </p>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
             {packages.map((pkg) => (
               <div
                 key={pkg.id}
-                className={`relative border-2 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:scale-105 ${
-                  selectedQuantity === pkg.id
-                    ? 'border-orange-500 bg-orange-500/10'
-                    : 'border-gray-600 hover:border-orange-500/50'
+                className={`relative cursor-pointer transition-all duration-500 hover:scale-105 ${
+                  selectedQuantity === pkg.id ? 'scale-105' : ''
                 }`}
                 onClick={() => setSelectedQuantity(pkg.id)}
-                role="radio"
-                aria-checked={selectedQuantity === pkg.id}
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && setSelectedQuantity(pkg.id)}
               >
-                {pkg.savings && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                {/* Popular Badge */}
+                {pkg.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center space-x-1 shadow-lg">
+                      <Sparkles className="w-4 h-4" />
+                      <span>Most Popular</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Savings Badge */}
+                {pkg.savings && !pkg.popular && (
+                  <div className="absolute -top-3 right-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
                     Save Ksh {pkg.savings}
                   </div>
                 )}
-                
-                <div className="text-center">
-                  <h3 className="text-xl font-bold text-white mb-2">{pkg.label}</h3>
+
+                {/* Card */}
+                <div className={`bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-xl border-2 rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/20 ${
+                  selectedQuantity === pkg.id
+                    ? 'border-pink-500 bg-gradient-to-br from-pink-500/20 to-purple-500/20'
+                    : 'border-pink-500/20 hover:border-pink-500/40'
+                }`}>
                   
-                  <div className="mb-4">
-                    <div className="text-3xl font-bold text-orange-500">
-                      Ksh {pkg.price}
-                    </div>
-                    {pkg.originalPrice !== pkg.price && (
-                      <div className="text-gray-400 line-through text-lg">
-                        Ksh {pkg.originalPrice}
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-white mb-4">{pkg.label}</h3>
+                    
+                    <div className="mb-6">
+                      <div className="text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                        Ksh {pkg.price}
                       </div>
-                    )}
-                  </div>
-                  
-                  <div className="text-gray-300 text-sm">
-                    Ksh {Math.round(pkg.price / parseInt(pkg.label))} per piece
+                      {pkg.originalPrice !== pkg.price && (
+                        <div className="text-gray-400 line-through text-lg mt-1">
+                          Ksh {pkg.originalPrice}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="text-gray-300 text-sm mb-4">
+                      Ksh {Math.round(pkg.price / parseInt(pkg.label))} per piece
+                    </div>
+
+                    {/* Selection Indicator */}
+                    <div className={`w-6 h-6 rounded-full mx-auto transition-all duration-300 ${
+                      selectedQuantity === pkg.id
+                        ? 'bg-gradient-to-r from-pink-500 to-purple-600 shadow-lg'
+                        : 'border-2 border-gray-400'
+                    }`}>
+                      {selectedQuantity === pkg.id && (
+                        <div className="w-2 h-2 bg-white rounded-full mx-auto mt-2"></div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -105,21 +142,29 @@ const OrderSection = () => {
 
           <button
             onClick={handleAddToCart}
-            className={`px-12 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 ${
+            className={`px-12 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
               selectedQuantity
-                ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-xl hover:shadow-orange-500/30'
+                ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-2xl hover:shadow-pink-500/50 hover:scale-105'
                 : 'bg-gray-600 text-gray-400 cursor-not-allowed'
             }`}
             disabled={!selectedQuantity}
-            aria-label="Add selected package to cart"
           >
             Add to Cart
           </button>
 
-          <div className="mt-8 text-gray-400 text-sm space-y-2">
-            <p>🚚 Free delivery within Nairobi</p>
-            <p>⏰ Delivered fresh within 2 hours</p>
-            <p>💯 100% satisfaction guaranteed</p>
+          <div className="mt-8 grid md:grid-cols-3 gap-4 text-gray-400 text-sm">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+              <span>Free delivery in Nairobi</span>
+            </div>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span>Fresh within 2 hours</span>
+            </div>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+              <span>100% satisfaction guaranteed</span>
+            </div>
           </div>
         </div>
       </div>
