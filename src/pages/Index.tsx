@@ -1,13 +1,64 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useEffect, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Header from '../components/Header';
+import HeroSection from '../components/HeroSection';
+import AboutSection from '../components/AboutSection';
+import FeaturesSection from '../components/FeaturesSection';
+import TestimonialsSection from '../components/TestimonialsSection';
+import OrderSection from '../components/OrderSection';
+import Footer from '../components/Footer';
+import Cart from '../components/Cart';
+import LoadingScreen from '../components/LoadingScreen';
+import { CartProvider } from '../context/CartContext';
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Google Analytics
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID';
+    document.head.appendChild(script);
+
+    const script2 = document.createElement('script');
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    `;
+    document.head.appendChild(script2);
+
+    // Loading screen animation
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <CartProvider>
+      <div className="min-h-screen bg-gray-900 text-white">
+        {isLoading && <LoadingScreen />}
+        <Header />
+        <main>
+          <HeroSection />
+          <AboutSection />
+          <FeaturesSection />
+          <TestimonialsSection />
+          <OrderSection />
+        </main>
+        <Footer />
+        <Cart />
       </div>
-    </div>
+    </CartProvider>
   );
 };
 
