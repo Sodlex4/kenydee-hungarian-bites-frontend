@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Facebook, Instagram, Twitter, Whatsapp } from 'lucide-react';
+import { Facebook, Instagram, Twitter, MessageCircle } from 'lucide-react';
 
 const Footer = () => {
   const scrollToSection = (sectionId: string) => {
@@ -25,7 +24,7 @@ const Footer = () => {
                 { icon: Facebook, href: 'https://facebook.com/hungarianbites', label: 'Facebook' },
                 { icon: Instagram, href: 'https://instagram.com/hungarianbites', label: 'Instagram' },
                 { icon: Twitter, href: 'https://twitter.com/hungarianbites', label: 'Twitter' },
-                { icon: Whatsapp, href: 'https://wa.me/254700123456', label: 'WhatsApp' }
+                { icon: MessageCircle, href: 'https://wa.me/254700123456', label: 'WhatsApp' }
               ].map((social, index) => (
                 <a
                   key={index}

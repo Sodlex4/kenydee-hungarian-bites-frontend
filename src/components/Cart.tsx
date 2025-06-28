@@ -16,7 +16,7 @@ const Cart = () => {
     }
 
     // Track Google Analytics event
-    if (typeof gtag !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof gtag !== 'undefined') {
       gtag('event', 'begin_checkout', {
         currency: 'KES',
         value: total,

@@ -1,7 +1,6 @@
-
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
-import { Fire, Heart, Award } from 'lucide-react';
+import { Flame, Heart, Award } from 'lucide-react';
 
 const HeroSection = () => {
   useEffect(() => {
@@ -123,7 +122,7 @@ const HeroSection = () => {
 
           <div className="product-variants absolute -bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
             {[
-              { icon: Fire, label: 'Spicy' },
+              { icon: Flame, label: 'Spicy' },
               { icon: Heart, label: 'Classic' },
               { icon: Award, label: 'Premium' }
             ].map((variant, index) => (

@@ -1,8 +1,7 @@
-
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Award, Fire, Heart } from 'lucide-react';
+import { Award, Flame, Heart } from 'lucide-react';
 
 const FeaturesSection = () => {
   useEffect(() => {
@@ -45,7 +44,7 @@ const FeaturesSection = () => {
       description: 'Made with the finest ingredients and traditional Hungarian recipes for authentic taste and superior quality.'
     },
     {
-      icon: Fire,
+      icon: Flame,
       title: 'Perfectly Crispy',
       description: 'Golden brown exterior with a satisfying crunch that gives way to tender, flavorful filling inside.'
     },

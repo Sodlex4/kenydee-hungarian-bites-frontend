@@ -32,7 +32,7 @@ const OrderSection = () => {
       toast.success(`Added ${selectedPackage.label} to cart!`);
       
       // Track Google Analytics event
-      if (typeof gtag !== 'undefined') {
+      if (typeof window !== 'undefined' && typeof gtag !== 'undefined') {
         gtag('event', 'add_to_cart', {
           currency: 'KES',
           value: selectedPackage.price,
