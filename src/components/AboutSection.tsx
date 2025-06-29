@@ -99,7 +99,7 @@ const AboutSection = () => {
                   <div className="text-pink-600 font-bold text-sm">Premium Quality</div>
                 </div>
                 <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-sm rounded-2xl p-3 shadow-xl">
-                  <div className="text-purple-600 font-bold text-sm">Handcrafted</div>
+                  <div className="text-purple-600 font-bold text-sm">Delicious</div>
                 </div>
               </div>
             </div>
