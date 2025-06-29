@@ -108,11 +108,11 @@ const Footer = () => {
                 <div className="space-y-2 text-gray-400">
                   <p className="flex justify-between">
                     <span>Mon - Fri:</span>
-                    <span className="text-white">8:00 AM - 10:00 PM</span>
+                    <span className="text-white">02:00 pM - 10:00 PM</span>
                   </p>
                   <p className="flex justify-between">
-                    <span>Sat - Sun:</span>
-                    <span className="text-white">9:00 AM - 11:00 PM</span>
+                    <span>Sat:</span>
+                    <span className="text-white">1:00 PM - 9:00 PM</span>
                   </p>
                   <div className="border-t border-pink-500/20 pt-2 mt-3">
                     <p className="text-center font-semibold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
@@ -132,7 +132,7 @@ const Footer = () => {
               &copy; 2025 Hungarian Bites. All rights reserved.
             </p>
             <p className="text-gray-400 text-center md:text-right">
-              Made with <span className="text-pink-400">❤️</span> in Kenya
+              Made BY trainWithSteve <span className="text-pink-400">❤️</span> in Kenya
             </p>
           </div>
         </div>

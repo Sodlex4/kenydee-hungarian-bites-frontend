@@ -36,13 +36,13 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       text: "Absolutely incredible! The perfect blend of traditional Hungarian flavors with modern presentation. Every bite is pure perfection.",
-      author: "Steve M.",
+      author: "trainWithSteve.",
       rating: 5,
       gradient: "from-pink-500/20 to-rose-500/20"
     },
     {
       text: "These hot dog rolls have become my go-to for parties. Guests always ask where I got them - they're truly exceptional!",
-      author: "Jimmy K.",
+      author: "Jimmy .",
       rating: 5,
       gradient: "from-purple-500/20 to-indigo-500/20"
     },

@@ -141,7 +141,7 @@ const Cart = () => {
               </button>
               
               <p className="text-gray-400 text-xs text-center">
-                🚚 Free delivery within Nairobi • ⏰ Delivered in 2 hours
+                🚚 Free delivery within Murang'a Town • ⏰ Delivered in 2 hours
               </p>
             </div>
           )}

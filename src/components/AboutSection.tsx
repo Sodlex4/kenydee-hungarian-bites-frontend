@@ -88,7 +88,7 @@ const AboutSection = () => {
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden group">
                 <img 
-                  src="https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=600&h=500&fit=crop&crop=center"
+                  src="/image/hotdog.jpg"
                   alt="Hungarian Bites kitchen preparation"
                   className="w-full h-96 object-cover transition-transform duration-500 group-hover:scale-110"
                 />

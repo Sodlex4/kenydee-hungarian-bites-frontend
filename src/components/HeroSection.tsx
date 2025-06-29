@@ -114,7 +114,7 @@ const HeroSection = () => {
           {/* Main Product Circle */}
           <div className="product-rotate relative w-80 h-80 rounded-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 backdrop-blur-sm border border-pink-500/30 flex items-center justify-center shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=300&h=300&fit=crop&crop=center"
+              src="\image\Cheese Dog Bread Rolls.jpg"
               alt="Premium Hungarian Hot Dog Rolls"
               className="w-56 h-56 object-cover rounded-full shadow-xl"
             />
