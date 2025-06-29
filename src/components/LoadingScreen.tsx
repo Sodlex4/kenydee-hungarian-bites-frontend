@@ -48,7 +48,7 @@ const LoadingScreen = () => {
       <div className="relative z-10 text-center">
         <h1 className="loading-text text-6xl md:text-8xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent opacity-0 scale-0" 
             style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
-          HUNGARIAN BITES
+          kila bite ina Slap 
         </h1>
         
         {/* Loading Dots */}
