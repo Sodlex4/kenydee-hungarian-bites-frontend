@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -38,19 +37,22 @@ const TestimonialsSection = () => {
       text: "Absolutely incredible! The perfect blend of traditional Hungarian flavors with modern presentation. Every bite is pure perfection.",
       author: "trainWithSteve.",
       rating: 5,
-      gradient: "from-pink-500/20 to-rose-500/20"
+      gradient: "from-pink-500/20 to-rose-500/20",
+      image: "/image/trainWithSteve.jpg"
     },
     {
       text: "These hot dog rolls have become my go-to for parties. Guests always ask where I got them - they're truly exceptional!",
       author: "Jimmy .",
       rating: 5,
-      gradient: "from-purple-500/20 to-indigo-500/20"
+      gradient: "from-purple-500/20 to-indigo-500/20",
+      image: "/image/jimmy.jpg"
     },
     {
       text: "The quality is outstanding and the flavors are authentic. Hungarian Bites never fails to impress!",
       author: "Mc Wizzy",
       rating: 5,
-      gradient: "from-indigo-500/20 to-purple-500/20"
+      gradient: "from-indigo-500/20 to-purple-500/20",
+      image: "/image/Mc Wizzy.jpg"
     }
   ];
 
@@ -111,6 +113,16 @@ const TestimonialsSection = () => {
                   </h4>
                   <div className="text-gray-400 text-sm mt-1">Verified Customer</div>
                 </div>
+
+                {/* Avatar Image */}
+                {testimonial.image && (
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.author}
+                    className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-pink-400 object-cover"
+                    style={{ borderRadius: '50%' }}
+                  />
+                )}
 
                 {/* Decorative Elements */}
                 <div className="absolute top-4 right-4 w-2 h-2 bg-pink-400 rounded-full opacity-60"></div>
