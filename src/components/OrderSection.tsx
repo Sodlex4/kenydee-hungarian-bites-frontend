@@ -155,7 +155,7 @@ const OrderSection = () => {
           <div className="mt-8 grid md:grid-cols-3 gap-4 text-gray-400 text-sm">
             <div className="flex items-center justify-center space-x-2">
               <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-              <span>Free delivery in Nairobi</span>
+              <span>Free delivery to your doorstep within Murang'a</span>
             </div>
             <div className="flex items-center justify-center space-x-2">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Facebook, Instagram, Twitter, MessageCircle, MapPin, Phone, Mail } from 'lucide-react';
 
@@ -31,7 +30,7 @@ const Footer = () => {
                 HUNGARIAN BITES
               </h3>
               <p className="text-gray-400 leading-relaxed">
-                Bringing authentic Hungarian street food to Kenya with premium quality, traditional recipes, and modern excellence.
+                Bringing authentic Hungarian street food to Kenya/Murang'a with premium quality, traditional recipes, and modern excellence.
               </p>
             </div>
             
@@ -39,7 +38,7 @@ const Footer = () => {
             <div className="flex space-x-4">
               {[
                 { icon: Facebook, href: 'https://facebook.com/hungarianbites', label: 'Facebook', color: 'hover:text-blue-400' },
-                { icon: Instagram, href: 'https://instagram.com/hungarianbites', label: 'Instagram', color: 'hover:text-pink-400' },
+                { icon: Instagram, href: 'https://www.instagram.com/vdj_kenydee/?next=%2F', label: 'Instagram', color: 'hover:text-pink-400' },
                 { icon: Twitter, href: 'https://twitter.com/hungarianbites', label: 'Twitter', color: 'hover:text-blue-300' },
                 { icon: MessageCircle, href: 'https://wa.me/254700123456', label: 'WhatsApp', color: 'hover:text-green-400' }
               ].map((social, index) => (
@@ -62,8 +61,8 @@ const Footer = () => {
             <h4 className="text-xl font-semibold text-white mb-4">Get In Touch</h4>
             <div className="space-y-4">
               {[
-                { icon: Phone, text: '+254 (0) 700 123 456', color: 'text-green-400' },
-                { icon: Mail, text: 'orders@hungarianbites.co.ke', color: 'text-blue-400' },
+                { icon: Phone, text: '+254 (0) 759233065', color: 'text-green-400' },
+                { icon: Mail, text: 'Kennedygikonyo3gmail.com', color: 'text-blue-400' },
                 { icon: MapPin, text: 'Nairobi, Kenya', color: 'text-red-400' }
               ].map((contact, index) => (
                 <div key={index} className="flex items-center space-x-3 group">
@@ -117,7 +116,8 @@ const Footer = () => {
                   <div className="border-t border-pink-500/20 pt-2 mt-3">
                     <p className="text-center font-semibold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
                       Online Orders: 24/7
-                    </p>
+                      <br />
+                    call us: +254 (0) 759 233 065  </p>
                   </div>
                 </div>
               </div>
@@ -132,7 +132,10 @@ const Footer = () => {
               &copy; 2025 Hungarian Bites. All rights reserved.
             </p>
             <p className="text-gray-400 text-center md:text-right">
-              Made BY trainWithSteve <span className="text-pink-400">❤️</span> in Kenya
+              Made BY{" "}
+              <span className="animate-shimmer font-bold">trainWithSteve</span>
+              <span className="text-pink-400 inline-block animate-bounce mx-3">❤️</span>
+              in Kenya
             </p>
           </div>
         </div>
