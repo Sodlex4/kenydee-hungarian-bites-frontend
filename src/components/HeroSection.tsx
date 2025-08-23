@@ -56,54 +56,82 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center bg-gradient-to-br from-purple-900 via-pink-800 to-indigo-900 pt-20 relative overflow-hidden">
+    <section id="home" className="min-h-screen flex items-center pt-20 relative overflow-hidden" style={{ background: 'var(--gradient-brown)' }}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'hsl(var(--gold) / 0.1)' }}></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'hsl(var(--gold) / 0.15)' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'hsl(var(--gold) / 0.08)' }}></div>
       </div>
 
       <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center relative z-10">
         <div className="hero-content space-y-8 text-center lg:text-left">
-          <div className="inline-block bg-gradient-to-r from-pink-500/20 to-purple-500/20 backdrop-blur-sm border border-pink-500/30 rounded-full px-6 py-3 text-pink-300 text-sm font-medium">
+          <div className="inline-block backdrop-blur-sm rounded-full px-6 py-3 text-sm font-medium" style={{ 
+            background: 'hsl(var(--gold) / 0.2)', 
+            border: '1px solid hsl(var(--gold) / 0.3)', 
+            color: 'hsl(var(--gold))' 
+          }}>
             ✨ Premium Street Food Experience
           </div>
           
           <h1 className="space-y-4">
-            <div className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+            <div className="text-5xl md:text-7xl font-bold bg-gradient-to-r bg-clip-text text-transparent" style={{ 
+              fontFamily: 'Pacifico, cursive',
+              backgroundImage: 'var(--gradient-gold)'
+            }}>
               HUNGARIAN
             </div>
-            <div className="text-4xl md:text-6xl font-bold text-white">
+            <div className="text-4xl md:text-6xl font-bold" style={{ color: 'hsl(var(--gold))' }}>
               Hot Dog Rolls
             </div>
-            <div className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+            <div className="text-3xl md:text-5xl font-bold bg-gradient-to-r bg-clip-text text-transparent" style={{ 
+              fontFamily: 'Pacifico, cursive',
+              backgroundImage: 'var(--gradient-gold)'
+            }}>
               REIMAGINED
             </div>
           </h1>
 
-          <p className="text-gray-300 text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
-            Discover the perfect fusion of traditional Hungarian flavors and modern culinary artistry. 
+          <p className="text-lg leading-relaxed max-w-lg mx-auto lg:mx-0" style={{ color: 'hsl(var(--gold-light))' }}>
+            Discover the perfect fusion of traditional Hungarian flavors and modern culinary artistry in Murang'a. 
             Each bite is a journey through authentic taste and premium quality.
           </p>
 
           <div className="flex items-center justify-center lg:justify-start space-x-4">
-            <div className="text-4xl font-bold text-white">
-              <span className="text-2xl text-pink-400">Ksh</span> 70
+            <div className="text-4xl font-bold" style={{ color: 'hsl(var(--gold))' }}>
+              <span className="text-2xl" style={{ color: 'hsl(var(--gold-light))' }}>Ksh</span> 70
             </div>
-            <div className="text-pink-400 font-semibold">per piece</div>
+            <div className="font-semibold" style={{ color: 'hsl(var(--gold-light))' }}>per piece</div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button
               onClick={scrollToOrder}
-              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/30"
+              className="px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              style={{ 
+                background: 'var(--gradient-gold)', 
+                color: 'hsl(var(--brown-dark))',
+                boxShadow: '0 10px 30px hsl(var(--gold) / 0.3)'
+              }}
             >
               Order Now
             </button>
             <button
               onClick={scrollToProducts}
-              className="border-2 border-pink-500 text-pink-400 hover:bg-pink-500 hover:text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+              className="border-2 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+              style={{ 
+                borderColor: 'hsl(var(--gold))', 
+                color: 'hsl(var(--gold))',
+                backgroundColor: 'transparent'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'hsl(var(--gold))';
+                e.currentTarget.style.color = 'hsl(var(--brown-dark))';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = 'hsl(var(--gold))';
+              }}
             >
               Explore Menu
             </button>
@@ -112,33 +140,45 @@ const HeroSection = () => {
 
         <div className="product-showcase relative flex justify-center items-center">
           {/* Main Product Circle */}
-          <div className="product-rotate relative w-80 h-80 rounded-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 backdrop-blur-sm border border-pink-500/30 flex items-center justify-center shadow-2xl">
+          <div className="product-rotate relative w-80 h-80 rounded-full backdrop-blur-sm flex items-center justify-center shadow-2xl" style={{
+            background: 'hsl(var(--gold) / 0.1)',
+            border: '1px solid hsl(var(--gold) / 0.3)'
+          }}>
             <img 
-              src="\image\Cheese Dog Bread Rolls.jpg"
+              src="/image/Cheese Dog Bread Rolls.jpg"
               alt="Premium Hungarian Hot Dog Rolls"
               className="w-56 h-56 object-cover rounded-full shadow-xl"
             />
           </div>
 
           {/* Floating Feature Cards */}
-          <div className="floating-card absolute -top-4 -left-4 bg-gradient-to-r from-pink-500/20 to-purple-500/20 backdrop-blur-sm border border-pink-500/30 rounded-2xl p-4 shadow-xl">
+          <div className="floating-card absolute -top-4 -left-4 backdrop-blur-sm rounded-2xl p-4 shadow-xl" style={{
+            background: 'hsl(var(--gold) / 0.15)',
+            border: '1px solid hsl(var(--gold) / 0.3)'
+          }}>
             <div className="flex items-center space-x-2">
-              <Star className="w-5 h-5 text-pink-400" />
-              <span className="text-white font-semibold">Premium</span>
+              <Star className="w-5 h-5" style={{ color: 'hsl(var(--gold))' }} />
+              <span className="font-semibold" style={{ color: 'hsl(var(--gold))' }}>Premium</span>
             </div>
           </div>
 
-          <div className="floating-card absolute -top-4 -right-4 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-4 shadow-xl">
+          <div className="floating-card absolute -top-4 -right-4 backdrop-blur-sm rounded-2xl p-4 shadow-xl" style={{
+            background: 'hsl(var(--gold) / 0.15)',
+            border: '1px solid hsl(var(--gold) / 0.3)'
+          }}>
             <div className="flex items-center space-x-2">
-              <Zap className="w-5 h-5 text-purple-400" />
-              <span className="text-white font-semibold">Fast</span>
+              <Zap className="w-5 h-5" style={{ color: 'hsl(var(--gold))' }} />
+              <span className="font-semibold" style={{ color: 'hsl(var(--gold))' }}>Fast</span>
             </div>
           </div>
 
-          <div className="floating-card absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-500/20 to-pink-500/20 backdrop-blur-sm border border-indigo-500/30 rounded-2xl p-4 shadow-xl">
+          <div className="floating-card absolute -bottom-4 left-1/2 transform -translate-x-1/2 backdrop-blur-sm rounded-2xl p-4 shadow-xl" style={{
+            background: 'hsl(var(--gold) / 0.15)',
+            border: '1px solid hsl(var(--gold) / 0.3)'
+          }}>
             <div className="flex items-center space-x-2">
-              <Heart className="w-5 h-5 text-indigo-400" />
-              <span className="text-white font-semibold">Loved</span>
+              <Heart className="w-5 h-5" style={{ color: 'hsl(var(--gold))' }} />
+              <span className="font-semibold" style={{ color: 'hsl(var(--gold))' }}>Loved</span>
             </div>
           </div>
         </div>
