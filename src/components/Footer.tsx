@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, MessageCircle, MapPin, Phone, Mail } from 'lucide-react';
 
 const Footer = () => {
@@ -11,7 +12,6 @@ const Footer = () => {
 
   return (
     <footer id="contact" className="bg-gradient-to-b from-indigo-900 to-black text-white py-16 relative overflow-hidden">
-      
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl"></div>
@@ -19,7 +19,6 @@ const Footer = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        
         {/* Main Footer Content */}
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           
@@ -63,7 +62,7 @@ const Footer = () => {
               {[
                 { icon: Phone, text: '+254 (0) 759233065', color: 'text-green-400' },
                 { icon: Mail, text: 'Kennedygikonyo3gmail.com', color: 'text-blue-400' },
-                { icon: MapPin, text: 'Nairobi, Kenya', color: 'text-red-400' }
+                { icon: MapPin, text: 'Murang\'a, Kenya', color: 'text-red-400' }
               ].map((contact, index) => (
                 <div key={index} className="flex items-center space-x-3 group">
                   <div className={`w-10 h-10 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -84,17 +83,27 @@ const Footer = () => {
               {[
                 { label: 'Home', id: 'home' },
                 { label: 'Products', id: 'products' },
-                { label: 'About Us', id: 'about' },
-                { label: 'Privacy Policy', href: '/privacy' },
-                { label: 'Terms of Service', href: '/terms' }
+                { label: 'About Us', href: '/legal/about' },
+                { label: 'Privacy Policy', href: '/legal/privacy' },
+                { label: 'Terms of Service', href: '/legal/terms' }
               ].map((link, index) => (
-                <button
-                  key={index}
-                  onClick={() => link.id ? scrollToSection(link.id) : window.open(link.href, '_blank')}
-                  className="block text-gray-400 hover:text-pink-400 transition-colors duration-300 text-left hover:translate-x-2 transform transition-transform"
-                >
-                  {link.label}
-                </button>
+                link.href ? (
+                  <Link
+                    key={index}
+                    to={link.href}
+                    className="block text-gray-400 hover:text-pink-400 transition-colors duration-300 text-left hover:translate-x-2 transform transition-transform"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={index}
+                    onClick={() => scrollToSection(link.id)}
+                    className="block text-gray-400 hover:text-pink-400 transition-colors duration-300 text-left hover:translate-x-2 transform transition-transform"
+                  >
+                    {link.label}
+                  </button>
+                )
               ))}
             </div>
           </div>
@@ -117,7 +126,8 @@ const Footer = () => {
                     <p className="text-center font-semibold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
                       Online Orders: 24/7
                       <br />
-                    call us: +254 (0) 759 233 065  </p>
+                      call us: +254 (0) 759 233 065
+                    </p>
                   </div>
                 </div>
               </div>
