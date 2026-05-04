@@ -32,28 +32,40 @@ interface CartProviderProps {
   children: ReactNode;
 }
 
+const CART_STORAGE_KEY = 'hungarian-bites-cart';
+
+const loadCartFromStorage = (): CartItem[] => {
+  try {
+    const stored = localStorage.getItem(CART_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(loadCartFromStorage);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addToCart = (newItem: CartItem) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === newItem.id);
-      
-      if (existingItem) {
-        return prevItems.map(item =>
-          item.id === newItem.id
-            ? { ...item, quantity: item.quantity + newItem.quantity }
-            : item
-        );
-      }
-      
-      return [...prevItems, newItem];
+      const updated = prevItems.find(item => item.id === newItem.id)
+        ? prevItems.map(item =>
+            item.id === newItem.id
+              ? { ...item, quantity: item.quantity + newItem.quantity }
+              : item
+          )
+        : [...prevItems, newItem];
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
     });
   };
 
   const removeFromCart = (id: string) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+    setCartItems(prevItems => {
+      const updated = prevItems.filter(item => item.id !== id);
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+    });
   };
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -61,12 +73,13 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       removeFromCart(id);
       return;
     }
-    
-    setCartItems(prevItems =>
-      prevItems.map(item =>
+    setCartItems(prevItems => {
+      const updated = prevItems.map(item =>
         item.id === id ? { ...item, quantity } : item
-      )
-    );
+      );
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const toggleCart = () => {
