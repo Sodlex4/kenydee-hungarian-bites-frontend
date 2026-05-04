@@ -12,10 +12,7 @@ const Footer = () => {
   };
 
   return (
-    <footer id="contact" className="text-white py-16 relative overflow-hidden" style={{
-      background: 'var(--gradient-section)',
-      borderTop: '1px solid hsl(var(--primary) / 0.1)'
-    }}>
+    <footer id="contact" className="bg-gradient-to-b from-indigo-900 to-black text-white py-16 relative overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'hsl(var(--primary) / 0.05)' }}></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'hsl(var(--accent) / 0.05)' }}></div>

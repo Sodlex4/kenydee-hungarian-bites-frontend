@@ -52,7 +52,6 @@ All colors MUST be HSL.
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--pink)), hsl(var(--purple)));
     --gradient-secondary: linear-gradient(135deg, hsl(var(--purple)), hsl(var(--indigo)));
-    --gradient-section: linear-gradient(180deg, hsl(270 30% 8%) 0%, hsl(250 30% 6%) 50%, hsl(270 30% 8%) 100%);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;

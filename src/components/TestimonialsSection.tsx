@@ -54,7 +54,7 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section id="testimonials" className="testimonials-section py-20 relative overflow-hidden" style={{ background: 'var(--gradient-section)' }}>
+    <section id="testimonials" className="testimonials-section py-20 bg-gradient-to-br from-purple-900 via-pink-900 to-indigo-900 relative overflow-hidden">
 
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--primary) / 0.1)' }}></div>

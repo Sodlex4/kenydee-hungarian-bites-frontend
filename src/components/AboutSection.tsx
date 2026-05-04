@@ -37,7 +37,7 @@ const AboutSection = () => {
   }, []);
 
   return (
-    <section id="about" className="about-section py-20 relative" style={{ background: 'var(--gradient-section)' }}>
+    <section id="about" className="about-section py-20 bg-gradient-to-b from-pink-900 via-purple-900 to-indigo-900 relative">
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,hsl(var(--primary)_/_0.3),transparent_50%),radial-gradient(circle_at_75%_75%,hsl(var(--accent)_/_0.3),transparent_50%)]"></div>
       </div>

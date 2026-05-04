@@ -48,7 +48,7 @@ const OrderSection = () => {
   };
 
   return (
-    <section id="order" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-section)' }}>
+    <section id="order" className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--primary) / 0.1)' }}></div>
         <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--accent) / 0.1)' }}></div>
