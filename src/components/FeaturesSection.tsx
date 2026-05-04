@@ -6,7 +6,7 @@ import { Crown, Sparkles, Shield } from 'lucide-react';
 
 const FeaturesSection = () => {
   useEffect(() => {
-    gsap.fromTo(".feature-card", 
+    gsap.fromTo(".feature-card",
       { y: 50, opacity: 0, scale: 0.9 },
       {
         y: 0,
@@ -22,7 +22,6 @@ const FeaturesSection = () => {
       }
     );
 
-    // Floating animation for icons
     gsap.to(".feature-icon", {
       y: -5,
       duration: 2,
@@ -52,18 +51,17 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section id="products" className="features-section py-20 bg-gradient-to-b from-purple-900 via-indigo-900 to-pink-900 relative">
-      {/* Background Pattern */}
+    <section id="products" className="features-section py-20 relative" style={{ background: 'var(--gradient-section)' }}>
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.4),transparent_70%)]"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,hsl(var(--accent)_/_0.4),transparent_70%)]"></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
             Why Choose Our <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Masterpiece</span>
           </h2>
-          <p className="text-gray-300 text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
             Experience the perfect harmony of traditional Hungarian recipes and modern culinary innovation.
           </p>
         </div>
@@ -74,39 +72,40 @@ const FeaturesSection = () => {
               key={index}
               className="feature-card group relative"
             >
-              {/* Glassmorphism Card */}
-              <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-xl border border-pink-500/20 rounded-3xl p-8 text-center hover:border-pink-500/40 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/20">
-                
-                {/* Icon Container */}
+              <div className="backdrop-blur-xl border rounded-3xl p-8 text-center hover:scale-105 transition-all duration-500" style={{
+                background: 'hsl(var(--card) / 0.5)',
+                borderColor: 'hsl(var(--primary) / 0.2)'
+              }}>
                 <div className="feature-icon relative mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-pink-500/50 transition-all duration-300">
+                  <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto shadow-lg" style={{
+                    background: 'var(--gradient-primary)'
+                  }}>
                     <feature.icon className="w-10 h-10 text-white" />
                   </div>
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-pink-500/30 to-purple-600/30 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{
+                    background: 'hsl(var(--primary) / 0.3)'
+                  }}></div>
                 </div>
-                
-                <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-pink-300 transition-colors duration-300">
+
+                <h3 className="text-2xl font-bold mb-4 group-hover:text-pink-300 transition-colors duration-300" style={{ color: 'hsl(var(--foreground))' }}>
                   {feature.title}
                 </h3>
-                
-                <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
+
+                <p className="leading-relaxed group-hover:text-gray-200 transition-colors duration-300" style={{ color: 'hsl(var(--muted-foreground))' }}>
                   {feature.description}
                 </p>
 
-                {/* Decorative Elements */}
-                <div className="absolute top-4 right-4 w-2 h-2 bg-pink-400 rounded-full opacity-50"></div>
-                <div className="absolute bottom-4 left-4 w-2 h-2 bg-purple-400 rounded-full opacity-50"></div>
+                <div className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-50" style={{ background: 'hsl(var(--primary))' }}></div>
+                <div className="absolute bottom-4 left-4 w-2 h-2 rounded-full opacity-50" style={{ background: 'hsl(var(--accent))' }}></div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Bottom Decorative Elements */}
         <div className="flex justify-center mt-16 space-x-4">
-          <div className="w-3 h-3 bg-pink-500 rounded-full animate-pulse"></div>
-          <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-3 h-3 bg-indigo-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+          <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: 'hsl(var(--primary))' }}></div>
+          <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: 'hsl(var(--accent))', animationDelay: '0.2s' }}></div>
+          <div className="w-3 h-3 rounded-full animate-pulse" style={{ background: 'hsl(var(--indigo))', animationDelay: '0.4s' }}></div>
         </div>
       </div>
     </section>

@@ -30,19 +30,19 @@ const Header = () => {
   return (
     <header 
       className="fixed top-0 left-0 right-0 z-40 transition-all duration-300 backdrop-blur-xl"
-      style={{
-        background: isScrolled ? 'hsl(var(--brown-dark) / 0.95)' : 'transparent',
-        borderBottom: isScrolled ? '1px solid hsl(var(--gold) / 0.2)' : 'none'
-      }}
+        style={{
+          background: isScrolled ? 'hsl(var(--background) / 0.95)' : 'transparent',
+          borderBottom: isScrolled ? '1px solid hsl(var(--primary) / 0.2)' : 'none'
+        }}
     >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <div 
           className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform"
           onClick={() => scrollToSection('home')}
-          style={{ 
+          style={{
             fontFamily: 'Pacifico, cursive',
-            backgroundImage: 'var(--gradient-gold)'
+            backgroundImage: 'var(--gradient-primary)'
           }}
         >
           HUNGARIAN BITES
@@ -60,13 +60,13 @@ const Header = () => {
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className="transition-colors duration-300 relative group font-medium"
-              style={{ color: 'hsl(var(--gold))' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--gold-light))'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--gold))'}
+              style={{ color: 'hsl(var(--primary))' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--primary-light, var(--primary)))'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--primary))'}
             >
               {item.label}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full" style={{ 
-                background: 'var(--gradient-gold)'
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full" style={{
+                background: 'var(--gradient-primary)'
               }}></span>
             </button>
           ))}
@@ -78,18 +78,18 @@ const Header = () => {
           <button
             onClick={toggleCart}
             className="relative p-3 backdrop-blur-sm rounded-full transition-all duration-300 hover:scale-110"
-            style={{ 
-              background: 'hsl(var(--gold) / 0.2)', 
-              border: '1px solid hsl(var(--gold) / 0.3)' 
+            style={{
+              background: 'hsl(var(--primary) / 0.2)',
+              border: '1px solid hsl(var(--primary) / 0.3)'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--gold) / 0.3)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'hsl(var(--gold) / 0.2)'}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.3)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.2)'}
           >
-            <ShoppingCart className="w-6 h-6" style={{ color: 'hsl(var(--gold))' }} />
+            <ShoppingCart className="w-6 h-6" style={{ color: 'hsl(var(--primary))' }} />
             {totalItems > 0 && (
               <span className="absolute -top-2 -right-2 text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold shadow-lg" style={{
-                background: 'var(--gradient-gold)',
-                color: 'hsl(var(--brown-dark))'
+                background: 'var(--gradient-primary)',
+                color: 'white'
               }}>
                 {totalItems}
               </span>
@@ -100,17 +100,17 @@ const Header = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-3 backdrop-blur-sm rounded-full transition-all duration-300"
-            style={{ 
-              background: 'hsl(var(--gold) / 0.2)', 
-              border: '1px solid hsl(var(--gold) / 0.3)' 
+            style={{
+              background: 'hsl(var(--primary) / 0.2)',
+              border: '1px solid hsl(var(--primary) / 0.3)'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--gold) / 0.3)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'hsl(var(--gold) / 0.2)'}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.3)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.2)'}
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6" style={{ color: 'hsl(var(--gold))' }} />
+              <X className="w-6 h-6" style={{ color: 'hsl(var(--primary))' }} />
             ) : (
-              <Menu className="w-6 h-6" style={{ color: 'hsl(var(--gold))' }} />
+              <Menu className="w-6 h-6" style={{ color: 'hsl(var(--primary))' }} />
             )}
           </button>
         </div>
@@ -119,8 +119,8 @@ const Header = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <nav className="md:hidden backdrop-blur-xl" style={{
-          background: 'hsl(var(--brown-dark) / 0.95)',
-          borderTop: '1px solid hsl(var(--gold) / 0.2)'
+          background: 'hsl(var(--background) / 0.95)',
+          borderTop: '1px solid hsl(var(--primary) / 0.2)'
         }}>
           <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
             {[
@@ -133,9 +133,9 @@ const Header = () => {
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
                 className="transition-colors text-left py-2 text-lg font-medium"
-                style={{ color: 'hsl(var(--gold))' }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--gold-light))'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--gold))'}
+                style={{ color: 'hsl(var(--primary))' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--primary-light, var(--primary)))'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--primary))'}
               >
                 {item.label}
               </button>

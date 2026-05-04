@@ -28,7 +28,7 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--gradient-brown)' }}>
+    <div className="min-h-screen" style={{ background: 'var(--gradient-section)' }}>
       <Header />
       
       <main className="pt-24 pb-16 px-4">
@@ -148,10 +148,10 @@ const About = () => {
             <div className="mt-8">
               <button 
                 className="px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105"
-                style={{ 
-                  background: 'var(--gradient-gold)', 
-                  color: 'hsl(var(--brown-dark))'
-                }}
+                  style={{
+                    background: 'var(--gradient-primary)',
+                    color: 'white'
+                  }}
               >
                 Join Our Team
               </button>

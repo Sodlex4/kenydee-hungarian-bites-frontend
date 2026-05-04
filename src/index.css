@@ -12,47 +12,47 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Brown theme colors */
-    --background: 25 35% 8%;
-    --foreground: 45 100% 50%;
+    /* Pink/Purple/Indigo theme colors */
+    --background: 270 30% 4%;
+    --foreground: 0 0% 95%;
 
-    --card: 25 30% 12%;
-    --card-foreground: 45 100% 50%;
+    --card: 270 25% 10%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 25 30% 12%;
-    --popover-foreground: 45 100% 50%;
+    --popover: 270 25% 10%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 45 100% 50%;
-    --primary-foreground: 25 35% 8%;
+    --primary: 330 80% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 25 25% 15%;
-    --secondary-foreground: 45 100% 50%;
+    --secondary: 260 40% 15%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 25 25% 15%;
-    --muted-foreground: 45 80% 70%;
+    --muted: 260 25% 15%;
+    --muted-foreground: 260 20% 65%;
 
-    --accent: 45 100% 50%;
-    --accent-foreground: 25 35% 8%;
+    --accent: 270 70% 65%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 25 30% 20%;
-    --input: 25 30% 20%;
-    --ring: 45 100% 50%;
+    --border: 270 30% 20%;
+    --input: 270 30% 20%;
+    --ring: 330 80% 60%;
 
     --radius: 0.5rem;
-    
+
     /* Custom theme colors */
-    --brown-dark: 25 35% 8%;
-    --brown-medium: 25 30% 12%;
-    --brown-light: 25 25% 15%;
-    --gold: 45 100% 50%;
-    --gold-light: 45 100% 70%;
-    
+    --pink: 330 80% 60%;
+    --pink-light: 330 80% 70%;
+    --purple: 270 70% 65%;
+    --indigo: 230 70% 65%;
+
     /* Gradients */
-    --gradient-brown: linear-gradient(135deg, hsl(var(--brown-dark)), hsl(var(--brown-medium)));
-    --gradient-gold: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-light)));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--pink)), hsl(var(--purple)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--purple)), hsl(var(--indigo)));
+    --gradient-section: linear-gradient(180deg, hsl(270 30% 8%) 0%, hsl(250 30% 6%) 50%, hsl(270 30% 8%) 100%);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -65,34 +65,34 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Brown theme colors for dark mode */
-    --background: 25 40% 6%;
-    --foreground: 45 100% 50%;
+    /* Pink/Purple/Indigo theme colors for dark mode */
+    --background: 270 35% 3%;
+    --foreground: 0 0% 95%;
 
-    --card: 25 35% 10%;
-    --card-foreground: 45 100% 50%;
+    --card: 270 30% 8%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 25 35% 10%;
-    --popover-foreground: 45 100% 50%;
+    --popover: 270 30% 8%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 45 100% 50%;
-    --primary-foreground: 25 40% 6%;
+    --primary: 330 80% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 25 30% 12%;
-    --secondary-foreground: 45 100% 50%;
+    --secondary: 260 40% 12%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 25 30% 12%;
-    --muted-foreground: 45 80% 70%;
+    --muted: 260 25% 12%;
+    --muted-foreground: 260 20% 65%;
 
-    --accent: 45 100% 50%;
-    --accent-foreground: 25 40% 6%;
+    --accent: 270 70% 65%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 25 35% 18%;
-    --input: 25 35% 18%;
-    --ring: 45 100% 50%;
+    --border: 270 35% 18%;
+    --input: 270 35% 18%;
+    --ring: 330 80% 60%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -126,7 +126,7 @@ All colors MUST be HSL.
   }
 
   .hero-glow {
-    background: radial-gradient(circle, rgba(255, 140, 0, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%);
   }
 
   /* Smooth scrolling */
@@ -144,17 +144,17 @@ All colors MUST be HSL.
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-orange-500 rounded-full;
+    @apply bg-pink-500 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-orange-600;
+    @apply bg-pink-600;
   }
 
   /* Focus styles for accessibility */
   button:focus-visible,
   a:focus-visible {
-    @apply outline-2 outline-orange-500 outline-offset-2;
+    @apply outline-2 outline-pink-500 outline-offset-2;
   }
 
   /* Hover animations */
@@ -168,7 +168,7 @@ All colors MUST be HSL.
 
   /* Text gradient */
   .text-gradient {
-    background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+    background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

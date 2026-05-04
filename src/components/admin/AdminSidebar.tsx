@@ -28,7 +28,7 @@ const AdminSidebar = () => {
       <div className="p-6">
         <h2 className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent" style={{
           fontFamily: 'Pacifico, cursive',
-          backgroundImage: 'var(--gradient-gold)'
+          backgroundImage: 'var(--gradient-primary)'
         }}>
           Admin Panel
         </h2>
@@ -47,8 +47,8 @@ const AdminSidebar = () => {
               }`
             }
             style={({ isActive }) => ({
-              background: isActive ? 'var(--gradient-gold)' : 'transparent',
-              color: isActive ? 'hsl(var(--brown-dark))' : 'hsl(var(--foreground))'
+              background: isActive ? 'var(--gradient-primary)' : 'transparent',
+              color: isActive ? 'white' : 'hsl(var(--foreground))'
             })}
           >
             <item.icon className="w-5 h-5" />

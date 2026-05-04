@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 
 const Privacy = () => {
   return (
-    <div className="min-h-screen" style={{ background: 'var(--gradient-brown)' }}>
+    <div className="min-h-screen" style={{ background: 'var(--gradient-section)' }}>
       <Header />
       
       <main className="pt-24 pb-16 px-4">

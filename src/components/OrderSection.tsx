@@ -29,10 +29,9 @@ const OrderSection = () => {
         quantity: 1,
         image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=100&h=100&fit=crop&crop=center"
       });
-      
+
       toast.success(`Added ${selectedPackage.label} to cart!`);
-      
-      // Track Google Analytics event
+
       if (typeof window !== 'undefined' && typeof gtag !== 'undefined') {
         gtag('event', 'add_to_cart', {
           currency: 'KES',
@@ -49,26 +48,29 @@ const OrderSection = () => {
   };
 
   return (
-    <section id="order" className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
-      {/* Background Effects */}
+    <section id="order" className="py-20 relative overflow-hidden" style={{ background: 'var(--gradient-section)' }}>
       <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--primary) / 0.1)' }}></div>
+        <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--accent) / 0.1)' }}></div>
       </div>
 
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="mb-4">
-          <div className="inline-block bg-gradient-to-r from-pink-500/20 to-purple-500/20 backdrop-blur-sm border border-pink-500/30 rounded-full px-6 py-2 text-pink-300 text-sm font-medium mb-6">
-            ✨ Limited Time Offers
+          <div className="inline-block backdrop-blur-sm border rounded-full px-6 py-2 text-sm font-medium mb-6" style={{
+            background: 'hsl(var(--primary) / 0.2)',
+            borderColor: 'hsl(var(--primary) / 0.3)',
+            color: 'hsl(var(--primary))'
+          }}>
+            Limited Time Offers
           </div>
         </div>
 
-        <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+        <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
           Ready to <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Experience</span> Perfection?
         </h2>
-        
-        <p className="text-gray-300 text-xl mb-12 max-w-3xl mx-auto leading-relaxed">
-          Choose your perfect package and let us deliver authentic Hungarian flavors 
+
+        <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
+          Choose your perfect package and let us deliver authentic Hungarian flavors
           straight to your doorstep within 2 hours.
         </p>
 
@@ -82,54 +84,63 @@ const OrderSection = () => {
                 }`}
                 onClick={() => setSelectedQuantity(pkg.id)}
               >
-                {/* Popular Badge */}
                 {pkg.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center space-x-1 shadow-lg">
+                    <div className="text-white px-4 py-2 rounded-full text-sm font-bold flex items-center space-x-1 shadow-lg" style={{
+                      background: 'var(--gradient-primary)'
+                    }}>
                       <Sparkles className="w-4 h-4" />
                       <span>Most Popular</span>
                     </div>
                   </div>
                 )}
 
-                {/* Savings Badge */}
                 {pkg.savings && !pkg.popular && (
-                  <div className="absolute -top-3 right-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                  <div className="absolute -top-3 right-4 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg" style={{
+                    background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))'
+                  }}>
                     Save Ksh {pkg.savings}
                   </div>
                 )}
 
-                {/* Card */}
-                <div className={`bg-gradient-to-br from-pink-500/10 to-purple-500/10 backdrop-blur-xl border-2 rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-pink-500/20 ${
+                <div className={`backdrop-blur-xl border-2 rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl ${
                   selectedQuantity === pkg.id
-                    ? 'border-pink-500 bg-gradient-to-br from-pink-500/20 to-purple-500/20'
-                    : 'border-pink-500/20 hover:border-pink-500/40'
-                }`}>
-                  
+                    ? 'border-pink-500'
+                    : 'hover:border-pink-500/40'
+                }`} style={{
+                  background: selectedQuantity === pkg.id
+                    ? 'hsl(var(--primary) / 0.2)'
+                    : 'hsl(var(--card) / 0.5)',
+                  borderColor: selectedQuantity === pkg.id
+                    ? 'hsl(var(--primary))'
+                    : 'hsl(var(--primary) / 0.2)'
+                }}>
+
                   <div className="text-center">
-                    <h3 className="text-2xl font-bold text-white mb-4">{pkg.label}</h3>
-                    
+                    <h3 className="text-2xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>{pkg.label}</h3>
+
                     <div className="mb-6">
                       <div className="text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
                         Ksh {pkg.price}
                       </div>
                       {pkg.originalPrice !== pkg.price && (
-                        <div className="text-gray-400 line-through text-lg mt-1">
-                          Ksh {pkg.originalPrice}
+                        <div className="text-lg mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                          <span className="line-through">Ksh {pkg.originalPrice}</span>
                         </div>
                       )}
                     </div>
-                    
-                    <div className="text-gray-300 text-sm mb-4">
+
+                    <div className="text-sm mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>
                       Ksh {Math.round(pkg.price / parseInt(pkg.label))} per piece
                     </div>
 
-                    {/* Selection Indicator */}
                     <div className={`w-6 h-6 rounded-full mx-auto transition-all duration-300 ${
                       selectedQuantity === pkg.id
-                        ? 'bg-gradient-to-r from-pink-500 to-purple-600 shadow-lg'
+                        ? 'shadow-lg'
                         : 'border-2 border-gray-400'
-                    }`}>
+                    }`} style={{
+                      background: selectedQuantity === pkg.id ? 'var(--gradient-primary)' : 'transparent'
+                    }}>
                       {selectedQuantity === pkg.id && (
                         <div className="w-2 h-2 bg-white rounded-full mx-auto mt-2"></div>
                       )}
@@ -144,25 +155,30 @@ const OrderSection = () => {
             onClick={handleAddToCart}
             className={`px-12 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
               selectedQuantity
-                ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-2xl hover:shadow-pink-500/50 hover:scale-105'
-                : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                ? 'hover:scale-105'
+                : 'cursor-not-allowed'
             }`}
             disabled={!selectedQuantity}
+            style={{
+              background: selectedQuantity ? 'var(--gradient-primary)' : 'hsl(var(--muted))',
+              color: selectedQuantity ? 'white' : 'hsl(var(--muted-foreground))',
+              boxShadow: selectedQuantity ? '0 10px 30px hsl(var(--primary) / 0.3)' : 'none'
+            }}
           >
             Add to Cart
           </button>
 
-          <div className="mt-8 grid md:grid-cols-3 gap-4 text-gray-400 text-sm">
+          <div className="mt-8 grid md:grid-cols-3 gap-4 text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
             <div className="flex items-center justify-center space-x-2">
-              <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+              <div className="w-2 h-2 rounded-full" style={{ background: 'hsl(var(--primary))' }}></div>
               <span>Free delivery to your doorstep within Murang'a</span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <div className="w-2 h-2 rounded-full" style={{ background: 'hsl(var(--accent))' }}></div>
               <span>Fresh within 2 hours</span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+              <div className="w-2 h-2 rounded-full" style={{ background: 'hsl(var(--indigo))' }}></div>
               <span>100% satisfaction guaranteed</span>
             </div>
           </div>
