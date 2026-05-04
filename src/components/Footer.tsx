@@ -61,7 +61,7 @@ const Footer = () => {
             <div className="space-y-4">
               {[
                 { icon: Phone, text: '+254 (0) 759233065', color: 'text-green-400' },
-                { icon: Mail, text: 'Kennedygikonyo3gmail.com', color: 'text-blue-400' },
+                { icon: Mail, text: 'kennedygikonyo3@gmail.com', color: 'text-blue-400' },
                 { icon: MapPin, text: 'Murang\'a, Kenya', color: 'text-red-400' }
               ].map((contact, index) => (
                 <div key={index} className="flex items-center space-x-3 group">
