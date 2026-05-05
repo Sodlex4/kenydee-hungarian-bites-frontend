@@ -41,7 +41,7 @@ const Footer = () => {
                 { icon: Facebook, href: 'https://facebook.com/hungarianbites', label: 'Facebook', color: 'hsl(var(--primary))' },
                 { icon: Instagram, href: 'https://www.instagram.com/vdj_kenydee/?next=%2F', label: 'Instagram', color: 'hsl(var(--primary))' },
                 { icon: Twitter, href: 'https://twitter.com/hungarianbites', label: 'Twitter', color: 'hsl(var(--primary))' },
-                { icon: MessageCircle, href: 'https://wa.me/254700123456', label: 'WhatsApp', color: 'hsl(var(--primary))' }
+                { icon: MessageCircle, href: 'https://wa.me/254759233065', label: 'WhatsApp', color: 'hsl(var(--primary))' }
               ].map((social, index) => (
                 <a
                   key={index}
@@ -134,7 +134,7 @@ const Footer = () => {
                 </p>
                 <div className="border-t pt-2 mt-3" style={{ borderColor: 'hsl(var(--primary) / 0.2)' }}>
                   <p className="text-center font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                    Online Orders: 24/7
+                    Order via WhatsApp: 24/7
                     <br />
                     call us: +254 (0) 759 233 065
                   </p>
@@ -147,7 +147,7 @@ const Footer = () => {
         <div className="pt-8" style={{ borderTop: '1px solid hsl(var(--primary) / 0.1)' }}>
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p style={{ color: 'hsl(var(--muted-foreground))' }}>
-              &copy; 2025 Hungarian Bites. All rights reserved.
+              &copy; {new Date().getFullYear()} Hungarian Bites. All rights reserved.
             </p>
             <p style={{ color: 'hsl(var(--muted-foreground))' }}>
               Made BY{" "}

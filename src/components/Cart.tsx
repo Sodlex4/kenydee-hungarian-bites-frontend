@@ -32,7 +32,7 @@ const Cart = () => {
       `\n• ${item.name} (Qty: ${item.quantity}) - Ksh ${item.price * item.quantity}`
     ).join('')}\n\nTotal: Ksh ${total}\n\nPlease confirm my order and delivery details.`;
 
-    const whatsappUrl = `https://wa.me/254700123456?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/254759233065?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
     toast.success('Redirecting to WhatsApp for order confirmation!');

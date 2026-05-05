@@ -9,9 +9,9 @@ const OrderSection = () => {
   const { addToCart } = useCart();
 
   const packages = [
-    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false },
-    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true },
-    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false }
+    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.jpg' },
+    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/Cheese Dog Bread Rolls.jpg' },
+    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.jpg' }
   ];
 
   const handleAddToCart = () => {
@@ -117,6 +117,11 @@ const OrderSection = () => {
                 }}>
 
                   <div className="text-center">
+                    <img
+                      src={pkg.image}
+                      alt={pkg.label}
+                      className="w-full h-32 object-cover rounded-xl mb-4"
+                    />
                     <h3 className="text-2xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>{pkg.label}</h3>
 
                     <div className="mb-6">

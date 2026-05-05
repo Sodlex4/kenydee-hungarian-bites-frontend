@@ -1,7 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useEffect, useState, useCallback } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
@@ -13,24 +11,17 @@ import Cart from '../components/Cart';
 import LoadingScreen from '../components/LoadingScreen';
 import { CartProvider } from '../context/CartContext';
 
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
-
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
+  const handleLoadingDone = useCallback(() => {
+    setIsLoading(false);
   }, []);
 
   return (
     <CartProvider>
       <div className="min-h-screen bg-gray-900 text-white">
-        {isLoading && <LoadingScreen />}
+        {isLoading && <LoadingScreen onSkip={handleLoadingDone} />}
         <Header />
         <main>
           <HeroSection />

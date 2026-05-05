@@ -107,20 +107,19 @@ const TestimonialsSection = () => {
                 </blockquote>
 
                 <div className="text-center">
+                  {testimonial.image && (
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.author}
+                      className="w-20 h-20 rounded-full mx-auto mb-3 border-2 object-cover"
+                      style={{ borderColor: 'hsl(var(--primary))', borderRadius: '50%' }}
+                    />
+                  )}
                   <h4 className="text-xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" style={{ fontFamily: 'Pacifico, cursive' }}>
                     {testimonial.author}
                   </h4>
                   <div className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Verified Customer</div>
                 </div>
-
-                {testimonial.image && (
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.author}
-                    className="w-20 h-20 rounded-full mx-auto mb-4 border-2 object-cover"
-                    style={{ borderColor: 'hsl(var(--primary))', borderRadius: '50%' }}
-                  />
-                )}
 
                 <div className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-60" style={{ background: 'hsl(var(--primary))' }}></div>
                 <div className="absolute bottom-4 left-4 w-2 h-2 rounded-full opacity-60" style={{ background: 'hsl(var(--accent))' }}></div>
