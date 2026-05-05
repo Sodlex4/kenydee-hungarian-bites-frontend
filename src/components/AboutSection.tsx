@@ -93,7 +93,7 @@ const AboutSection = () => {
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden group">
                 <img
-                  src="/image/hotdog.jpg"
+                  src="/image/hotdog.webp"
                   alt="Hungarian Bites kitchen preparation"
                   className="w-full h-96 object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {

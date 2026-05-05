@@ -15,7 +15,7 @@ const notifications = [
   { id: 8, type: 'order', title: 'Order Cancelled', message: 'Order #1237 was cancelled by the customer', time: '1 day ago', read: true },
 ];
 
-const iconMap = {
+const iconMap: Record<string, React.ElementType> = {
   order: Package,
   user: User,
   alert: AlertCircle,
@@ -25,46 +25,46 @@ const iconMap = {
 const AdminNotifications = () => {
   return (
     <AdminLayout title="Notifications" description="View all system notifications and customer interactions.">
-      <div className="backdrop-blur-sm border rounded-xl" style={{
+      <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
       }}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Type</TableHead>
-              <TableHead>Notification</TableHead>
-              <TableHead>Message</TableHead>
-              <TableHead>Time</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {notifications.map((notification) => {
-              const Icon = iconMap[notification.type as keyof typeof iconMap] || Bell;
-              return (
-                <TableRow key={notification.id} className={!notification.read ? 'font-medium' : ''}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Icon className="w-4 h-4" style={{ color: 'hsl(var(--primary))' }} />
-                      <span style={{ color: 'hsl(var(--muted-foreground))' }}>{notification.type}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{notification.title}</TableCell>
-                  <TableCell style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '250px' }}>{notification.message}</TableCell>
-                  <TableCell style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{notification.time}</TableCell>
-                  <TableCell>
-                    <Badge className={
-                      !notification.read ? 'bg-pink-600 hover:bg-pink-700' : 'bg-gray-600 hover:bg-gray-700'
-                    }>
-                      {!notification.read ? 'Unread' : 'Read'}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+        <div className="overflow-x-auto" role="region" aria-label="Notifications table">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Type</TableHead>
+                <TableHead className="min-w-[120px]">Notification</TableHead>
+                <TableHead className="hidden sm:table-cell min-w-[180px]">Message</TableHead>
+                <TableHead className="hidden md:table-cell">Time</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {notifications.map((notification) => {
+                const Icon = iconMap[notification.type] || Bell;
+                return (
+                  <TableRow key={notification.id} className={!notification.read ? 'font-medium' : ''}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
+                        <span className="capitalize hidden sm:inline" style={{ color: 'hsl(var(--muted-foreground))' }}>{notification.type}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{notification.title}</TableCell>
+                    <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '250px' }}>{notification.message}</TableCell>
+                    <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{notification.time}</TableCell>
+                    <TableCell>
+                      <Badge className={!notification.read ? 'bg-pink-500/80 hover:bg-pink-500' : 'bg-gray-500/80 hover:bg-gray-500'}>
+                        {!notification.read ? 'Unread' : 'Read'}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </AdminLayout>
   );

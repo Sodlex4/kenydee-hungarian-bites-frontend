@@ -40,13 +40,13 @@ const TestimonialsSection = () => {
       text: "Absolutely incredible! The perfect blend of traditional Hungarian flavors with modern presentation. Every bite is pure perfection.",
       author: "trainWithSteve.",
       rating: 5,
-      image: "/image/trainWithSteve.jpg"
+      image: "/image/trainwithsteve.webp"
     },
     {
       text: "These hot dog rolls have become my go-to for parties. Guests always ask where I got them - they're truly exceptional!",
       author: "Jimmy .",
       rating: 5,
-      image: "/image/jimmy.jpg"
+      image: "/image/jimmy.webp"
     },
     {
       text: "The quality is outstanding and the flavors are authentic. Hungarian Bites never fails to impress!",

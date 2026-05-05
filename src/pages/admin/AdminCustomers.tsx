@@ -14,45 +14,50 @@ const customers = [
   { id: 8, name: 'Lucy Wambui', email: 'lucy@example.com', phone: '+254700890123', orders: 1, total: 'Ksh 350', joined: '2024-03-12', status: 'Active' },
 ];
 
+const statusColors = {
+  Active: 'bg-emerald-500/80 hover:bg-emerald-500',
+  Inactive: 'bg-gray-500/80 hover:bg-gray-500',
+};
+
 const AdminCustomers = () => {
   return (
     <AdminLayout title="Customers" description="Manage your customer base and view their order history.">
-      <div className="backdrop-blur-sm border rounded-xl" style={{
+      <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
       }}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Orders</TableHead>
-              <TableHead>Total Spent</TableHead>
-              <TableHead>Joined</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {customers.map((customer) => (
-              <TableRow key={customer.id}>
-                <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{customer.name}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.email}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.phone}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--foreground))' }}>{customer.orders}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--foreground))' }}>{customer.total}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.joined}</TableCell>
-                <TableCell>
-                  <Badge variant={customer.status === 'Active' ? 'default' : 'secondary'}
-                    className={customer.status === 'Active' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
-                  >
-                    {customer.status}
-                  </Badge>
-                </TableCell>
+        <div className="overflow-x-auto" role="region" aria-label="Customers table">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead className="hidden sm:table-cell">Email</TableHead>
+                <TableHead className="hidden md:table-cell">Phone</TableHead>
+                <TableHead>Orders</TableHead>
+                <TableHead className="hidden sm:table-cell">Total Spent</TableHead>
+                <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {customers.map((customer) => (
+                <TableRow key={customer.id}>
+                  <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{customer.name}</TableCell>
+                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '160px' }}>{customer.email}</TableCell>
+                  <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.phone}</TableCell>
+                  <TableCell style={{ color: 'hsl(var(--foreground))' }}>{customer.orders}</TableCell>
+                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--foreground))' }}>{customer.total}</TableCell>
+                  <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.joined}</TableCell>
+                  <TableCell>
+                    <Badge className={statusColors[customer.status as keyof typeof statusColors]}>
+                      {customer.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </AdminLayout>
   );

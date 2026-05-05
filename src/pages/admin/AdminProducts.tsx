@@ -12,45 +12,49 @@ const products = [
   { id: 6, name: 'Premium Hungarian Rolls', category: 'Premium', price: 'Ksh 500', stock: 45, status: 'In Stock', sales: 95 },
 ];
 
+const statusColors: Record<string, string> = {
+  'In Stock': 'bg-emerald-500/80 hover:bg-emerald-500',
+  'Low Stock': 'bg-amber-500/80 hover:bg-amber-500',
+  'Out of Stock': 'bg-red-500/80 hover:bg-red-500',
+};
+
 const AdminProducts = () => {
   return (
     <AdminLayout title="Products" description="Manage your product catalog and inventory levels.">
-      <div className="backdrop-blur-sm border rounded-xl" style={{
+      <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
       }}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Product Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Total Sales</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{product.name}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{product.category}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--foreground))' }}>{product.price}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{product.stock}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{product.sales}</TableCell>
-                <TableCell>
-                  <Badge className={
-                    product.status === 'In Stock' ? 'bg-emerald-600 hover:bg-emerald-700' :
-                    product.status === 'Low Stock' ? 'bg-amber-600 hover:bg-amber-700' :
-                    'bg-red-600 hover:bg-red-700'
-                  }>
-                    {product.status}
-                  </Badge>
-                </TableCell>
+        <div className="overflow-x-auto" role="region" aria-label="Products table">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="min-w-[150px]">Product Name</TableHead>
+                <TableHead className="hidden sm:table-cell">Category</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead className="hidden md:table-cell">Stock</TableHead>
+                <TableHead className="hidden lg:table-cell">Total Sales</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {products.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{product.name}</TableCell>
+                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.category}</TableCell>
+                  <TableCell style={{ color: 'hsl(var(--foreground))' }}>{product.price}</TableCell>
+                  <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.stock}</TableCell>
+                  <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.sales}</TableCell>
+                  <TableCell>
+                    <Badge className={statusColors[product.status]}>
+                      {product.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </AdminLayout>
   );

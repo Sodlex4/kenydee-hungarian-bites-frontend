@@ -10,9 +10,9 @@ const OrderSection = () => {
   const { addToCartAndOpen } = useCart();
 
   const packages = [
-    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.jpg' },
-    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/Cheese Dog Bread Rolls.jpg' },
-    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.jpg' }
+    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp' },
+    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp' },
+    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp' }
   ];
 
   const getQty = (id: string) => packageQty[id] || 1;

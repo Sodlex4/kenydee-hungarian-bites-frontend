@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { Star, Zap, Heart } from 'lucide-react';
-import { prefersReducedMotion, getGsapDuration } from '../lib/motion';
+import { prefersReducedMotion } from '../lib/motion';
 
 const HeroSection = () => {
   useEffect(() => {
@@ -146,7 +146,7 @@ const HeroSection = () => {
             border: '1px solid hsl(var(--primary) / 0.3)'
           }}>
             <img
-              src="/image/Cheese Dog Bread Rolls.jpg"
+              src="/image/cheese-dog-bread-rolls.webp"
               alt="Premium Hungarian Hot Dog Rolls"
               className="w-56 h-56 object-cover rounded-full shadow-xl"
               onError={(e) => {

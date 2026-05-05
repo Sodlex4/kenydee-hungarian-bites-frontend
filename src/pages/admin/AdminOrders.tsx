@@ -14,47 +14,51 @@ const orders = [
   { id: '#1241', customer: 'Peter Kamau', items: '10 Hot Dog Rolls', amount: 'Ksh 650', date: '2024-03-12', status: 'Pending', method: 'M-Pesa' },
 ];
 
+const statusColors: Record<string, string> = {
+  Completed: 'bg-emerald-500/80 hover:bg-emerald-500',
+  Pending: 'bg-amber-500/80 hover:bg-amber-500',
+  Cancelled: 'bg-red-500/80 hover:bg-red-500',
+};
+
 const AdminOrders = () => {
   return (
     <AdminLayout title="Orders" description="Track and manage all incoming orders.">
-      <div className="backdrop-blur-sm border rounded-xl" style={{
+      <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
       }}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Items</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Payment</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{order.id}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{order.customer}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{order.items}</TableCell>
-                <TableCell className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{order.amount}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{order.date}</TableCell>
-                <TableCell style={{ color: 'hsl(var(--muted-foreground))' }}>{order.method}</TableCell>
-                <TableCell>
-                  <Badge className={
-                    order.status === 'Completed' ? 'bg-emerald-600 hover:bg-emerald-700' :
-                    order.status === 'Pending' ? 'bg-amber-600 hover:bg-amber-700' :
-                    'bg-red-600 hover:bg-red-700'
-                  }>
-                    {order.status}
-                  </Badge>
-                </TableCell>
+        <div className="overflow-x-auto" role="region" aria-label="Orders table">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead className="hidden sm:table-cell">Customer</TableHead>
+                <TableHead className="hidden md:table-cell">Items</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead className="hidden sm:table-cell">Date</TableHead>
+                <TableHead className="hidden lg:table-cell">Payment</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{order.id}</TableCell>
+                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.customer}</TableCell>
+                  <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.items}</TableCell>
+                  <TableCell className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{order.amount}</TableCell>
+                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.date}</TableCell>
+                  <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.method}</TableCell>
+                  <TableCell>
+                    <Badge className={statusColors[order.status]}>
+                      {order.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </AdminLayout>
   );

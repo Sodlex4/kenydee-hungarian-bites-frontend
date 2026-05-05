@@ -1,6 +1,7 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
 import AdminTopbar from './AdminTopbar';
+import { MobileSidebar } from './AdminSidebar';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -9,19 +10,26 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, description }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleLogout = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="flex min-h-screen" style={{ background: 'hsl(var(--background))' }}>
-      <AdminSidebar />
-      <div className="flex-1 flex flex-col">
-        <AdminTopbar />
-        <main className="flex-1 p-6">
-          <div className="mb-8">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style={{
+      <AdminSidebar onClose={() => setSidebarOpen(false)} onLogout={handleLogout} />
+      <MobileSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onLogout={handleLogout} />
+      <div className="flex-1 flex flex-col min-w-0">
+        <AdminTopbar onMenuToggle={() => setSidebarOpen(true)} />
+        <main className="flex-1 p-3 sm:p-4 md:p-6">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-1 md:mb-2 truncate" style={{
               color: 'hsl(var(--foreground))',
             }}>
               {title}
             </h1>
-            <p style={{ color: 'hsl(var(--muted-foreground))' }}>
+            <p className="text-xs sm:text-sm md:text-base truncate" style={{ color: 'hsl(var(--muted-foreground))' }}>
               {description}
             </p>
           </div>

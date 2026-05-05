@@ -12,15 +12,21 @@ import LoadingScreen from '../components/LoadingScreen';
 import { CartProvider } from '../context/CartContext';
 
 const Index = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !localStorage.getItem('has-visited');
+    }
+    return true;
+  });
 
   const handleLoadingDone = useCallback(() => {
+    localStorage.setItem('has-visited', 'true');
     setIsLoading(false);
   }, []);
 
   return (
     <CartProvider>
-      <div className="min-h-screen bg-gray-900 text-white">
+      <div className="min-h-screen" style={{ background: 'hsl(var(--background))' }}>
         {isLoading && <LoadingScreen onSkip={handleLoadingDone} />}
         <Header />
         <main>

@@ -2,9 +2,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Search, Bell, User, Sun, Moon } from 'lucide-react';
+import { Search, Bell, User, Sun, Moon, Menu, X } from 'lucide-react';
 
-const AdminTopbar = () => {
+interface AdminTopbarProps {
+  onMenuToggle: () => void;
+}
+
+const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
   const navigate = useNavigate();
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -13,6 +17,7 @@ const AdminTopbar = () => {
     return false;
   });
   const [showProfile, setShowProfile] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,62 +56,102 @@ const AdminTopbar = () => {
   };
 
   return (
-    <header className="h-16 backdrop-blur-sm border-b flex items-center justify-between px-6" style={{
+    <header className="h-14 sm:h-16 backdrop-blur-sm border-b flex items-center justify-between px-3 sm:px-6" style={{
       background: 'hsl(var(--background))',
       borderColor: 'hsl(var(--border))'
     }}>
-      <div className="flex items-center space-x-4 flex-1">
-        <div className="relative max-w-md w-full">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'hsl(var(--muted-foreground))' }} />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+      <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+        <button
+          onClick={onMenuToggle}
+          className="md:hidden p-2 rounded-lg transition-colors"
+          style={{ background: 'hsl(var(--muted))' }}
+          aria-label="Open sidebar menu"
+        >
+          <Menu className="w-5 h-5" style={{ color: 'hsl(var(--foreground))' }} />
+        </button>
+
+        {showSearch ? (
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'hsl(var(--muted-foreground))' }} />
+            <input
+              type="text"
+              placeholder="Search..."
+              autoFocus
+              className="w-full pl-10 pr-10 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm"
+              style={{
+                background: 'hsl(var(--input))',
+                borderColor: 'hsl(var(--border))',
+                color: 'hsl(var(--foreground))'
+              }}
+            />
+            <button
+              onClick={() => setShowSearch(false)}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded"
+              aria-label="Close search"
+            >
+              <X className="w-4 h-4" style={{ color: 'hsl(var(--muted-foreground))' }} />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowSearch(true)}
+            className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg border text-sm max-w-md w-full"
             style={{
               background: 'hsl(var(--input))',
               borderColor: 'hsl(var(--border))',
-              color: 'hsl(var(--foreground))'
+              color: 'hsl(var(--muted-foreground))'
             }}
-          />
-        </div>
+          >
+            <Search className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">Search...</span>
+          </button>
+        )}
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center gap-1 sm:gap-2">
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-lg transition-colors hover:scale-105"
+          className="p-2 rounded-lg transition-colors"
           style={{
             background: 'hsl(var(--muted))',
             color: 'hsl(var(--muted-foreground))'
           }}
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-          {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {isDark ? <Sun className="w-4 h-4 sm:w-5 sm:h-5" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
         </button>
 
-        <button className="relative p-2 rounded-lg transition-colors hover:scale-105" style={{
-          background: 'hsl(var(--muted))',
-          color: 'hsl(var(--muted-foreground))'
-        }}>
-          <Bell className="w-5 h-5" />
+        <Link
+          to="/admin/notifications"
+          className="relative p-2 rounded-lg transition-colors"
+          style={{
+            background: 'hsl(var(--muted))',
+            color: 'hsl(var(--muted-foreground))'
+          }}
+          aria-label="View notifications"
+        >
+          <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full text-xs flex items-center justify-center" style={{
             background: 'hsl(var(--destructive))',
             color: 'hsl(var(--destructive-foreground))'
           }}>
             3
           </span>
-        </button>
+        </Link>
 
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowProfile(!showProfile)}
-            className="flex items-center space-x-2 p-2 rounded-lg transition-colors hover:scale-105"
+            className="flex items-center gap-2 p-2 rounded-lg transition-colors"
             style={{
               background: 'hsl(var(--muted))',
               color: 'hsl(var(--muted-foreground))'
             }}
+            aria-label="User menu"
+            aria-expanded={showProfile}
           >
-            <User className="w-5 h-5" />
-            <span className="font-medium">Admin</span>
+            <User className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="font-medium hidden sm:inline text-sm">Admin</span>
           </button>
 
           {showProfile && (

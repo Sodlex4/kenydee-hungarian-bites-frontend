@@ -7,22 +7,12 @@ const sections = ['home', 'products', 'about', 'contact'];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const { cartItems, toggleCart, isCartOpen } = useCart();
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const firstMobileButtonRef = useRef<HTMLButtonElement>(null);
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -103,7 +93,7 @@ const Header = () => {
       className="fixed top-0 left-0 right-0 transition-all duration-300 backdrop-blur-xl"
       style={{
         zIndex: isCartOpen ? 50 : 40,
-        background: isScrolled ? 'hsl(var(--background) / 0.95)' : 'hsl(var(--background) / 0.6)',
+        background: 'hsl(var(--background) / 0.8)',
         borderBottom: '1px solid hsl(var(--primary) / 0.15)'
       }}
     >
