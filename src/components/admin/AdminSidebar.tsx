@@ -1,15 +1,16 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { 
-  LayoutDashboard, 
-  Users, 
-  ShoppingBag, 
-  Bell, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Users,
+  ShoppingBag,
+  Bell,
+  Settings,
   LogOut,
   Package,
-  X
+  X,
+  User
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -36,6 +37,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose, onLogout }
     { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
     { icon: Package, label: 'Products', path: '/admin/products' },
     { icon: Bell, label: 'Notifications', path: '/admin/notifications' },
+    { icon: User, label: 'Profile', path: '/admin/profile' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
   ];
 
@@ -117,6 +119,7 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, o
     { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
     { icon: Package, label: 'Products', path: '/admin/products' },
     { icon: Bell, label: 'Notifications', path: '/admin/notifications' },
+    { icon: User, label: 'Profile', path: '/admin/profile' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
   ];
 

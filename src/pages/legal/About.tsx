@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { Heart, Award, Users, MapPin } from 'lucide-react';
+import { Heart, Award, Users, MapPin, Mail, Phone } from 'lucide-react';
 
 const About = () => {
+  useEffect(() => {
+    document.title = 'About Us | Hungarian Bites';
+  }, []);
+
   const values = [
     {
       icon: Heart,
@@ -28,14 +32,14 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-black">
+    <div className="min-h-screen">
       <Header />
-      
+
       <main className="pt-24 pb-16 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold mb-6" style={{ 
+            <h1 className="text-5xl font-bold mb-6" style={{
               color: 'hsl(var(--foreground))',
               fontFamily: 'Pacifico, cursive'
             }}>
@@ -52,7 +56,7 @@ const About = () => {
               background: 'hsl(var(--card))',
               borderColor: 'hsl(var(--border))'
             }}>
-              <h2 className="text-3xl font-semibold mb-6" style={{ 
+              <h2 className="text-3xl font-semibold mb-6" style={{
                 color: 'hsl(var(--accent))',
                 fontFamily: 'Pacifico, cursive'
               }}>
@@ -60,12 +64,12 @@ const About = () => {
               </h2>
               <div className="space-y-4" style={{ color: 'hsl(var(--foreground))' }}>
                 <p className="leading-relaxed">
-                  It all started with a simple dream: to bring the incredible flavors of Hungarian street food to our beloved 
-                  community in Murang'a. Having traveled and experienced the authentic taste of Hungarian hot dog rolls, 
+                  It all started with a simple dream: to bring the incredible flavors of Hungarian street food to our beloved
+                  community in Murang'a. Having traveled and experienced the authentic taste of Hungarian hot dog rolls,
                   we knew we had to share this culinary delight with our neighbors.
                 </p>
                 <p className="leading-relaxed">
-                  What began as a small family venture has grown into a local favorite, serving fresh, high-quality Hungarian 
+                  What began as a small family venture has grown into a local favorite, serving fresh, high-quality Hungarian
                   Hot Dog Rolls that combine traditional European flavors with locally-sourced ingredients.
                 </p>
               </div>
@@ -75,7 +79,7 @@ const About = () => {
               background: 'hsl(var(--card))',
               borderColor: 'hsl(var(--border))'
             }}>
-              <h2 className="text-3xl font-semibold mb-6" style={{ 
+              <h2 className="text-3xl font-semibold mb-6" style={{
                 color: 'hsl(var(--accent))',
                 fontFamily: 'Pacifico, cursive'
               }}>
@@ -83,11 +87,11 @@ const About = () => {
               </h2>
               <div className="space-y-4" style={{ color: 'hsl(var(--foreground))' }}>
                 <p className="leading-relaxed">
-                  Our mission is simple: to serve the most delicious, authentic Hungarian Hot Dog Rolls in Murang'a while 
+                  Our mission is simple: to serve the most delicious, authentic Hungarian Hot Dog Rolls in Murang'a while
                   building lasting relationships with our community. We believe that great food brings people together.
                 </p>
                 <p className="leading-relaxed">
-                  Every roll we make is a testament to our commitment to quality, authenticity, and the satisfaction of 
+                  Every roll we make is a testament to our commitment to quality, authenticity, and the satisfaction of
                   our customers. We source the finest ingredients and use time-tested recipes to ensure every bite is perfect.
                 </p>
               </div>
@@ -96,7 +100,7 @@ const About = () => {
 
           {/* Values Section */}
           <div className="mb-16">
-            <h2 className="text-4xl font-bold text-center mb-12" style={{ 
+            <h2 className="text-4xl font-bold text-center mb-12" style={{
               color: 'hsl(var(--foreground))',
               fontFamily: 'Pacifico, cursive'
             }}>
@@ -112,7 +116,7 @@ const About = () => {
                     borderColor: 'hsl(var(--border))'
                   }}
                 >
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
                     style={{ background: 'hsl(var(--accent) / 0.2)' }}
                   >
@@ -130,31 +134,83 @@ const About = () => {
           </div>
 
           {/* Team Section */}
-          <div className="backdrop-blur-sm rounded-2xl p-8 border text-center" style={{
+          <div className="backdrop-blur-sm rounded-2xl p-8 border text-center mb-16" style={{
             background: 'hsl(var(--card))',
             borderColor: 'hsl(var(--border))'
           }}>
-            <h2 className="text-4xl font-bold mb-6" style={{ 
+            <h2 className="text-4xl font-bold mb-6" style={{
               color: 'hsl(var(--accent))',
               fontFamily: 'Pacifico, cursive'
             }}>
               Meet the Team
             </h2>
             <p className="text-lg max-w-3xl mx-auto leading-relaxed" style={{ color: 'hsl(var(--foreground))' }}>
-              Our dedicated team of food enthusiasts works tirelessly to ensure every Hungarian Hot Dog Roll meets our 
-              high standards. From our skilled chefs to our friendly delivery team, everyone plays a crucial role in 
+              Our dedicated team of food enthusiasts works tirelessly to ensure every Hungarian Hot Dog Roll meets our
+              high standards. From our skilled chefs to our friendly delivery team, everyone plays a crucial role in
               bringing you the best dining experience in Murang'a.
             </p>
             <div className="mt-8">
-              <button 
-                className="px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105"
-                  style={{
-                    background: 'var(--gradient-primary)',
-                    color: 'white'
-                  }}
+              <a
+                href="mailto:orders@hungarianbites.co.ke"
+                className="inline-block px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105"
+                style={{
+                  background: 'var(--gradient-primary)',
+                  color: 'white'
+                }}
               >
                 Join Our Team
-              </button>
+              </a>
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="grid sm:grid-cols-3 gap-6">
+            <a
+              href="mailto:orders@hungarianbites.co.ke"
+              className="flex items-center gap-3 p-6 rounded-2xl border transition-colors hover:scale-105"
+              style={{
+                background: 'hsl(var(--card))',
+                borderColor: 'hsl(var(--border))'
+              }}
+            >
+              <Mail className="w-6 h-6 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
+              <div className="text-left">
+                <p className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>Email Us</p>
+                <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  orders@hungarianbites.co.ke
+                </p>
+              </div>
+            </a>
+            <a
+              href="tel:+254759233065"
+              className="flex items-center gap-3 p-6 rounded-2xl border transition-colors hover:scale-105"
+              style={{
+                background: 'hsl(var(--card))',
+                borderColor: 'hsl(var(--border))'
+              }}
+            >
+              <Phone className="w-6 h-6 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
+              <div className="text-left">
+                <p className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>Call Us</p>
+                <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  +254 759 233 065
+                </p>
+              </div>
+            </a>
+            <div
+              className="flex items-center gap-3 p-6 rounded-2xl border"
+              style={{
+                background: 'hsl(var(--card))',
+                borderColor: 'hsl(var(--border))'
+              }}
+            >
+              <MapPin className="w-6 h-6 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
+              <div className="text-left">
+                <p className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>Visit Us</p>
+                <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  Murang'a, Kenya
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -2,7 +2,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Search, Bell, User, Sun, Moon, Menu, X } from 'lucide-react';
+import { Search, Bell, Sun, Moon, Menu, X } from 'lucide-react';
+import { useAdminProfile } from '@/context/AdminProfileContext';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface AdminTopbarProps {
   onMenuToggle: () => void;
@@ -10,6 +12,7 @@ interface AdminTopbarProps {
 
 const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
   const navigate = useNavigate();
+  const { profile, updateProfile } = useAdminProfile();
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('admin-theme') === 'dark';
@@ -52,7 +55,16 @@ const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
 
   const handleViewProfile = () => {
     setShowProfile(false);
-    toast.info('Coming soon');
+    navigate('/admin/profile');
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
@@ -150,8 +162,16 @@ const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
             aria-label="User menu"
             aria-expanded={showProfile}
           >
-            <User className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="font-medium hidden sm:inline text-sm">Admin</span>
+            <Avatar className="h-6 w-6 sm:h-7 sm:w-7">
+              <AvatarImage src={profile.avatar} alt={profile.name} />
+              <AvatarFallback className="text-xs" style={{
+                background: 'var(--gradient-primary)',
+                color: 'white'
+              }}>
+                {getInitials(profile.name)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="font-medium hidden sm:inline text-sm">{profile.name}</span>
           </button>
 
           {showProfile && (
