@@ -1,6 +1,7 @@
 import React from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import DashboardCards from '../../components/admin/DashboardCards';
+import RevenueChart from '../../components/admin/RevenueChart';
 import NotificationPanel from '../../components/admin/NotificationPanel';
 
 const AdminDashboard = () => {
@@ -8,6 +9,8 @@ const AdminDashboard = () => {
     <AdminLayout title="Dashboard Overview" description="Welcome back! Here's what's happening with your Hungarian Hot Dog business in Murang'a.">
       <div className="space-y-8">
         <DashboardCards />
+
+        <RevenueChart />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <NotificationPanel />
