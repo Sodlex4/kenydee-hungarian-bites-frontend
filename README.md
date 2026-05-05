@@ -1,73 +1,166 @@
-# Welcome to your Lovable project
+# Kenydee Hungarian Bites Frontend
 
-## Project info
+**URL**: https://hungarianbites.co.ke
+**Status**: Frontend-only (no backend/database yet)
 
-**URL**: https://lovable.dev/projects/52d2dd9b-2b4c-44c7-b945-18f85ec98192
+A single-page e-commerce site for **Kenydee Hungarian Bites** — a Kenyan food business selling authentic Hungarian Hot Dog Rolls. Customers browse, add to cart, and check out via WhatsApp. An admin dashboard provides mock analytics for revenue, orders, customers, and product management.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+### Customer-Facing
+- **Product ordering** — 3 package tiers (5, 10, 20 pieces) with per-piece pricing
+- **Shopping cart** — slide-in drawer with quantity controls, line subtotals, localStorage persistence
+- **WhatsApp checkout** — auto-generates pre-filled order message to `+254759233065`
+- **Quick-order button** — bypass cart and message directly via WhatsApp
+- **Responsive design** — mobile-first, dark theme with pink/purple/indigo palette
+- **GSAP loading screen** — animated intro with skip button
+- **Legal pages** — Terms, Privacy, About
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/52d2dd9b-2b4c-44c7-b945-18f85ec98192) and start prompting.
+### Admin Dashboard
+- **Overview** — KPI cards (revenue, orders, customers, products) + weekly revenue chart (Recharts AreaChart)
+- **Customers** — data table with mock customer records
+- **Orders** — order tracking table with status badges
+- **Products** — product listing table
+- **Notifications** — notification management
+- **Settings** — theme toggle (persisted), profile dropdown with logout
+- **6 sub-routes**: `/admin`, `/admin/customers`, `/admin/orders`, `/admin/products`, `/admin/notifications`, `/admin/settings`
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+| Category | Technology |
+|---|---|
+| Framework | React 18 + TypeScript |
+| Build | Vite 5 |
+| Styling | Tailwind CSS 3 |
+| UI Components | shadcn/ui (Radix UI primitives) |
+| Routing | React Router DOM 6 |
+| State | React Context (cart) |
+| Animations | GSAP 3 |
+| Charts | Recharts 2 |
+| Notifications | Sonner |
+| Icons | Lucide React |
+| Deployment | Vercel |
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Getting Started
 
+### Prerequisites
+- Node.js 18+ and npm
+
+### Install & Run
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+git clone https://github.com/Sodlex4/kenydee-hungarian-bites-frontend.git
+cd kenydee-hungarian-bites-frontend
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The dev server starts at `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build for Production
+```sh
+npm run build
+npm run preview
+```
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Environment Variables
 
-## What technologies are used for this project?
+Copy `.env.example` to `.env` and fill in the values:
 
-This project is built with:
+```env
+VITE_WHATSAPP_NUMBER=254759233065
+VITE_CONTACT_EMAIL=orders@hungarianbites.co.ke
+VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+VITE_SITE_URL=https://hungarianbites.co.ke
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+| Variable | Description |
+|---|---|
+| `VITE_WHATSAPP_NUMBER` | WhatsApp number for checkout (international format, no `+` or spaces) |
+| `VITE_CONTACT_EMAIL` | Contact email shown in footer/legal pages |
+| `VITE_GA_MEASUREMENT_ID` | Google Analytics measurement ID (leave empty to disable) |
+| `VITE_SITE_URL` | Canonical site URL for OpenGraph/meta tags |
 
-## How can I deploy this project?
+> **Note:** Currently these values are hardcoded in the source. The migration to `import.meta.env` is on the roadmap.
 
-Simply open [Lovable](https://lovable.dev/projects/52d2dd9b-2b4c-44c7-b945-18f85ec98192) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## Project Structure
 
-Yes, you can!
+```
+src/
+├── components/
+│   ├── ui/              # 40+ shadcn/ui primitives (button, card, table, dialog, etc.)
+│   ├── admin/           # Admin dashboard layout, sidebar, topbar, charts, data tables
+│   ├── Cart.tsx         # Slide-in cart drawer with WhatsApp checkout
+│   ├── Header.tsx       # Fixed nav with cart badge + mobile menu
+│   ├── Footer.tsx       # Contact info, social links, business hours
+│   ├── HeroSection.tsx  # Landing hero with GSAP animations
+│   ├── AboutSection.tsx # Business story
+│   ├── FeaturesSection.tsx
+│   ├── TestimonialsSection.tsx
+│   ├── OrderSection.tsx # Product packages + Add to Cart / WhatsApp buttons
+│   └── LoadingScreen.tsx
+├── context/
+│   └── CartContext.tsx  # Cart state, localStorage persistence, body scroll lock
+├── pages/
+│   ├── admin/           # 6 admin route pages
+│   ├── legal/           # Terms, Privacy, About
+│   ├── Index.tsx        # Main landing (assembles all public sections)
+│   └── NotFound.tsx     # Themed 404 page
+├── hooks/               # use-mobile, use-toast
+├── lib/                 # Utility functions (cn helper)
+├── types/               # Global type declarations (gtag, vite-env)
+├── App.tsx              # Route definitions
+├── index.css            # CSS variables, theme, animations
+└── main.tsx             # Entry point
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Deployment
+
+### Vercel
+```sh
+vercel --prod
+```
+
+SPA routing is handled by `vercel.json` which rewrites all paths to `index.html`.
+
+### Custom Domain
+Configure via **Project > Settings > Domains** on Vercel, or see the [Vercel docs](https://vercel.com/docs/custom-domains).
+
+---
+
+## Known Limitations
+
+- **No backend** — all admin data is mock/localStorage. No database, no API.
+- **No authentication** — `/admin/*` routes are publicly accessible.
+- **Hardcoded config** — WhatsApp number, emails, and URLs are inline in source (not using `import.meta.env`).
+- **No tests** — zero test coverage.
+- **No CI/CD** — no pre-commit hooks, no GitHub Actions.
+
+---
+
+## Roadmap
+
+- [ ] Backend integration (Node.js/Express or serverless functions)
+- [ ] Database (PostgreSQL/Supabase) for orders, customers, products
+- [ ] Admin authentication (login page, route guards)
+- [ ] M-Pesa / Stripe payment integration
+- [ ] Migrate hardcoded config to environment variables
+- [ ] Add tests (Vitest + React Testing Library)
+- [ ] CI/CD pipeline (GitHub Actions)
+- [ ] Error boundaries and loading states for data fetching
+- [ ] SEO improvements (sitemap, robots.txt, structured data)
+
+---
+
+Made by [Sodlex](https://github.com/Sodlex4) for **Kenydee Hungarian Bites**
