@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
+import { prefersReducedMotion } from '../lib/motion';
 
 interface LoadingScreenProps {
   onSkip: () => void;
@@ -11,6 +12,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
 
   useEffect(() => {
     const enableSkipTimer = setTimeout(() => setCanSkip(true), 800);
+
+    if (prefersReducedMotion()) {
+      onSkip();
+      return () => clearTimeout(enableSkipTimer);
+    }
 
     const tl = gsap.timeline();
 

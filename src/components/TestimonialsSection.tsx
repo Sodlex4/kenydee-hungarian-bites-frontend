@@ -3,9 +3,12 @@ import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Star, Quote } from 'lucide-react';
+import { prefersReducedMotion } from '../lib/motion';
 
 const TestimonialsSection = () => {
   useEffect(() => {
+    if (prefersReducedMotion()) return;
+
     gsap.fromTo(".testimonial-card",
       { y: 50, opacity: 0, rotation: -5 },
       {
@@ -112,7 +115,10 @@ const TestimonialsSection = () => {
                       src={testimonial.image}
                       alt={testimonial.author}
                       className="w-20 h-20 rounded-full mx-auto mb-3 border-2 object-cover"
-                      style={{ borderColor: 'hsl(var(--primary))', borderRadius: '50%' }}
+                      style={{ borderColor: 'hsl(var(--primary))' }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/placeholder.svg';
+                      }}
                     />
                   )}
                   <h4 className="text-xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" style={{ fontFamily: 'Pacifico, cursive' }}>

@@ -90,7 +90,7 @@ const Footer = () => {
               {[
                 { label: 'Home', id: 'home' },
                 { label: 'Products', id: 'products' },
-                { label: 'About Us', href: '/legal/about' },
+                { label: 'About Us', id: 'about' },
                 { label: 'Privacy Policy', href: '/legal/privacy' },
                 { label: 'Terms of Service', href: '/legal/terms' }
               ].map((link, index) => (

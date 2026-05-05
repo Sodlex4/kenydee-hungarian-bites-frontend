@@ -3,9 +3,12 @@ import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Users, Clock, Award } from 'lucide-react';
+import { prefersReducedMotion } from '../lib/motion';
 
 const AboutSection = () => {
   useEffect(() => {
+    if (prefersReducedMotion()) return;
+
     gsap.fromTo(".about-content",
       { y: 50, opacity: 0 },
       {
@@ -91,6 +94,9 @@ const AboutSection = () => {
                   src="/image/hotdog.jpg"
                   alt="Hungarian Bites kitchen preparation"
                   className="w-full h-96 object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/placeholder.svg';
+                  }}
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--accent) / 0.3))' }}></div>
 

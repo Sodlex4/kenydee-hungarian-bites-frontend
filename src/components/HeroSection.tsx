@@ -2,9 +2,12 @@
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { Star, Zap, Heart } from 'lucide-react';
+import { prefersReducedMotion, getGsapDuration } from '../lib/motion';
 
 const HeroSection = () => {
   useEffect(() => {
+    if (prefersReducedMotion()) return;
+
     const tl = gsap.timeline({ delay: 3.5 });
 
     tl.from(".hero-content > *", {
@@ -144,6 +147,9 @@ const HeroSection = () => {
               src="/image/Cheese Dog Bread Rolls.jpg"
               alt="Premium Hungarian Hot Dog Rolls"
               className="w-56 h-56 object-cover rounded-full shadow-xl"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
             />
           </div>
 

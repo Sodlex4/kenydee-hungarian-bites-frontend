@@ -2,17 +2,27 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
-import { Sparkles, MessageCircle } from 'lucide-react';
+import { Sparkles, MessageCircle, Plus, Minus } from 'lucide-react';
 
 const OrderSection = () => {
   const [selectedQuantity, setSelectedQuantity] = useState('');
-  const { addToCartAndOpen, closeCart } = useCart();
+  const [packageQty, setPackageQty] = useState<{ [key: string]: number }>({});
+  const { addToCartAndOpen } = useCart();
 
   const packages = [
     { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.jpg' },
     { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/Cheese Dog Bread Rolls.jpg' },
     { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.jpg' }
   ];
+
+  const getQty = (id: string) => packageQty[id] || 1;
+
+  const handleQtyChange = (id: string, delta: number) => {
+    setPackageQty(prev => ({
+      ...prev,
+      [id]: Math.max(1, Math.min(50, (prev[id] || 1) + delta))
+    }));
+  };
 
   const handleAddToCart = () => {
     if (!selectedQuantity) {
@@ -22,25 +32,26 @@ const OrderSection = () => {
 
     const selectedPackage = packages.find(pkg => pkg.id === selectedQuantity);
     if (selectedPackage) {
+      const qty = getQty(selectedPackage.id);
       addToCartAndOpen({
         id: selectedPackage.id,
         name: `Hungarian Hot Dog Rolls - ${selectedPackage.label}`,
         price: selectedPackage.price,
-        quantity: 1,
+        quantity: qty,
         image: selectedPackage.image
       });
 
-      toast.success(`Added ${selectedPackage.label} to cart!`);
+      toast.success(`Added ${qty}x ${selectedPackage.label} to cart!`);
 
       if (typeof window !== 'undefined' && typeof gtag !== 'undefined') {
         gtag('event', 'add_to_cart', {
           currency: 'KES',
-          value: selectedPackage.price,
+          value: selectedPackage.price * qty,
           items: [{
             item_id: selectedPackage.id,
             item_name: selectedPackage.label,
             price: selectedPackage.price,
-            quantity: 1
+            quantity: qty
           }]
         });
       }
@@ -89,6 +100,9 @@ const OrderSection = () => {
                   selectedQuantity === pkg.id ? 'scale-105' : ''
                 }`}
                 onClick={() => setSelectedQuantity(pkg.id)}
+                role="radio"
+                aria-checked={selectedQuantity === pkg.id}
+                aria-label={`${pkg.label} - Ksh ${pkg.price}`}
               >
                 {pkg.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
@@ -127,6 +141,9 @@ const OrderSection = () => {
                       src={pkg.image}
                       alt={pkg.label}
                       className="w-full h-32 object-cover rounded-xl mb-4"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/placeholder.svg';
+                      }}
                     />
                     <h3 className="text-2xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>{pkg.label}</h3>
 
@@ -144,6 +161,30 @@ const OrderSection = () => {
                     <div className="text-sm mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>
                       Ksh {Math.round(pkg.price / parseInt(pkg.label))} per piece
                     </div>
+
+                    {selectedQuantity === pkg.id && (
+                      <div className="flex items-center justify-center gap-3 mb-4" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={() => handleQtyChange(pkg.id, -1)}
+                          className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
+                          style={{ background: 'hsl(var(--muted))' }}
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
+                        </button>
+                        <span className="font-semibold w-8 text-center text-sm" style={{ color: 'hsl(var(--foreground))' }}>
+                          {getQty(pkg.id)}
+                        </span>
+                        <button
+                          onClick={() => handleQtyChange(pkg.id, 1)}
+                          className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
+                          style={{ background: 'hsl(var(--muted))' }}
+                          aria-label="Increase quantity"
+                        >
+                          <Plus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
+                        </button>
+                      </div>
+                    )}
 
                     <div className={`w-6 h-6 rounded-full mx-auto transition-all duration-300 ${
                       selectedQuantity === pkg.id

@@ -3,9 +3,12 @@ import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Crown, Sparkles, Shield } from 'lucide-react';
+import { prefersReducedMotion } from '../lib/motion';
 
 const FeaturesSection = () => {
   useEffect(() => {
+    if (prefersReducedMotion()) return;
+
     gsap.fromTo(".feature-card",
       { y: 50, opacity: 0, scale: 0.9 },
       {

@@ -37,19 +37,20 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <div 
+        <button
           className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform"
           onClick={() => scrollToSection('home')}
           style={{
             fontFamily: 'Pacifico, cursive',
             backgroundImage: 'var(--gradient-primary)'
           }}
+          aria-label="Go to top"
         >
           HUNGARIAN BITES
-        </div>
+        </button>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center space-x-8" aria-label="Main navigation">
           {[
             { label: 'Home', id: 'home' },
             { label: 'Products', id: 'products' },
@@ -63,6 +64,7 @@ const Header = () => {
               style={{ color: 'hsl(var(--primary))' }}
               onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--primary-light, var(--primary)))'}
               onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--primary))'}
+              aria-label={`Navigate to ${item.label}`}
             >
               {item.label}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full" style={{
@@ -84,6 +86,7 @@ const Header = () => {
             }}
             onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.3)'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.2)'}
+            aria-label={`Shopping cart, ${totalItems} items`}
           >
             <ShoppingCart className="w-6 h-6" style={{ color: 'hsl(var(--primary))' }} />
             {totalItems > 0 && (
@@ -106,6 +109,8 @@ const Header = () => {
             }}
             onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.3)'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'hsl(var(--primary) / 0.2)'}
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? (
               <X className="w-6 h-6" style={{ color: 'hsl(var(--primary))' }} />
@@ -116,33 +121,34 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <nav className="md:hidden backdrop-blur-xl" style={{
-          background: 'hsl(var(--background) / 0.95)',
-          borderTop: '1px solid hsl(var(--primary) / 0.2)'
-        }}>
-          <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
-            {[
-              { label: 'Home', id: 'home' },
-              { label: 'Products', id: 'products' },
-              { label: 'About', id: 'about' },
-              { label: 'Contact', id: 'contact' }
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="transition-colors text-left py-2 text-lg font-medium"
-                style={{ color: 'hsl(var(--primary))' }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--primary-light, var(--primary)))'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--primary))'}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </nav>
-      )}
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <nav className="md:hidden backdrop-blur-xl" style={{
+            background: 'hsl(var(--background) / 0.95)',
+            borderTop: '1px solid hsl(var(--primary) / 0.2)'
+          }} aria-label="Mobile navigation">
+            <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
+              {[
+                { label: 'Home', id: 'home' },
+                { label: 'Products', id: 'products' },
+                { label: 'About', id: 'about' },
+                { label: 'Contact', id: 'contact' }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className="transition-colors text-left py-2 text-lg font-medium"
+                  style={{ color: 'hsl(var(--primary))' }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--primary-light, var(--primary)))'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--primary))'}
+                  aria-label={`Navigate to ${item.label}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </nav>
+        )}
     </header>
   );
 };
