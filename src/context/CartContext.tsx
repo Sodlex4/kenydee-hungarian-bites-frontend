@@ -15,6 +15,7 @@ interface CartContextType {
   addToCart: (item: CartItem) => void;
   addToCartAndOpen: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
+  undoRemove: () => void;
   updateQuantity: (id: string, quantity: number) => void;
   toggleCart: () => void;
   closeCart: () => void;
@@ -48,6 +49,7 @@ const loadCartFromStorage = (): CartItem[] => {
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(loadCartFromStorage);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const lastRemovedItemRef = React.useRef<CartItem | null>(null);
 
   useEffect(() => {
     if (isCartOpen) {
@@ -95,9 +97,34 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const removeFromCart = (id: string) => {
     setCartItems(prevItems => {
+      const removedItem = prevItems.find(item => item.id === id);
+      if (removedItem) {
+        lastRemovedItemRef.current = removedItem;
+      }
       const updated = prevItems.filter(item => item.id !== id);
       persistCart(updated);
+      return updated;
     });
+  };
+
+  const undoRemove = () => {
+    if (lastRemovedItemRef.current) {
+      const item = lastRemovedItemRef.current;
+      setCartItems(prevItems => {
+        const existing = prevItems.find(i => i.id === item.id);
+        if (existing) {
+          const updated = prevItems.map(i =>
+            i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+          );
+          persistCart(updated);
+          return updated;
+        }
+        const updated = [...prevItems, item];
+        persistCart(updated);
+        return updated;
+      });
+      lastRemovedItemRef.current = null;
+    }
   };
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -128,6 +155,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     addToCart,
     addToCartAndOpen,
     removeFromCart,
+    undoRemove,
     updateQuantity,
     toggleCart,
     closeCart,

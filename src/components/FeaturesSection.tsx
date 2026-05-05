@@ -54,7 +54,9 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section id="products" className="features-section py-20 bg-gradient-to-b from-purple-900 via-indigo-900 to-pink-900 relative">
+    <section id="products" className="features-section py-20 relative" style={{
+      background: 'linear-gradient(to bottom, hsl(270 70% 20%), hsl(230 70% 20%), hsl(330 80% 20%))'
+    }}>
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,hsl(var(--accent)_/_0.4),transparent_70%)]"></div>
       </div>
@@ -62,7 +64,7 @@ const FeaturesSection = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
-            Why Choose Our <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Masterpiece</span>
+            Why Choose Our <span style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Masterpiece</span>
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
             Experience the perfect harmony of traditional Hungarian recipes and modern culinary innovation.

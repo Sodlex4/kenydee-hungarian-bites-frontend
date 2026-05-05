@@ -40,7 +40,9 @@ const AboutSection = () => {
   }, []);
 
   return (
-    <section id="about" className="about-section py-20 bg-gradient-to-b from-pink-900 via-purple-900 to-indigo-900 relative">
+    <section id="about" className="about-section py-20 relative" style={{
+      background: 'linear-gradient(to bottom, hsl(330 80% 20%), hsl(270 70% 20%), hsl(230 70% 20%))'
+    }}>
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,hsl(var(--primary)_/_0.3),transparent_50%),radial-gradient(circle_at_75%_75%,hsl(var(--accent)_/_0.3),transparent_50%)]"></div>
       </div>
@@ -50,7 +52,7 @@ const AboutSection = () => {
 
           <div className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
-              About <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Hungarian Bites</span>
+              About <span style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Hungarian Bites</span>
             </h2>
             <div className="w-24 h-1 mx-auto mb-8" style={{ background: 'var(--gradient-primary)' }}></div>
             <p className="text-xl leading-relaxed max-w-3xl mx-auto" style={{ color: 'hsl(var(--muted-foreground))' }}>
@@ -133,7 +135,7 @@ const AboutSection = () => {
                     <stat.icon className="w-8 h-8 text-white" />
                   </div>
 
-                  <div className="text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                  <div className="text-4xl font-bold mb-2" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {stat.number}
                   </div>
 

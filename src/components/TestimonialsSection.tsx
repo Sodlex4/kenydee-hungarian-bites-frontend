@@ -52,12 +52,14 @@ const TestimonialsSection = () => {
       text: "The quality is outstanding and the flavors are authentic. Hungarian Bites never fails to impress!",
       author: "Mc Wizzy",
       rating: 5,
-      image: "/image/Mc Wizzy.jpg"
+      image: "/image/mc-wizzy.webp"
     }
   ];
 
   return (
-    <section id="testimonials" className="testimonials-section py-20 bg-gradient-to-br from-purple-900 via-pink-900 to-indigo-900 relative overflow-hidden">
+    <section id="testimonials" className="testimonials-section py-20 relative overflow-hidden" style={{
+      background: 'linear-gradient(135deg, hsl(270 70% 20%), hsl(330 80% 20%), hsl(230 70% 20%))'
+    }}>
 
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--primary) / 0.1)' }}></div>
@@ -121,7 +123,7 @@ const TestimonialsSection = () => {
                       }}
                     />
                   )}
-                  <h4 className="text-xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent" style={{ fontFamily: 'Pacifico, cursive' }}>
+                  <h4 className="text-xl font-bold" style={{ fontFamily: 'Pacifico, cursive', backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {testimonial.author}
                   </h4>
                   <div className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Verified Customer</div>
@@ -142,7 +144,7 @@ const TestimonialsSection = () => {
             <p className="text-lg mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>Join our community of satisfied customers</p>
             <div className="flex justify-center items-center space-x-2" style={{ color: 'hsl(var(--primary))' }}>
               <Star className="w-5 h-5 fill-current" />
-              <span className="text-2xl font-bold">4.9/5</span>
+              <span className="text-2xl font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>4.9/5</span>
               <span className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>average rating</span>
             </div>
           </div>

@@ -65,7 +65,9 @@ const OrderSection = () => {
   };
 
   return (
-    <section id="order" className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
+    <section id="order" className="py-20 relative overflow-hidden" style={{
+      background: 'linear-gradient(135deg, hsl(230 70% 20%), hsl(270 70% 20%), hsl(330 80% 20%))'
+    }}>
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--primary) / 0.1)' }}></div>
         <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--accent) / 0.1)' }}></div>
@@ -83,7 +85,7 @@ const OrderSection = () => {
         </div>
 
         <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
-          Ready to <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Experience</span> Perfection?
+          Ready to <span style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Experience</span> Perfection?
         </h2>
 
         <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
@@ -148,7 +150,7 @@ const OrderSection = () => {
                     <h3 className="text-2xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>{pkg.label}</h3>
 
                     <div className="mb-6">
-                      <div className="text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                      <div className="text-4xl font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                         Ksh {pkg.price}
                       </div>
                       {pkg.originalPrice !== pkg.price && (

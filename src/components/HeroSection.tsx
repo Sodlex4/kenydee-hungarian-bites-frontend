@@ -57,7 +57,9 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center pt-20 bg-gradient-to-b from-pink-900 via-purple-900 to-indigo-900 relative overflow-hidden">
+    <section id="home" className="min-h-screen flex items-center pt-20 relative overflow-hidden" style={{
+      background: 'linear-gradient(to bottom, hsl(330 80% 20%), hsl(270 70% 20%), hsl(230 70% 20%))'
+    }}>
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'hsl(var(--primary) / 0.1)' }}></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'hsl(var(--accent) / 0.15)' }}></div>

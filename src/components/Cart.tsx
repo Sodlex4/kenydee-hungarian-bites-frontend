@@ -1,11 +1,11 @@
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import { X, Plus, Minus, ShoppingCart, MessageCircle } from 'lucide-react';
+import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
 const Cart = () => {
-  const { cartItems, isCartOpen, toggleCart, closeCart, updateQuantity, removeFromCart } = useCart();
+  const { cartItems, isCartOpen, toggleCart, closeCart, updateQuantity, removeFromCart, undoRemove } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
   const isPointerReady = useRef(false);
@@ -33,16 +33,28 @@ const Cart = () => {
   };
 
   const handleRemove = useCallback((id: string, name: string) => {
-    toast.info(`Removed ${name}`);
     removeFromCart(id);
-  }, [removeFromCart]);
+    toast.info(`Removed ${name}`, {
+      action: {
+        label: <><Undo2 className="w-3 h-3" /> Undo</>,
+        onClick: () => undoRemove()
+      }
+    });
+  }, [removeFromCart, undoRemove]);
 
   const handleDecrease = useCallback((id: string, currentQty: number) => {
     if (currentQty <= 1) {
-      toast.info('Item removed from cart');
+      removeFromCart(id);
+      toast.info('Item removed from cart', {
+        action: {
+          label: <><Undo2 className="w-3 h-3" /> Undo</>,
+          onClick: () => undoRemove()
+        }
+      });
+      return;
     }
     updateQuantity(id, currentQty - 1);
-  }, [updateQuantity]);
+  }, [updateQuantity, removeFromCart, undoRemove]);
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {

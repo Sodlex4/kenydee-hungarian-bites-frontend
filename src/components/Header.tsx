@@ -1,12 +1,17 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+
+const sections = ['home', 'products', 'about', 'contact'];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   const { cartItems, toggleCart, isCartOpen } = useCart();
+  const mobileNavRef = useRef<HTMLDivElement>(null);
+  const firstMobileButtonRef = useRef<HTMLButtonElement>(null);
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -15,9 +20,69 @@ const Header = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(id);
+            }
+          });
+        },
+        { rootMargin: '-20% 0px -70% 0px' }
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => {
+      observers.forEach((o) => o.disconnect());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMenuOpen(false);
+    };
+
+    const trapFocus = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !mobileNavRef.current) return;
+
+      const focusable = mobileNavRef.current.querySelectorAll('button');
+      if (focusable.length === 0) return;
+
+      const first = focusable[0] as HTMLElement;
+      const last = focusable[focusable.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', trapFocus);
+    firstMobileButtonRef.current?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', trapFocus);
+    };
+  }, [isMenuOpen]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -26,6 +91,12 @@ const Header = () => {
     }
     setIsMenuOpen(false);
   };
+
+  const navButtons = sections.map((item, i) => ({
+    label: item.charAt(0).toUpperCase() + item.slice(1),
+    id: item,
+    ref: i === 0 ? firstMobileButtonRef : undefined
+  }));
 
   return (
     <header
@@ -61,16 +132,24 @@ const Header = () => {
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="transition-colors duration-300 relative group font-medium"
-              style={{ color: 'hsl(var(--primary))' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--primary-light, var(--primary)))'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--primary))'}
+              className={`transition-all duration-300 relative group font-medium ${
+                activeSection === item.id ? 'font-semibold' : ''
+              }`}
+              style={{ color: activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--foreground))'}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))';
+              }}
               aria-label={`Navigate to ${item.label}`}
+              aria-current={activeSection === item.id ? 'page' : undefined}
             >
               {item.label}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full" style={{
-                background: 'var(--gradient-primary)'
-              }}></span>
+              <span
+                className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+                  activeSection === item.id ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}
+                style={{ background: 'var(--gradient-primary)' }}
+              ></span>
             </button>
           ))}
         </nav>
@@ -138,25 +217,30 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <nav className="md:hidden" style={{
-          background: 'hsl(var(--background) / 0.98)',
-          borderTop: '1px solid hsl(var(--primary) / 0.2)'
-        }} aria-label="Mobile navigation">
+        <nav
+          ref={mobileNavRef}
+          className="md:hidden"
+          style={{
+            background: 'hsl(var(--background) / 0.98)',
+            borderTop: '1px solid hsl(var(--primary) / 0.2)'
+          }}
+          aria-label="Mobile navigation"
+        >
           <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
-            {[
-              { label: 'Home', id: 'home' },
-              { label: 'Products', id: 'products' },
-              { label: 'About', id: 'about' },
-              { label: 'Contact', id: 'contact' }
-            ].map((item) => (
+            {navButtons.map((item) => (
               <button
                 key={item.id}
+                ref={item.ref}
                 onClick={() => scrollToSection(item.id)}
-                className="transition-colors text-left py-2 text-lg font-medium"
-                style={{ color: 'hsl(var(--primary))' }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--primary-light, var(--primary)))'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'hsl(var(--primary))'}
+                className={`transition-colors text-left py-2 text-lg font-medium ${
+                  activeSection === item.id ? 'font-semibold' : ''
+                }`}
+                style={{
+                  color: activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))',
+                  borderBottom: activeSection === item.id ? '2px solid hsl(var(--primary))' : '2px solid transparent'
+                }}
                 aria-label={`Navigate to ${item.label}`}
+                aria-current={activeSection === item.id ? 'page' : undefined}
               >
                 {item.label}
               </button>
