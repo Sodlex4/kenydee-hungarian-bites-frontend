@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MessageCircle } from 'lucide-react';
 
 const OrderSection = () => {
   const [selectedQuantity, setSelectedQuantity] = useState('');
@@ -45,6 +45,12 @@ const OrderSection = () => {
         });
       }
     }
+  };
+
+  const handleQuickWhatsApp = () => {
+    const message = `Hello! I'd like to order Hungarian Hot Dog Rolls. Please confirm availability and delivery details.`;
+    const whatsappUrl = `https://wa.me/254759233065?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -171,6 +177,19 @@ const OrderSection = () => {
             }}
           >
             Add to Cart
+          </button>
+
+          <button
+            onClick={handleQuickWhatsApp}
+            className="mt-4 px-12 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+            style={{
+              background: 'transparent',
+              border: '2px solid hsl(var(--primary))',
+              color: 'hsl(var(--primary))'
+            }}
+          >
+            <MessageCircle className="w-5 h-5" />
+            Order via WhatsApp
           </button>
 
           <div className="mt-8 grid md:grid-cols-3 gap-4 text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { X, Plus, Minus, ShoppingCart, MessageCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
@@ -8,9 +8,29 @@ const Cart = () => {
   const { cartItems, isCartOpen, toggleCart, closeCart, updateQuantity, removeFromCart } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
+  const isPointerReady = useRef(false);
+  const [pointerEventsEnabled, setPointerEventsEnabled] = useState(false);
+
+  useEffect(() => {
+    if (isCartOpen) {
+      isPointerReady.current = false;
+      setPointerEventsEnabled(false);
+      const timer = setTimeout(() => {
+        isPointerReady.current = true;
+        setPointerEventsEnabled(true);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [isCartOpen]);
 
   const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleBackdropClick = () => {
+    if (isPointerReady.current) {
+      closeCart();
+    }
+  };
 
   const handleRemove = useCallback((id: string, name: string) => {
     toast.info(`Removed ${name}`);
@@ -100,8 +120,9 @@ const Cart = () => {
   return (
     <div className="fixed inset-0 z-50 flex">
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"
-        onClick={handleClose}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"
+        onClick={handleBackdropClick}
+        style={{ pointerEvents: pointerEventsEnabled ? 'auto' : 'none', touchAction: 'none' }}
         aria-hidden="true"
       ></div>
 
