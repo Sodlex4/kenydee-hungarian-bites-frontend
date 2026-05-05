@@ -6,7 +6,7 @@ import { Sparkles } from 'lucide-react';
 
 const OrderSection = () => {
   const [selectedQuantity, setSelectedQuantity] = useState('');
-  const { addToCart, toggleCart } = useCart();
+  const { addToCartAndOpen, closeCart } = useCart();
 
   const packages = [
     { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.jpg' },
@@ -22,15 +22,13 @@ const OrderSection = () => {
 
     const selectedPackage = packages.find(pkg => pkg.id === selectedQuantity);
     if (selectedPackage) {
-      addToCart({
+      addToCartAndOpen({
         id: selectedPackage.id,
         name: `Hungarian Hot Dog Rolls - ${selectedPackage.label}`,
         price: selectedPackage.price,
         quantity: 1,
         image: selectedPackage.image
       });
-
-      toggleCart();
 
       toast.success(`Added ${selectedPackage.label} to cart!`);
 

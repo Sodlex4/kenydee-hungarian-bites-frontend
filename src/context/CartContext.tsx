@@ -13,9 +13,11 @@ interface CartContextType {
   cartItems: CartItem[];
   isCartOpen: boolean;
   addToCart: (item: CartItem) => void;
+  addToCartAndOpen: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   toggleCart: () => void;
+  closeCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -47,6 +49,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(loadCartFromStorage);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  const persistCart = (updated: CartItem[]) => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+  };
+
   const addToCart = (newItem: CartItem) => {
     setCartItems(prevItems => {
       const updated = prevItems.find(item => item.id === newItem.id)
@@ -56,15 +62,30 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
               : item
           )
         : [...prevItems, newItem];
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+      persistCart(updated);
       return updated;
     });
+  };
+
+  const addToCartAndOpen = (newItem: CartItem) => {
+    setCartItems(prevItems => {
+      const updated = prevItems.find(item => item.id === newItem.id)
+        ? prevItems.map(item =>
+            item.id === newItem.id
+              ? { ...item, quantity: item.quantity + newItem.quantity }
+              : item
+          )
+        : [...prevItems, newItem];
+      persistCart(updated);
+      return updated;
+    });
+    setIsCartOpen(true);
   };
 
   const removeFromCart = (id: string) => {
     setCartItems(prevItems => {
       const updated = prevItems.filter(item => item.id !== id);
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+      persistCart(updated);
     });
   };
 
@@ -77,7 +98,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       const updated = prevItems.map(item =>
         item.id === id ? { ...item, quantity } : item
       );
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+      persistCart(updated);
       return updated;
     });
   };
@@ -86,13 +107,19 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setIsCartOpen(prev => !prev);
   };
 
+  const closeCart = () => {
+    setIsCartOpen(false);
+  };
+
   const value: CartContextType = {
     cartItems,
     isCartOpen,
     addToCart,
+    addToCartAndOpen,
     removeFromCart,
     updateQuantity,
-    toggleCart
+    toggleCart,
+    closeCart,
   };
 
   return (

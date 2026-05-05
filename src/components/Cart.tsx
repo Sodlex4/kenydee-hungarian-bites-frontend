@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
 const Cart = () => {
-  const { cartItems, isCartOpen, toggleCart, updateQuantity, removeFromCart } = useCart();
+  const { cartItems, isCartOpen, toggleCart, closeCart, updateQuantity, removeFromCart } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
 
@@ -54,8 +54,8 @@ const Cart = () => {
   };
 
   const handleClose = useCallback(() => {
-    toggleCart();
-  }, [toggleCart]);
+    closeCart();
+  }, [closeCart]);
 
   useEffect(() => {
     if (!isCartOpen) return;
@@ -87,7 +87,7 @@ const Cart = () => {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('keydown', trapFocus);
     };
-  }, [isCartOpen, handleClose]);
+  }, [isCartOpen]);
 
   useEffect(() => {
     if (isCartOpen && firstFocusableRef.current) {
@@ -142,7 +142,7 @@ const Cart = () => {
                 <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>Free delivery within Murang'a Town</p>
                 <button
                   onClick={() => {
-                    handleClose();
+                    closeCart();
                     document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105 text-white"
