@@ -1,5 +1,6 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { 
   LayoutDashboard, 
   Users, 
@@ -11,6 +12,13 @@ import {
 } from 'lucide-react';
 
 const AdminSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate('/');
+    toast.success('Logged out successfully');
+  };
+
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
     { icon: Users, label: 'Customers', path: '/admin/customers' },
@@ -57,6 +65,7 @@ const AdminSidebar = () => {
         ))}
 
         <button 
+          onClick={handleLogout}
           className="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 w-full text-left hover:scale-105 mt-8"
           style={{ color: 'hsl(var(--destructive))' }}
         >

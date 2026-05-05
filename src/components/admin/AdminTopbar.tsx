@@ -1,13 +1,53 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { Search, Bell, User, Sun, Moon } from 'lucide-react';
 
 const AdminTopbar = () => {
-  const [isDark, setIsDark] = useState(false);
+  const navigate = useNavigate();
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('admin-theme') === 'dark';
+    }
+    return false;
+  });
   const [showProfile, setShowProfile] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('admin-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('admin-theme', 'light');
+    }
+  }, [isDark]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowProfile(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const toggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark');
+    setIsDark((prev: boolean) => !prev);
+  };
+
+  const handleLogout = () => {
+    setShowProfile(false);
+    navigate('/');
+    toast.success('Logged out successfully');
+  };
+
+  const handleViewProfile = () => {
+    setShowProfile(false);
+    toast.info('Coming soon');
   };
 
   return (
@@ -32,7 +72,6 @@ const AdminTopbar = () => {
       </div>
 
       <div className="flex items-center space-x-4">
-        {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
           className="p-2 rounded-lg transition-colors hover:scale-105"
@@ -44,7 +83,6 @@ const AdminTopbar = () => {
           {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
 
-        {/* Notifications */}
         <button className="relative p-2 rounded-lg transition-colors hover:scale-105" style={{
           background: 'hsl(var(--muted))',
           color: 'hsl(var(--muted-foreground))'
@@ -58,8 +96,7 @@ const AdminTopbar = () => {
           </span>
         </button>
 
-        {/* Profile Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowProfile(!showProfile)}
             className="flex items-center space-x-2 p-2 rounded-lg transition-colors hover:scale-105"
@@ -73,21 +110,34 @@ const AdminTopbar = () => {
           </button>
 
           {showProfile && (
-            <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg border backdrop-blur-sm" style={{
+            <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg border backdrop-blur-sm z-50" style={{
               background: 'hsl(var(--popover))',
               borderColor: 'hsl(var(--border))'
             }}>
               <div className="py-2">
-                <a href="#" className="block px-4 py-2 text-sm transition-colors" style={{ color: 'hsl(var(--popover-foreground))' }}>
+                <button
+                  onClick={handleViewProfile}
+                  className="block w-full text-left px-4 py-2 text-sm transition-colors"
+                  style={{ color: 'hsl(var(--popover-foreground))' }}
+                >
                   View Profile
-                </a>
-                <a href="#" className="block px-4 py-2 text-sm transition-colors" style={{ color: 'hsl(var(--popover-foreground))' }}>
+                </button>
+                <Link
+                  to="/admin/settings"
+                  onClick={() => setShowProfile(false)}
+                  className="block px-4 py-2 text-sm transition-colors"
+                  style={{ color: 'hsl(var(--popover-foreground))' }}
+                >
                   Settings
-                </a>
+                </Link>
                 <hr className="my-1" style={{ borderColor: 'hsl(var(--border))' }} />
-                <a href="#" className="block px-4 py-2 text-sm transition-colors" style={{ color: 'hsl(var(--destructive))' }}>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-sm transition-colors"
+                  style={{ color: 'hsl(var(--destructive))' }}
+                >
                   Logout
-                </a>
+                </button>
               </div>
             </div>
           )}
