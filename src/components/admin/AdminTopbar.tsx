@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Search, Bell, Sun, Moon, Menu, X } from 'lucide-react';
 import { useAdminProfile } from '@/context/AdminProfileContext';
@@ -8,10 +8,13 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 interface AdminTopbarProps {
   onMenuToggle: () => void;
+  onSearch?: (term: string) => void;
+  notificationCount?: number;
 }
 
-const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
+const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle, onSearch }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { profile, updateProfile } = useAdminProfile();
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -21,6 +24,8 @@ const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
   });
   const [showProfile, setShowProfile] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -86,9 +91,23 @@ const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: 'hsl(var(--muted-foreground))' }} />
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Search..."
               autoFocus
+              value={searchTerm}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSearchTerm(value);
+                onSearch?.(value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setShowSearch(false);
+                  setSearchTerm('');
+                  onSearch?.( '');
+                }
+              }}
               className="w-full pl-10 pr-10 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm"
               style={{
                 background: 'hsl(var(--input))',
@@ -97,7 +116,11 @@ const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
               }}
             />
             <button
-              onClick={() => setShowSearch(false)}
+              onClick={() => {
+                setShowSearch(false);
+                setSearchTerm('');
+                onSearch?.('');
+              }}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded"
               aria-label="Close search"
             >
@@ -140,15 +163,17 @@ const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle }) => {
             background: 'hsl(var(--muted))',
             color: 'hsl(var(--muted-foreground))'
           }}
-          aria-label="View notifications"
+          aria-label={`View notifications ${notificationCount ? `(${notificationCount} unread)` : ''}`}
         >
           <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full text-xs flex items-center justify-center" style={{
-            background: 'hsl(var(--destructive))',
-            color: 'hsl(var(--destructive-foreground))'
-          }}>
-            3
-          </span>
+          {notificationCount > 0 && (
+            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full text-xs flex items-center justify-center" style={{
+              background: 'hsl(var(--destructive))',
+              color: 'hsl(var(--destructive-foreground))'
+            }}>
+              {notificationCount > 9 ? '9+' : notificationCount}
+            </span>
+          )}
         </Link>
 
         <div className="relative" ref={dropdownRef}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -20,8 +20,29 @@ const statusColors = {
 };
 
 const AdminCustomers = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredCustomers = useMemo(() => {
+    if (!searchTerm) return customers;
+    const term = searchTerm.toLowerCase();
+    return customers.filter(customer =>
+      customer.name.toLowerCase().includes(term) ||
+      customer.email.toLowerCase().includes(term) ||
+      customer.phone.includes(term) ||
+      customer.status.toLowerCase().includes(term)
+    );
+  }, [searchTerm]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
   return (
-    <AdminLayout title="Customers" description="Manage your customer base and view their order history.">
+    <AdminLayout
+      title={`Customers ${searchTerm ? `(${filteredCustomers.length} found)` : ''}`}
+      description="Manage your customer base and view their order history."
+      onSearch={handleSearch}
+    >
       <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
@@ -40,21 +61,29 @@ const AdminCustomers = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customers.map((customer) => (
-                <TableRow key={customer.id}>
-                  <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{customer.name}</TableCell>
-                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '160px' }}>{customer.email}</TableCell>
-                  <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.phone}</TableCell>
-                  <TableCell style={{ color: 'hsl(var(--foreground))' }}>{customer.orders}</TableCell>
-                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--foreground))' }}>{customer.total}</TableCell>
-                  <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.joined}</TableCell>
-                  <TableCell>
-                    <Badge className={statusColors[customer.status as keyof typeof statusColors]}>
-                      {customer.status}
-                    </Badge>
+              {filteredCustomers.length > 0 ? (
+                filteredCustomers.map((customer) => (
+                  <TableRow key={customer.id}>
+                    <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{customer.name}</TableCell>
+                    <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '160px' }}>{customer.email}</TableCell>
+                    <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.phone}</TableCell>
+                    <TableCell style={{ color: 'hsl(var(--foreground))' }}>{customer.orders}</TableCell>
+                    <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--foreground))' }}>{customer.total}</TableCell>
+                    <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.joined}</TableCell>
+                    <TableCell>
+                      <Badge className={statusColors[customer.status as keyof typeof statusColors]}>
+                        {customer.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                    No customers found matching "{searchTerm}"
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>

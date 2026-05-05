@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -21,8 +21,30 @@ const statusColors: Record<string, string> = {
 };
 
 const AdminOrders = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredOrders = useMemo(() => {
+    if (!searchTerm) return orders;
+    const term = searchTerm.toLowerCase();
+    return orders.filter(order =>
+      order.id.toLowerCase().includes(term) ||
+      order.customer.toLowerCase().includes(term) ||
+      order.items.toLowerCase().includes(term) ||
+      order.status.toLowerCase().includes(term) ||
+      order.method.toLowerCase().includes(term)
+    );
+  }, [searchTerm]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
   return (
-    <AdminLayout title="Orders" description="Track and manage all incoming orders.">
+    <AdminLayout
+      title={`Orders ${searchTerm ? `(${filteredOrders.length} found)` : ''}`}
+      description="Track and manage all incoming orders."
+      onSearch={handleSearch}
+    >
       <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
@@ -41,21 +63,29 @@ const AdminOrders = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{order.id}</TableCell>
-                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.customer}</TableCell>
-                  <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.items}</TableCell>
-                  <TableCell className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{order.amount}</TableCell>
-                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.date}</TableCell>
-                  <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.method}</TableCell>
-                  <TableCell>
-                    <Badge className={statusColors[order.status]}>
-                      {order.status}
-                    </Badge>
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{order.id}</TableCell>
+                    <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.customer}</TableCell>
+                    <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.items}</TableCell>
+                    <TableCell className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{order.amount}</TableCell>
+                    <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.date}</TableCell>
+                    <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.method}</TableCell>
+                    <TableCell>
+                      <Badge className={statusColors[order.status as keyof typeof statusColors]}>
+                        {order.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                    No orders found matching "{searchTerm}"
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>

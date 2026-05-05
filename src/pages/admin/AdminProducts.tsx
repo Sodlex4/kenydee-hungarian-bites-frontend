@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -19,8 +19,29 @@ const statusColors: Record<string, string> = {
 };
 
 const AdminProducts = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm) return products;
+    const term = searchTerm.toLowerCase();
+    return products.filter(product =>
+      product.name.toLowerCase().includes(term) ||
+      product.category.toLowerCase().includes(term) ||
+      product.status.toLowerCase().includes(term) ||
+      product.price.toLowerCase().includes(term)
+    );
+  }, [searchTerm]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
   return (
-    <AdminLayout title="Products" description="Manage your product catalog and inventory levels.">
+    <AdminLayout
+      title={`Products ${searchTerm ? `(${filteredProducts.length} found)` : ''}`}
+      description="Manage your product catalog and inventory levels."
+      onSearch={handleSearch}
+    >
       <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
@@ -38,20 +59,28 @@ const AdminProducts = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{product.name}</TableCell>
-                  <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.category}</TableCell>
-                  <TableCell style={{ color: 'hsl(var(--foreground))' }}>{product.price}</TableCell>
-                  <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.stock}</TableCell>
-                  <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.sales}</TableCell>
-                  <TableCell>
-                    <Badge className={statusColors[product.status]}>
-                      {product.status}
-                    </Badge>
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{product.name}</TableCell>
+                    <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.category}</TableCell>
+                    <TableCell style={{ color: 'hsl(var(--foreground))' }}>{product.price}</TableCell>
+                    <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.stock}</TableCell>
+                    <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{product.sales}</TableCell>
+                    <TableCell>
+                      <Badge className={statusColors[product.status]}>
+                        {product.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                    No products found matching "{searchTerm}"
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>

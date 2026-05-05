@@ -1,12 +1,89 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Mail, Phone, MapPin, Globe, Instagram, Facebook, MessageCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import AdminLayout from '@/components/admin/AdminLayout';
 
+const SETTINGS_STORAGE_KEY = 'hungarian-bites-settings';
+
+const businessSchema = z.object({
+  businessName: z.string().min(2, 'Business name is required'),
+  businessEmail: z.string().email('Invalid email address'),
+  phoneNumber: z.string().min(10, 'Phone number must be at least 10 characters'),
+  location: z.string().min(2, 'Location is required'),
+});
+
+const socialSchema = z.object({
+  instagram: z.string().url('Invalid URL').or(z.literal('')),
+  facebook: z.string().url('Invalid URL').or(z.literal('')),
+  whatsapp: z.string().url('Invalid URL').or(z.literal('')),
+  website: z.string().url('Invalid URL').or(z.literal('')),
+});
+
+const defaultSettings = {
+  businessName: 'Hungarian Bites',
+  businessEmail: 'kennedygikonyo3@gmail.com',
+  phoneNumber: '+254 (0) 759 233 065',
+  location: 'Murang\'a, Kenya',
+  instagram: 'https://www.instagram.com/vdj_kenydee/',
+  facebook: 'https://facebook.com/hungarianbites',
+  whatsapp: 'https://wa.me/254700123456',
+  website: 'https://hungarianbites.co.ke',
+};
+
+const loadSettings = () => {
+  try {
+    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    return stored ? { ...defaultSettings, ...JSON.parse(stored) } : defaultSettings;
+  } catch {
+    return defaultSettings;
+  }
+};
+
 const AdminSettings = () => {
+  const settings = loadSettings();
+
+  const businessForm = useForm<z.infer<typeof businessSchema>>({
+    resolver: zodResolver(businessSchema),
+    defaultValues: {
+      businessName: settings.businessName,
+      businessEmail: settings.businessEmail,
+      phoneNumber: settings.phoneNumber,
+      location: settings.location,
+    },
+  });
+
+  const socialForm = useForm<z.infer<typeof socialSchema>>({
+    resolver: zodResolver(socialSchema),
+    defaultValues: {
+      instagram: settings.instagram,
+      facebook: settings.facebook,
+      whatsapp: settings.whatsapp,
+      website: settings.website,
+    },
+  });
+
+  const onSaveBusiness = (data: z.infer<typeof businessSchema>) => {
+    const currentSettings = loadSettings();
+    const updated = { ...currentSettings, ...data };
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updated));
+    toast.success('Business information saved successfully');
+  };
+
+  const onSaveSocial = (data: z.infer<typeof socialSchema>) => {
+    const currentSettings = loadSettings();
+    const updated = { ...currentSettings, ...data };
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updated));
+    toast.success('Social media links saved successfully');
+  };
+
   return (
     <AdminLayout title="Settings" description="Manage your store settings and contact information.">
       <div className="grid gap-6 max-w-4xl">
@@ -15,43 +92,85 @@ const AdminSettings = () => {
           borderColor: 'hsl(var(--border))'
         }}>
           <h3 className="text-lg font-semibold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Business Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium" style={{ color: 'hsl(var(--foreground))' }}>Business Name</label>
-              <Input defaultValue="Hungarian Bites" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium" style={{ color: 'hsl(var(--foreground))' }}>Business Email</label>
-              <Input defaultValue="kennedygikonyo3@gmail.com" type="email" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium" style={{ color: 'hsl(var(--foreground))' }}>Phone Number</label>
-              <Input defaultValue="+254 (0) 759 233 065" type="tel" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium" style={{ color: 'hsl(var(--foreground))' }}>Location</label>
-              <Input defaultValue="Murang'a, Kenya" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-          </div>
-          <div className="mt-6 flex justify-end">
-            <Button style={{ background: 'var(--gradient-primary)' }}>Save Changes</Button>
-          </div>
+          <Form {...businessForm}>
+            <form onSubmit={businessForm.handleSubmit(onSaveBusiness)} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={businessForm.control}
+                  name="businessName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={businessForm.control}
+                  name="businessEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Email</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="email" style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={businessForm.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="tel" style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={businessForm.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <Input {...field} style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit" disabled={!businessForm.formState.isDirty} style={{ background: 'var(--gradient-primary)' }}>
+                  Save Changes
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
 
         <Separator />
@@ -61,51 +180,93 @@ const AdminSettings = () => {
           borderColor: 'hsl(var(--border))'
         }}>
           <h3 className="text-lg font-semibold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Social Media Links</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'hsl(var(--foreground))' }}>
-                <Instagram className="w-4 h-4" /> Instagram
-              </label>
-              <Input defaultValue="https://www.instagram.com/vdj_kenydee/" placeholder="Instagram URL" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'hsl(var(--foreground))' }}>
-                <Facebook className="w-4 h-4" /> Facebook
-              </label>
-              <Input defaultValue="https://facebook.com/hungarianbites" placeholder="Facebook URL" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'hsl(var(--foreground))' }}>
-                <MessageCircle className="w-4 h-4" /> WhatsApp
-              </label>
-              <Input defaultValue="https://wa.me/254700123456" placeholder="WhatsApp URL" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2" style={{ color: 'hsl(var(--foreground))' }}>
-                <Globe className="w-4 h-4" /> Website
-              </label>
-              <Input defaultValue="https://hungarianbites.co.ke" placeholder="Website URL" style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))'
-              }} />
-            </div>
-          </div>
-          <div className="mt-6 flex justify-end">
-            <Button style={{ background: 'var(--gradient-primary)' }}>Save Changes</Button>
-          </div>
+          <Form {...socialForm}>
+            <form onSubmit={socialForm.handleSubmit(onSaveSocial)} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={socialForm.control}
+                  name="instagram"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Instagram className="w-4 h-4" /> Instagram
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Instagram URL" style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={socialForm.control}
+                  name="facebook"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Facebook className="w-4 h-4" /> Facebook
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Facebook URL" style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={socialForm.control}
+                  name="whatsapp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <MessageCircle className="w-4 h-4" /> WhatsApp
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="WhatsApp URL" style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={socialForm.control}
+                  name="website"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Globe className="w-4 h-4" /> Website
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Website URL" style={{
+                          background: 'hsl(var(--input))',
+                          borderColor: 'hsl(var(--border))',
+                          color: 'hsl(var(--foreground))'
+                        }} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit" disabled={!socialForm.formState.isDirty} style={{ background: 'var(--gradient-primary)' }}>
+                  Save Changes
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
 
         <Separator />

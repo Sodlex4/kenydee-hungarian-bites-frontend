@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Bell, Package, User, AlertCircle, DollarSign } from 'lucide-react';
@@ -23,8 +23,59 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 const AdminNotifications = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [notificationsData, setNotificationsData] = useState(notifications);
+
+  const filteredNotifications = useMemo(() => {
+    if (!searchTerm) return notificationsData;
+    const term = searchTerm.toLowerCase();
+    return notificationsData.filter(notification =>
+      notification.title.toLowerCase().includes(term) ||
+      notification.message.toLowerCase().includes(term) ||
+      notification.type.toLowerCase().includes(term) ||
+      notification.time.toLowerCase().includes(term)
+    );
+  }, [searchTerm, notificationsData]);
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
+  const markAsRead = (id: number) => {
+    setNotificationsData(prev =>
+      prev.map(n => n.id === id ? { ...n, read: true } : n)
+    );
+  };
+
+  const markAllAsRead = () => {
+    setNotificationsData(prev =>
+      prev.map(n => ({ ...n, read: true }))
+    );
+  };
+
+  const deleteNotification = (id: number) => {
+    setNotificationsData(prev => prev.filter(n => n.id !== id));
+  };
+
+  const unreadCount = notificationsData.filter(n => !n.read).length;
+
   return (
-    <AdminLayout title="Notifications" description="View all system notifications and customer interactions.">
+    <AdminLayout
+      title={`Notifications ${searchTerm ? `(${filteredNotifications.length} found)` : `(${unreadCount} unread)`}`}
+      description="View all system notifications and customer interactions."
+      onSearch={handleSearch}
+      notificationCount={unreadCount}
+    >
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={markAllAsRead}
+          className="text-sm px-4 py-2 rounded-lg transition-colors hover:bg-muted"
+          style={{ color: 'hsl(var(--primary))' }}
+          disabled={unreadCount === 0}
+        >
+          Mark all as read
+        </button>
+      </div>
       <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
@@ -38,30 +89,62 @@ const AdminNotifications = () => {
                 <TableHead className="hidden sm:table-cell min-w-[180px]">Message</TableHead>
                 <TableHead className="hidden md:table-cell">Time</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {notifications.map((notification) => {
-                const Icon = iconMap[notification.type] || Bell;
-                return (
-                  <TableRow key={notification.id} className={!notification.read ? 'font-medium' : ''}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
-                        <span className="capitalize hidden sm:inline" style={{ color: 'hsl(var(--muted-foreground))' }}>{notification.type}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{notification.title}</TableCell>
-                    <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '250px' }}>{notification.message}</TableCell>
-                    <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{notification.time}</TableCell>
-                    <TableCell>
-                      <Badge className={!notification.read ? 'bg-pink-500/80 hover:bg-pink-500' : 'bg-gray-500/80 hover:bg-gray-500'}>
-                        {!notification.read ? 'Unread' : 'Read'}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {filteredNotifications.length > 0 ? (
+                filteredNotifications.map((notification) => {
+                  const Icon = iconMap[notification.type] || Bell;
+                  return (
+                    <TableRow
+                      key={notification.id}
+                      className={!notification.read ? 'font-medium bg-muted/30' : ''}
+                    >
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Icon className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
+                          <span className="capitalize hidden sm:inline" style={{ color: 'hsl(var(--muted-foreground))' }}>{notification.type}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{notification.title}</TableCell>
+                      <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '250px' }}>{notification.message}</TableCell>
+                      <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{notification.time}</TableCell>
+                      <TableCell>
+                        <Badge className={!notification.read ? 'bg-pink-500/80 hover:bg-pink-500' : 'bg-gray-500/80 hover:bg-gray-500'}>
+                          {!notification.read ? 'Unread' : 'Read'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          {!notification.read && (
+                            <button
+                              onClick={() => markAsRead(notification.id)}
+                              className="text-xs px-2 py-1 rounded hover:bg-muted transition-colors"
+                              style={{ color: 'hsl(var(--primary))' }}
+                            >
+                              Mark read
+                            </button>
+                          )}
+                          <button
+                            onClick={() => deleteNotification(notification.id)}
+                            className="text-xs px-2 py-1 rounded hover:bg-destructive/20 transition-colors"
+                            style={{ color: 'hsl(var(--destructive))' }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                    No notifications found matching "{searchTerm}"
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
