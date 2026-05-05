@@ -16,9 +16,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, description 
         <AdminTopbar />
         <main className="flex-1 p-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2" style={{
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2" style={{
               color: 'hsl(var(--foreground))',
-              fontFamily: 'Pacifico, cursive'
             }}>
               {title}
             </h1>
