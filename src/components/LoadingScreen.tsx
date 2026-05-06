@@ -9,49 +9,71 @@ interface LoadingScreenProps {
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
   const [canSkip, setCanSkip] = useState(false);
+  const isReturning = typeof window !== 'undefined' && localStorage.getItem('has-visited') === null;
 
   useEffect(() => {
-    const enableSkipTimer = setTimeout(() => setCanSkip(true), 800);
-
     if (prefersReducedMotion()) {
       onSkip();
-      return () => clearTimeout(enableSkipTimer);
+      return;
     }
 
     const tl = gsap.timeline();
 
-    tl.fromTo(".loading-text", { opacity: 0, scale: 0 }, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.6,
-      ease: "power2.out"
-    })
-    .to(".loading-text", {
-      scale: 1.1,
-      duration: 0.3,
-      yoyo: true,
-      repeat: 2,
-      ease: "power2.inOut"
-    })
-    .to(".loading-gradient", {
-      scale: 1.5,
-      opacity: 0.3,
-      duration: 0.6,
-      ease: "power2.out"
-    }, "-=0.6")
-    .to(".loading-screen", {
-      opacity: 0,
-      duration: 0.8,
-      delay: 0.3,
-      ease: "power2.out",
-      onComplete: onSkip
-    });
+    if (isReturning) {
+      tl.fromTo(".loading-text", { opacity: 0, scale: 0.8 }, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.3,
+        ease: "power2.out"
+      })
+      .to(".loading-screen", {
+        opacity: 0,
+        duration: 0.2,
+        ease: "power2.out",
+        onComplete: onSkip
+      });
+
+      setCanSkip(true);
+    } else {
+      const enableSkipTimer = setTimeout(() => setCanSkip(true), 800);
+
+      tl.fromTo(".loading-text", { opacity: 0, scale: 0 }, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: "power2.out"
+      })
+      .to(".loading-text", {
+        scale: 1.1,
+        duration: 0.3,
+        yoyo: true,
+        repeat: 2,
+        ease: "power2.inOut"
+      })
+      .to(".loading-gradient", {
+        scale: 1.5,
+        opacity: 0.3,
+        duration: 0.6,
+        ease: "power2.out"
+      }, "-=0.6")
+      .to(".loading-screen", {
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.3,
+        ease: "power2.out",
+        onComplete: onSkip
+      });
+
+      return () => {
+        clearTimeout(enableSkipTimer);
+        tl.kill();
+      };
+    }
 
     return () => {
-      clearTimeout(enableSkipTimer);
       tl.kill();
     };
-  }, [onSkip]);
+  }, [onSkip, isReturning]);
 
   const handleSkip = useCallback(() => {
     gsap.to(".loading-screen", {

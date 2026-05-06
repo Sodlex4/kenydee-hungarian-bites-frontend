@@ -43,8 +43,8 @@ const OrderSection = () => {
 
       toast.success(`Added ${qty}x ${selectedPackage.label} to cart!`);
 
-      if (typeof window !== 'undefined' && typeof gtag !== 'undefined') {
-        gtag('event', 'add_to_cart', {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        window.gtag('event', 'add_to_cart', {
           currency: 'KES',
           value: selectedPackage.price * qty,
           items: [{
@@ -66,7 +66,7 @@ const OrderSection = () => {
 
   return (
     <section id="order" className="py-20 relative overflow-hidden" style={{
-      background: 'linear-gradient(135deg, hsl(230 70% 20%), hsl(270 70% 20%), hsl(330 80% 20%))'
+      background: 'linear-gradient(135deg, hsl(330 30% 8%), hsl(270 40% 12%), hsl(330 50% 8%))'
     }}>
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--primary) / 0.1)' }}></div>

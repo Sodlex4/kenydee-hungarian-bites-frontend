@@ -58,7 +58,7 @@ const TestimonialsSection = () => {
 
   return (
     <section id="testimonials" className="testimonials-section py-20 relative overflow-hidden" style={{
-      background: 'linear-gradient(135deg, hsl(270 70% 20%), hsl(330 80% 20%), hsl(230 70% 20%))'
+      background: 'linear-gradient(135deg, hsl(330 40% 10%), hsl(270 50% 15%), hsl(230 40% 10%))'
     }}>
 
       <div className="absolute inset-0">

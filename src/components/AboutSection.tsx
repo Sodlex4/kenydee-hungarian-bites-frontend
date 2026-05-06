@@ -41,7 +41,7 @@ const AboutSection = () => {
 
   return (
     <section id="about" className="about-section py-20 relative" style={{
-      background: 'linear-gradient(to bottom, hsl(330 80% 20%), hsl(270 70% 20%), hsl(230 70% 20%))'
+      background: 'linear-gradient(to bottom, hsl(270 40% 8%), hsl(230 50% 12%), hsl(270 40% 8%))'
     }}>
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,hsl(var(--primary)_/_0.3),transparent_50%),radial-gradient(circle_at_75%_75%,hsl(var(--accent)_/_0.3),transparent_50%)]"></div>

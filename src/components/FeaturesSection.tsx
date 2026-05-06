@@ -55,7 +55,7 @@ const FeaturesSection = () => {
 
   return (
     <section id="products" className="features-section py-20 relative" style={{
-      background: 'linear-gradient(to bottom, hsl(270 70% 20%), hsl(230 70% 20%), hsl(330 80% 20%))'
+      background: 'linear-gradient(to bottom, hsl(230 50% 12%), hsl(260 40% 15%), hsl(330 50% 12%))'
     }}>
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,hsl(var(--accent)_/_0.4),transparent_70%)]"></div>
