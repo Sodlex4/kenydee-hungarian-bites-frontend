@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
-const sections = ['home', 'products', 'about', 'testimonials', 'order'];
+const sections = ['home', 'products', 'about', 'testimonials', 'faq', 'order'];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -118,6 +118,7 @@ const Header = () => {
             { label: 'Menu', id: 'products' },
             { label: 'About', id: 'about' },
             { label: 'Reviews', id: 'testimonials' },
+            { label: 'FAQ', id: 'faq' },
             { label: 'Order', id: 'order' }
           ].map((item) => (
             <button

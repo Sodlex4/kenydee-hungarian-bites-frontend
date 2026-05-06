@@ -94,6 +94,7 @@ const Footer = () => {
                 { label: 'Menu', id: 'products' },
                 { label: 'About', id: 'about' },
                 { label: 'Reviews', id: 'testimonials' },
+                { label: 'FAQ', id: 'faq' },
                 { label: 'Order', id: 'order' },
                 { label: 'Privacy Policy', href: '/legal/privacy' },
                 { label: 'Terms of Service', href: '/legal/terms' }

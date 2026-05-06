@@ -175,7 +175,7 @@ const AboutSection = () => {
             {[
               { icon: Users, number: '500+', label: 'Happy Customers', color: 'var(--gradient-primary)' },
               { icon: Award, number: '100%', label: 'Premium Ingredients', color: 'var(--gradient-secondary)' },
-              { icon: Clock, number: '24/7', label: 'Online Ordering', color: 'var(--gradient-secondary)' }
+              { icon: Clock, number: '2hr', label: 'Fast Delivery', color: 'var(--gradient-secondary)' }
             ].map((stat, index) => (
               <div key={index} className="stat-card text-center group">
                 <div className="backdrop-blur-xl border rounded-3xl p-8 hover:scale-105 transition-all duration-300" style={{
