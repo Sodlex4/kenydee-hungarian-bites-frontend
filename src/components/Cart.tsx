@@ -23,8 +23,8 @@ const Cart = () => {
     }
   }, [isCartOpen]);
 
-  const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const total = cartItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
+  const totalItems = cartItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
 
   const handleBackdropClick = () => {
     if (isPointerReady.current) {
@@ -62,8 +62,8 @@ const Cart = () => {
       return;
     }
 
-    if (typeof window !== 'undefined' && typeof gtag !== 'undefined') {
-      gtag('event', 'begin_checkout', {
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', 'begin_checkout', {
         currency: 'KES',
         value: total,
         items: cartItems.map(item => ({
@@ -102,6 +102,8 @@ const Cart = () => {
       const focusable = drawerRef.current.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
+      if (focusable.length === 0) return;
+
       const first = focusable[0] as HTMLElement;
       const last = focusable[focusable.length - 1] as HTMLElement;
 
@@ -144,7 +146,7 @@ const Cart = () => {
         aria-modal="true"
         aria-label="Shopping cart"
         className="ml-auto w-full max-w-md shadow-2xl animate-slideInRight"
-        style={{ background: 'hsl(var(--background))' }}
+        style={{ background: 'hsl(var(--background))', height: '100vh' }}
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'hsl(var(--border))' }}>

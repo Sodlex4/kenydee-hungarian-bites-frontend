@@ -37,10 +37,27 @@ interface CartProviderProps {
 
 const CART_STORAGE_KEY = 'hungarian-bites-cart';
 
+const isValidCartItem = (item: unknown): item is CartItem => {
+  if (typeof item !== 'object' || item === null) return false;
+  const obj = item as Record<string, unknown>;
+  return (
+    typeof obj.id === 'string' &&
+    typeof obj.name === 'string' &&
+    typeof obj.price === 'number' &&
+    !isNaN(obj.price) &&
+    typeof obj.quantity === 'number' &&
+    !isNaN(obj.quantity) &&
+    obj.quantity > 0 &&
+    typeof obj.image === 'string'
+  );
+};
+
 const loadCartFromStorage = (): CartItem[] => {
   try {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (!stored) return [];
+    const parsed = JSON.parse(stored) as unknown[];
+    return parsed.filter(isValidCartItem);
   } catch {
     return [];
   }

@@ -1,6 +1,8 @@
 
 declare global {
-  function gtag(command: 'config' | 'event', targetId: string, config?: Record<string, unknown>): void;
+  interface Window {
+    gtag?: (command: 'config' | 'event', targetId: string, config?: Record<string, unknown>) => void;
+  }
 }
 
 export {};
