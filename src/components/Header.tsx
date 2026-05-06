@@ -100,7 +100,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <button
-          className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform"
+          className="font-bold bg-gradient-to-r bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform leading-tight truncate max-w-[140px] sm:max-w-none sm:text-2xl text-xl"
           onClick={() => scrollToSection('home')}
           style={{
             fontFamily: 'Pacifico, cursive',

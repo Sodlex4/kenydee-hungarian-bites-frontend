@@ -10,6 +10,7 @@ import Footer from '../components/Footer';
 import Cart from '../components/Cart';
 import LoadingScreen from '../components/LoadingScreen';
 import FloatingWhatsApp from '../components/FloatingWhatsApp';
+import BackToTop from '../components/BackToTop';
 import { CartProvider } from '../context/CartContext';
 
 const Index = () => {
@@ -34,6 +35,7 @@ const Index = () => {
         <Footer />
         <Cart />
         <FloatingWhatsApp />
+        <BackToTop />
       </div>
     </CartProvider>
   );
