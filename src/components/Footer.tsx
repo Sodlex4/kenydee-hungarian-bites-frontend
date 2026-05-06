@@ -91,8 +91,10 @@ const Footer = () => {
             <div className="space-y-3">
               {[
                 { label: 'Home', id: 'home' },
-                { label: 'Products', id: 'products' },
-                { label: 'About Us', id: 'about' },
+                { label: 'Menu', id: 'products' },
+                { label: 'About', id: 'about' },
+                { label: 'Reviews', id: 'testimonials' },
+                { label: 'Order', id: 'order' },
                 { label: 'Privacy Policy', href: '/legal/privacy' },
                 { label: 'Terms of Service', href: '/legal/terms' }
               ].map((link, index) => (

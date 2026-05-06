@@ -106,6 +106,25 @@ const HeroSection = () => {
             <div className="font-semibold" style={{ color: 'hsl(var(--muted-foreground))' }}>per piece</div>
           </div>
 
+          <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm" style={{
+              background: 'hsl(142 70% 40% / 0.15)',
+              border: '1px solid hsl(142 70% 40% / 0.3)',
+              color: '#4ade80'
+            }}>
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              Free delivery within Murang'a
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm" style={{
+              background: 'hsl(var(--primary) / 0.15)',
+              border: '1px solid hsl(var(--primary) / 0.3)',
+              color: 'hsl(var(--primary))'
+            }}>
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'hsl(var(--primary))' }} />
+              2hr delivery
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button
               onClick={scrollToOrder}
