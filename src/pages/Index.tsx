@@ -9,6 +9,7 @@ import OrderSection from '../components/OrderSection';
 import Footer from '../components/Footer';
 import Cart from '../components/Cart';
 import LoadingScreen from '../components/LoadingScreen';
+import FloatingWhatsApp from '../components/FloatingWhatsApp';
 import { CartProvider } from '../context/CartContext';
 
 const Index = () => {
@@ -32,6 +33,7 @@ const Index = () => {
         </main>
         <Footer />
         <Cart />
+        <FloatingWhatsApp />
       </div>
     </CartProvider>
   );
