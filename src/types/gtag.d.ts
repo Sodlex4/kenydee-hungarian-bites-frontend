@@ -1,6 +1,6 @@
 
 declare global {
-  function gtag(command: 'config' | 'event', targetId: string, config?: any): void;
+  function gtag(command: 'config' | 'event', targetId: string, config?: Record<string, unknown>): void;
 }
 
 export {};

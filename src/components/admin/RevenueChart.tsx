@@ -16,7 +16,12 @@ const totalRevenue = revenueData.reduce((sum, d) => sum + d.revenue, 0);
 const totalOrders = revenueData.reduce((sum, d) => sum + d.orders, 0);
 const bestDay = revenueData.reduce((max, d) => d.revenue > max.revenue ? d : max, revenueData[0]);
 
-const CustomTooltip: React.FC<any> = ({ active, payload }) => {
+interface TooltipProps {
+  active?: boolean;
+  payload?: { payload: { day: string; orders: number }; value: number }[];
+}
+
+const CustomTooltip: React.FC<TooltipProps> = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
       <div className="p-3 rounded-lg border shadow-lg" style={{

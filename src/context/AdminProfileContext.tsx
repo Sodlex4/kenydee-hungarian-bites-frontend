@@ -130,6 +130,7 @@ export const AdminProfileProvider: React.FC<AdminProfileProviderProps> = ({ chil
     if (storedAvatar && !profile.avatar) {
       setProfile(prev => ({ ...prev, avatar: storedAvatar }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -119,7 +119,7 @@ const Cart = () => {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('keydown', trapFocus);
     };
-  }, [isCartOpen]);
+  }, [isCartOpen, handleClose]);
 
   useEffect(() => {
     if (isCartOpen && firstFocusableRef.current) {
