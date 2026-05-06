@@ -150,6 +150,10 @@ const OrderSection = () => {
                         src={pkg.image}
                         alt={pkg.label}
                         className="w-full h-32 object-cover rounded-xl"
+                        width="300"
+                        height="128"
+                        loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/placeholder.svg';
                         }}

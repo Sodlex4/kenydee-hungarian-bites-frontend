@@ -201,6 +201,10 @@ const Cart = () => {
                         src={item.image}
                         alt={item.name}
                         className="w-16 h-16 sm:w-14 sm:h-14 object-cover rounded-lg flex-shrink-0"
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/placeholder.svg';
                         }}

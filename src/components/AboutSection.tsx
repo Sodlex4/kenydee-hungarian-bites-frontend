@@ -97,6 +97,10 @@ const AboutSection = () => {
                     src="/image/cheese-dog-bread-rolls.webp"
                     alt="Hungarian Bites cheese dog rolls"
                     className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+                    width="300"
+                    height="224"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}
@@ -147,6 +151,10 @@ const AboutSection = () => {
                     src="/image/hotdog.webp"
                     alt="Hungarian hot dog rolls ready for delivery"
                     className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+                    width="300"
+                    height="224"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}

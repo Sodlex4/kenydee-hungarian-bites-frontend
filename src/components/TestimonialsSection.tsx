@@ -118,6 +118,10 @@ const TestimonialsSection = () => {
                       alt={testimonial.author}
                       className="w-20 h-20 rounded-full mx-auto mb-3 border-2 object-cover"
                       style={{ borderColor: 'hsl(var(--primary))' }}
+                      width="80"
+                      height="80"
+                      loading="lazy"
+                      decoding="async"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/placeholder.svg';
                       }}
