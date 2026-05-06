@@ -123,7 +123,7 @@ const TestimonialsSection = () => {
                       }}
                     />
                   )}
-                  <h4 className="text-xl font-bold" style={{ fontFamily: 'Pacifico, cursive', backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                  <h4 className="text-xl font-bold tracking-wide" style={{ fontFamily: 'Bebas Neue, sans-serif', backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {testimonial.author}
                   </h4>
                   <div className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Verified Customer</div>

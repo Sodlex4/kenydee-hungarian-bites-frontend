@@ -25,8 +25,8 @@ const Footer = () => {
 
           <div className="space-y-6">
             <div>
-              <h3 className="text-3xl font-bold mb-4" style={{
-                fontFamily: 'Pacifico, cursive',
+              <h3 className="text-3xl font-bold mb-4 tracking-wider" style={{
+                fontFamily: 'Bebas Neue, sans-serif',
                 backgroundImage: 'var(--gradient-primary)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'

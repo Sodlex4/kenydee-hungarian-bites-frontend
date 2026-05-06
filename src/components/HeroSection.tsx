@@ -77,17 +77,17 @@ const HeroSection = () => {
           </div>
 
           <h1 className="space-y-4">
-            <div className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent" style={{
-              fontFamily: 'Pacifico, cursive',
+            <div className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent tracking-wider" style={{
+              fontFamily: 'Bebas Neue, sans-serif',
               backgroundImage: 'var(--gradient-primary)'
             }}>
               HUNGARIAN
             </div>
-            <div className="text-4xl md:text-6xl font-bold" style={{ color: 'hsl(var(--primary))' }}>
+            <div className="text-4xl md:text-6xl font-bold tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', color: 'hsl(var(--primary))' }}>
               Hot Dog Rolls
             </div>
-            <div className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent" style={{
-              fontFamily: 'Pacifico, cursive',
+            <div className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent tracking-wider" style={{
+              fontFamily: 'Bebas Neue, sans-serif',
               backgroundImage: 'var(--gradient-primary)'
             }}>
               REIMAGINED

@@ -51,8 +51,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose, onLogout }
       borderColor: 'hsl(var(--border))'
     }}>
       <div className="p-6">
-        <h2 className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent" style={{
-          fontFamily: 'Pacifico, cursive',
+        <h2 className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent tracking-wider" style={{
+          fontFamily: 'Bebas Neue, sans-serif',
           backgroundImage: 'var(--gradient-primary)'
         }}>
           Admin Panel
@@ -142,8 +142,8 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, o
         }}
       >
         <div className="flex items-center justify-between p-6">
-          <h2 className="text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent" style={{
-            fontFamily: 'Pacifico, cursive',
+          <h2 className="text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent tracking-wider" style={{
+            fontFamily: 'Bebas Neue, sans-serif',
             backgroundImage: 'var(--gradient-primary)'
           }}>
             Admin Panel
