@@ -12,7 +12,7 @@ interface AdminTopbarProps {
   notificationCount?: number;
 }
 
-const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle, onSearch }) => {
+const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle, onSearch, notificationCount }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { profile, updateProfile } = useAdminProfile();
