@@ -265,7 +265,7 @@ const Cart = () => {
           </div>
 
           {cartItems.length > 0 && (
-            <div className="border-t p-6 space-y-4" style={{ borderColor: 'hsl(var(--border))' }}>
+            <div className="border-t p-6 space-y-4 flex-shrink-0" style={{ borderColor: 'hsl(var(--border))' }}>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                   <span>{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
