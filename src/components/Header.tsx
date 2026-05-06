@@ -92,7 +92,7 @@ const Header = () => {
     <header
       className="fixed top-0 left-0 right-0 transition-all duration-300 backdrop-blur-xl"
       style={{
-        zIndex: isCartOpen ? 50 : 40,
+        zIndex: 40,
         background: 'hsl(var(--background) / 0.8)',
         borderBottom: '1px solid hsl(var(--primary) / 0.15)'
       }}

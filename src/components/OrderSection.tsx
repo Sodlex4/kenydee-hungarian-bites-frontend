@@ -205,6 +205,21 @@ const OrderSection = () => {
             ))}
           </div>
 
+          {selectedQuantity && (() => {
+            const selected = packages.find(p => p.id === selectedQuantity);
+            const qty = getQty(selectedQuantity);
+            return (
+              <div className="mb-6 inline-flex items-center gap-3 px-6 py-3 rounded-xl border animate-fadeIn" style={{
+                background: 'hsl(var(--primary) / 0.1)',
+                borderColor: 'hsl(var(--primary) / 0.3)'
+              }}>
+                <span className="text-sm font-medium" style={{ color: 'hsl(var(--muted-foreground))' }}>Selected:</span>
+                <span className="text-lg font-bold" style={{ color: 'hsl(var(--foreground))' }}>{selected?.label} × {qty}</span>
+                <span className="text-lg font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ksh {selected ? selected.price * qty : 0}</span>
+              </div>
+            );
+          })()}
+
           <button
             onClick={handleAddToCart}
             className={`px-12 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${

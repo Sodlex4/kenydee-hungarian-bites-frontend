@@ -8,7 +8,7 @@ const HeroSection = () => {
   useEffect(() => {
     if (prefersReducedMotion()) return;
 
-    const tl = gsap.timeline({ delay: 3.5 });
+    const tl = gsap.timeline({ delay: 0.5 });
 
     tl.from(".hero-content > *", {
       y: 50,
