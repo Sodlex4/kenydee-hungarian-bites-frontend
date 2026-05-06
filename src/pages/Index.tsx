@@ -12,15 +12,9 @@ import LoadingScreen from '../components/LoadingScreen';
 import { CartProvider } from '../context/CartContext';
 
 const Index = () => {
-  const [isLoading, setIsLoading] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return !localStorage.getItem('has-visited');
-    }
-    return true;
-  });
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleLoadingDone = useCallback(() => {
-    localStorage.setItem('has-visited', 'true');
     setIsLoading(false);
   }, []);
 
