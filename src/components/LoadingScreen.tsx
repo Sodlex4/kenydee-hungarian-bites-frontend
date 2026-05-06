@@ -20,7 +20,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
 
     const tl = gsap.timeline();
 
-    tl.to(".loading-text", {
+    tl.fromTo(".loading-text", { opacity: 0, scale: 0 }, {
       opacity: 1,
       scale: 1,
       duration: 0.6,
@@ -72,7 +72,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
       </div>
 
       <div className="relative z-10 text-center">
-        <h1 className="loading-text text-6xl md:text-8xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent opacity-0 scale-0"
+        <h1 className="loading-text text-6xl md:text-8xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent"
             style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
           kila bite ina Slap
         </h1>

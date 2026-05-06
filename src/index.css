@@ -117,7 +117,7 @@ All colors MUST be HSL.
 /* Custom animations and effects */
 @layer utilities {
   .loading-screen {
-    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    /* Gradient handled by Tailwind classes on the element */
   }
 
   .hero-glow {
