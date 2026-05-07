@@ -1,30 +1,48 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import DashboardCards from '../../components/admin/DashboardCards';
 import RevenueChart from '../../components/admin/RevenueChart';
 import NotificationPanel from '../../components/admin/NotificationPanel';
-
-const recentOrders = [
-  { id: 1001, items: '5 Hot Dog Rolls', status: 'Pending' },
-  { id: 1002, items: '3 Chorizo Rolls', status: 'Pending' },
-  { id: 1003, items: '2 Premium Rolls', status: 'Pending' },
-];
+import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
+import { getOrders, getDashboardStats, getNotifications } from '@/data/orders';
+import type { Order, Notification } from '@/data/orders';
+import { Badge } from '@/components/ui/badge';
 
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [stats, setStats] = useState(getDashboardStats());
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  const refreshData = useCallback(() => {
+    setStats(getDashboardStats());
+    const unread = getNotifications().filter(n => !n.read).length;
+    setNotificationCount(unread);
+  }, []);
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
 
   const filteredOrders = useMemo(() => {
-    if (!searchTerm) return recentOrders;
+    const orders = stats.recentOrders;
+    if (!searchTerm) return orders;
     const term = searchTerm.toLowerCase();
-    return recentOrders.filter(order =>
-      order.items.toLowerCase().includes(term) ||
-      order.id.toString().includes(term) ||
+    return orders.filter(order =>
+      order.items.some(i => i.name.toLowerCase().includes(term)) ||
+      order.id.toLowerCase().includes(term) ||
       order.status.toLowerCase().includes(term)
     );
-  }, [searchTerm]);
+  }, [searchTerm, stats.recentOrders]);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+  };
+
+  const handleViewOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setIsDetailOpen(true);
   };
 
   return (
@@ -32,6 +50,7 @@ const AdminDashboard = () => {
       title="Dashboard Overview"
       description="Welcome back! Here's what's happening with your Hungarian Hot Dog business in Murang'a."
       onSearch={handleSearch}
+      notificationCount={notificationCount}
     >
       <div className="mb-4 p-4 rounded-xl border flex items-center gap-3" style={{
         background: 'hsl(var(--accent) / 0.1)',
@@ -41,12 +60,18 @@ const AdminDashboard = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <p className="text-sm font-medium" style={{ color: 'hsl(var(--accent))' }}>
-          Demo Mode: Showing sample data. Connect a backend to view real orders, customers, and revenue.
+          Demo Mode: Data is stored locally. Connect a backend to sync real orders, customers, and revenue.
         </p>
       </div>
 
       <div className="space-y-8">
-        <DashboardCards />
+        <DashboardCards
+          totalCustomers={stats.totalCustomers}
+          ordersToday={stats.ordersToday}
+          revenue={stats.revenue}
+          growth={stats.growth}
+          pendingOrders={stats.pendingOrders}
+        />
 
         <RevenueChart />
 
@@ -57,31 +82,45 @@ const AdminDashboard = () => {
             background: 'hsl(var(--card))',
             borderColor: 'hsl(var(--border))'
           }}>
-            <h3 className="text-lg font-semibold mb-4" style={{ color: 'hsl(var(--foreground))' }}>
-              Recent Orders {searchTerm && `(${filteredOrders.length} found)`}
+            <h3 className="text-lg font-semibold mb-4 flex items-center justify-between" style={{ color: 'hsl(var(--foreground))' }}>
+              <span>Recent Orders</span>
+              <span className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                {searchTerm ? `${filteredOrders.length} found` : `${stats.recentOrders.length} total`}
+              </span>
             </h3>
             <div className="space-y-3">
               {filteredOrders.length > 0 ? (
-                filteredOrders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-3 rounded-lg" style={{
-                    background: 'hsl(var(--muted) / 0.3)'
-                  }}>
-                    <div>
-                      <p className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>
-                        Order #{order.id}
-                      </p>
-                      <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                        {order.items}
-                      </p>
+                filteredOrders.map((order) => {
+                  const statusColors: Record<string, string> = {
+                    Pending: 'bg-amber-500/80',
+                    Processing: 'bg-blue-500/80',
+                    Completed: 'bg-emerald-500/80',
+                    Cancelled: 'bg-red-500/80',
+                  };
+                  return (
+                    <div
+                      key={order.id}
+                      className="flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+                      style={{ background: 'hsl(var(--muted) / 0.3)' }}
+                      onClick={() => handleViewOrder(order)}
+                    >
+                      <div>
+                        <p className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>
+                          Order {order.id}
+                        </p>
+                        <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                          {order.customer.name} • {order.items.map(i => `${i.quantity}x ${i.name}`).join(', ')}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-semibold" style={{ color: 'hsl(var(--primary))' }}>Ksh {order.amount}</span>
+                        <Badge className={statusColors[order.status]}>
+                          {order.status}
+                        </Badge>
+                      </div>
                     </div>
-                    <span className="text-sm font-medium px-2 py-1 rounded" style={{
-                      background: 'hsl(var(--accent) / 0.2)',
-                      color: 'hsl(var(--accent))'
-                    }}>
-                      {order.status}
-                    </span>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p className="text-sm text-center py-4" style={{ color: 'hsl(var(--muted-foreground))' }}>
                   No orders found matching "{searchTerm}"
@@ -91,6 +130,13 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+
+      <OrderDetailDialog
+        order={selectedOrder}
+        isOpen={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+        onStatusChange={refreshData}
+      />
     </AdminLayout>
   );
 };

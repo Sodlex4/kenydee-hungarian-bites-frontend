@@ -1,35 +1,43 @@
 import React from 'react';
-import { Users, ShoppingBag, DollarSign, TrendingUp } from 'lucide-react';
+import { Users, ShoppingBag, DollarSign, TrendingUp, AlertCircle } from 'lucide-react';
 
-const DashboardCards = () => {
+interface DashboardCardsProps {
+  totalCustomers: number;
+  ordersToday: number;
+  revenue: number;
+  growth: number;
+  pendingOrders: number;
+}
+
+const DashboardCards: React.FC<DashboardCardsProps> = ({ totalCustomers, ordersToday, revenue, growth, pendingOrders }) => {
   const stats = [
     {
       title: 'Total Customers',
-      value: '1,204',
-      change: '+12%',
+      value: totalCustomers.toLocaleString(),
+      change: 'Registered',
       icon: Users,
-      trend: 'up'
+      color: 'hsl(var(--primary))'
     },
     {
       title: 'Orders Today',
-      value: '45',
-      change: '+8%',
+      value: ordersToday.toString(),
+      change: `${pendingOrders} pending`,
       icon: ShoppingBag,
-      trend: 'up'
+      color: 'hsl(var(--accent))'
     },
     {
       title: 'Revenue',
-      value: 'Ksh 89,240',
-      change: '+23%',
+      value: `Ksh ${revenue.toLocaleString()}`,
+      change: 'From completed orders',
       icon: DollarSign,
-      trend: 'up'
+      color: 'hsl(var(--primary))'
     },
     {
       title: 'Growth',
-      value: '15.2%',
-      change: '+5%',
+      value: `${growth}%`,
+      change: 'This month',
       icon: TrendingUp,
-      trend: 'up'
+      color: 'hsl(var(--primary))'
     }
   ];
 
@@ -52,15 +60,16 @@ const DashboardCards = () => {
               <p className="text-2xl font-bold mt-1" style={{ color: 'hsl(var(--foreground))' }}>
                 {stat.value}
               </p>
-              <p className="text-sm mt-1" style={{ color: 'hsl(var(--accent))' }}>
-                {stat.change} from last month
+              <p className="text-sm mt-1 flex items-center gap-1" style={{ color: pendingOrders > 0 && index === 1 ? '#fbbf24' : 'hsl(var(--accent))' }}>
+                {index === 1 && pendingOrders > 0 && <AlertCircle className="w-3 h-3" />}
+                {stat.change}
               </p>
             </div>
             <div 
               className="p-3 rounded-lg"
-              style={{ background: 'hsl(var(--accent) / 0.1)' }}
+              style={{ background: `${stat.color} / 0.1` }}
             >
-              <stat.icon className="w-6 h-6" style={{ color: 'hsl(var(--accent))' }} />
+              <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
             </div>
           </div>
         </div>

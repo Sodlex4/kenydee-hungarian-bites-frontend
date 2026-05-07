@@ -1,19 +1,14 @@
-import React, { useState, useMemo } from 'react';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Bell, Package, User, AlertCircle, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
+import Pagination from '@/components/admin/Pagination';
+import { getNotifications, markNotificationRead, markAllNotificationsRead, deleteNotification } from '@/data/orders';
+import type { Notification } from '@/data/orders';
+import { Bell, Package, User, AlertCircle, DollarSign, Check, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
-const notifications = [
-  { id: 1, type: 'order', title: 'New Order Received', message: 'Order #1234 from John Doe - 5 Hot Dog Rolls', time: '2 min ago', read: false },
-  { id: 2, type: 'user', title: 'New Customer Registration', message: 'Sarah Wilson just signed up for an account', time: '10 min ago', read: false },
-  { id: 3, type: 'alert', title: 'Low Stock Alert', message: 'Hungarian Hot Dog Rolls (20 Pack) - Only 15 left', time: '1 hour ago', read: false },
-  { id: 4, type: 'order', title: 'Order Completed', message: 'Order #1230 delivered successfully', time: '2 hours ago', read: true },
-  { id: 5, type: 'payment', title: 'Payment Received', message: 'Ksh 650 from David Mwangi via M-Pesa', time: '3 hours ago', read: true },
-  { id: 6, type: 'alert', title: 'Product Review', message: 'New 5-star review on Hungarian Hot Dog Rolls', time: '5 hours ago', read: true },
-  { id: 7, type: 'user', title: 'Customer Feedback', message: 'Grace Wanjiku left a comment: "Amazing quality!"', time: '6 hours ago', read: true },
-  { id: 8, type: 'order', title: 'Order Cancelled', message: 'Order #1237 was cancelled by the customer', time: '1 day ago', read: true },
-];
+const ITEMS_PER_PAGE = 10;
 
 const iconMap: Record<string, React.ElementType> = {
   order: Package,
@@ -22,42 +17,58 @@ const iconMap: Record<string, React.ElementType> = {
   payment: DollarSign,
 };
 
+const iconColors: Record<string, string> = {
+  order: 'hsl(var(--primary))',
+  user: 'hsl(var(--accent))',
+  alert: '#fbbf24',
+  payment: '#4ade80',
+};
+
 const AdminNotifications = () => {
+  const [notifications, setNotifications] = useState<Notification[]>(getNotifications);
   const [searchTerm, setSearchTerm] = useState('');
-  const [notificationsData, setNotificationsData] = useState(notifications);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const refreshNotifications = useCallback(() => {
+    setNotifications(getNotifications());
+  }, []);
 
   const filteredNotifications = useMemo(() => {
-    if (!searchTerm) return notificationsData;
+    if (!searchTerm) return notifications;
     const term = searchTerm.toLowerCase();
-    return notificationsData.filter(notification =>
-      notification.title.toLowerCase().includes(term) ||
-      notification.message.toLowerCase().includes(term) ||
-      notification.type.toLowerCase().includes(term) ||
-      notification.time.toLowerCase().includes(term)
+    return notifications.filter(n =>
+      n.title.toLowerCase().includes(term) ||
+      n.message.toLowerCase().includes(term) ||
+      n.type.toLowerCase().includes(term) ||
+      n.time.toLowerCase().includes(term)
     );
-  }, [searchTerm, notificationsData]);
+  }, [notifications, searchTerm]);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+  const totalPages = Math.ceil(filteredNotifications.length / ITEMS_PER_PAGE);
+  const paginatedNotifications = filteredNotifications.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+    setCurrentPage(1);
   };
 
-  const markAsRead = (id: number) => {
-    setNotificationsData(prev =>
-      prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
+  const handleMarkRead = (id: number) => {
+    markNotificationRead(id);
+    refreshNotifications();
   };
 
-  const markAllAsRead = () => {
-    setNotificationsData(prev =>
-      prev.map(n => ({ ...n, read: true }))
-    );
+  const handleMarkAllRead = () => {
+    markAllNotificationsRead();
+    toast.success('All notifications marked as read');
+    refreshNotifications();
   };
 
-  const deleteNotification = (id: number) => {
-    setNotificationsData(prev => prev.filter(n => n.id !== id));
+  const handleDelete = (id: number) => {
+    deleteNotification(id);
+    toast.success('Notification deleted');
+    refreshNotifications();
   };
-
-  const unreadCount = notificationsData.filter(n => !n.read).length;
 
   return (
     <AdminLayout
@@ -66,89 +77,101 @@ const AdminNotifications = () => {
       onSearch={handleSearch}
       notificationCount={unreadCount}
     >
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={markAllAsRead}
-          className="text-sm px-4 py-2 rounded-lg transition-colors hover:bg-muted"
-          style={{ color: 'hsl(var(--primary))' }}
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+        <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+          {filteredNotifications.length} total • {unreadCount} unread
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleMarkAllRead}
           disabled={unreadCount === 0}
         >
-          Mark all as read
-        </button>
+          <Check className="w-4 h-4 mr-2" /> Mark all as read
+        </Button>
       </div>
-      <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
-        background: 'hsl(var(--card))',
-        borderColor: 'hsl(var(--border))'
-      }}>
-        <div className="overflow-x-auto" role="region" aria-label="Notifications table">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead className="min-w-[120px]">Notification</TableHead>
-                <TableHead className="hidden sm:table-cell min-w-[180px]">Message</TableHead>
-                <TableHead className="hidden md:table-cell">Time</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredNotifications.length > 0 ? (
-                filteredNotifications.map((notification) => {
-                  const Icon = iconMap[notification.type] || Bell;
-                  return (
-                    <TableRow
-                      key={notification.id}
-                      className={!notification.read ? 'font-medium bg-muted/30' : ''}
-                    >
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Icon className="w-4 h-4 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
-                          <span className="capitalize hidden sm:inline" style={{ color: 'hsl(var(--muted-foreground))' }}>{notification.type}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{notification.title}</TableCell>
-                      <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '250px' }}>{notification.message}</TableCell>
-                      <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))', fontSize: '12px' }}>{notification.time}</TableCell>
-                      <TableCell>
-                        <Badge className={!notification.read ? 'bg-pink-500/80 hover:bg-pink-500' : 'bg-gray-500/80 hover:bg-gray-500'}>
-                          {!notification.read ? 'Unread' : 'Read'}
+
+      <div className="space-y-3">
+        {paginatedNotifications.length > 0 ? (
+          paginatedNotifications.map((notification) => {
+            const Icon = iconMap[notification.type] || Bell;
+            return (
+              <div
+                key={notification.id}
+                className="flex gap-4 p-4 rounded-xl border transition-all duration-200"
+                style={{
+                  background: !notification.read ? 'hsl(var(--muted) / 0.2)' : 'transparent',
+                  borderColor: 'hsl(var(--border))',
+                  opacity: notification.read ? 0.7 : 1
+                }}
+              >
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{
+                    background: `${iconColors[notification.type]} / 0.15`
+                  }}>
+                    <Icon className="w-5 h-5" style={{ color: iconColors[notification.type] }} />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{notification.title}</h4>
+                        <Badge variant="outline" className="text-xs capitalize" style={{ color: iconColors[notification.type], borderColor: `${iconColors[notification.type]} / 0.3` }}>
+                          {notification.type}
                         </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          {!notification.read && (
-                            <button
-                              onClick={() => markAsRead(notification.id)}
-                              className="text-xs px-2 py-1 rounded hover:bg-muted transition-colors"
-                              style={{ color: 'hsl(var(--primary))' }}
-                            >
-                              Mark read
-                            </button>
-                          )}
-                          <button
-                            onClick={() => deleteNotification(notification.id)}
-                            className="text-xs px-2 py-1 rounded hover:bg-destructive/20 transition-colors"
-                            style={{ color: 'hsl(var(--destructive))' }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                    No notifications found matching "{searchTerm}"
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                        {!notification.read && (
+                          <div className="w-2 h-2 rounded-full" style={{ background: 'hsl(var(--primary))' }} />
+                        )}
+                      </div>
+                      <p className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>{notification.message}</p>
+                      <p className="text-xs mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>{notification.time}</p>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      {!notification.read && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => handleMarkRead(notification.id)}
+                          title="Mark as read"
+                        >
+                          <Check className="w-4 h-4" />
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 text-red-500 hover:text-red-500"
+                        onClick={() => handleDelete(notification.id)}
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="text-center py-16" style={{ color: 'hsl(var(--muted-foreground))' }}>
+            <Bell className="w-12 h-12 mx-auto mb-4 opacity-30" />
+            <p className="text-lg font-medium">No notifications</p>
+            <p className="text-sm">
+              {searchTerm ? `No notifications matching "${searchTerm}"` : 'You\'re all caught up!'}
+            </p>
+          </div>
+        )}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredNotifications.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
     </AdminLayout>
   );
 };

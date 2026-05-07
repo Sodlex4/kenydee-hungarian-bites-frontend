@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,8 +10,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Mail, Phone, MapPin, Globe, Instagram, Facebook, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import AdminLayout from '@/components/admin/AdminLayout';
-
-const SETTINGS_STORAGE_KEY = 'hungarian-bites-settings';
+import {
+  getAdminSettings,
+  saveAdminSettings,
+  getAdminPreferences,
+  saveAdminPreference,
+  type AdminPreferences
+} from '@/data/orders';
 
 const businessSchema = z.object({
   businessName: z.string().min(2, 'Business name is required'),
@@ -27,28 +32,11 @@ const socialSchema = z.object({
   website: z.string().url('Invalid URL').or(z.literal('')),
 });
 
-const defaultSettings = {
-  businessName: 'Hungarian Bites',
-  businessEmail: 'kennedygikonyo3@gmail.com',
-  phoneNumber: '+254 (0) 759 233 065',
-  location: 'Murang\'a, Kenya',
-  instagram: 'https://www.instagram.com/vdj_kenydee/',
-  facebook: 'https://facebook.com/hungarianbites',
-  whatsapp: 'https://wa.me/254700123456',
-  website: 'https://hungarianbites.co.ke',
-};
-
-const loadSettings = () => {
-  try {
-    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
-    return stored ? { ...defaultSettings, ...JSON.parse(stored) } : defaultSettings;
-  } catch {
-    return defaultSettings;
-  }
-};
-
 const AdminSettings = () => {
-  const settings = loadSettings();
+  const settings = getAdminSettings();
+  const preferences = getAdminPreferences();
+
+  const [prefs, setPrefs] = useState<AdminPreferences>(preferences);
 
   const businessForm = useForm<z.infer<typeof businessSchema>>({
     resolver: zodResolver(businessSchema),
@@ -71,17 +59,20 @@ const AdminSettings = () => {
   });
 
   const onSaveBusiness = (data: z.infer<typeof businessSchema>) => {
-    const currentSettings = loadSettings();
-    const updated = { ...currentSettings, ...data };
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updated));
+    saveAdminSettings(data);
     toast.success('Business information saved successfully');
   };
 
   const onSaveSocial = (data: z.infer<typeof socialSchema>) => {
-    const currentSettings = loadSettings();
-    const updated = { ...currentSettings, ...data };
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updated));
+    saveAdminSettings(data);
     toast.success('Social media links saved successfully');
+  };
+
+  const togglePreference = (key: keyof AdminPreferences) => {
+    const newVal = !prefs[key];
+    setPrefs(prev => ({ ...prev, [key]: newVal }));
+    saveAdminPreference(key, newVal);
+    toast.success(`${key === 'autoAcceptOrders' ? 'Auto-accept' : key === 'emailNotifications' ? 'Email notifications' : 'Low stock alerts'} ${newVal ? 'enabled' : 'disabled'}`);
   };
 
   return (
@@ -95,79 +86,37 @@ const AdminSettings = () => {
           <Form {...businessForm}>
             <form onSubmit={businessForm.handleSubmit(onSaveBusiness)} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={businessForm.control}
-                  name="businessName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Business Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={businessForm.control}
-                  name="businessEmail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Business Email</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="email" style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={businessForm.control}
-                  name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input {...field} type="tel" style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={businessForm.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Location</FormLabel>
-                      <FormControl>
-                        <Input {...field} style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <FormField control={businessForm.control} name="businessName" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Business Name</FormLabel>
+                    <FormControl><Input {...field} style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={businessForm.control} name="businessEmail" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Business Email</FormLabel>
+                    <FormControl><Input {...field} type="email" style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={businessForm.control} name="phoneNumber" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl><Input {...field} type="tel" style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={businessForm.control} name="location" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl><Input {...field} style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
               </div>
               <div className="flex justify-end">
-                <Button type="submit" disabled={!businessForm.formState.isDirty} style={{ background: 'var(--gradient-primary)' }}>
-                  Save Changes
-                </Button>
+                <Button type="submit" disabled={!businessForm.formState.isDirty} style={{ background: 'var(--gradient-primary)' }}>Save Changes</Button>
               </div>
             </form>
           </Form>
@@ -183,87 +132,37 @@ const AdminSettings = () => {
           <Form {...socialForm}>
             <form onSubmit={socialForm.handleSubmit(onSaveSocial)} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={socialForm.control}
-                  name="instagram"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Instagram className="w-4 h-4" /> Instagram
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Instagram URL" style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={socialForm.control}
-                  name="facebook"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Facebook className="w-4 h-4" /> Facebook
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Facebook URL" style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={socialForm.control}
-                  name="whatsapp"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <MessageCircle className="w-4 h-4" /> WhatsApp
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="WhatsApp URL" style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={socialForm.control}
-                  name="website"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Globe className="w-4 h-4" /> Website
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Website URL" style={{
-                          background: 'hsl(var(--input))',
-                          borderColor: 'hsl(var(--border))',
-                          color: 'hsl(var(--foreground))'
-                        }} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <FormField control={socialForm.control} name="instagram" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><Instagram className="w-4 h-4" /> Instagram</FormLabel>
+                    <FormControl><Input {...field} placeholder="Instagram URL" style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={socialForm.control} name="facebook" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><Facebook className="w-4 h-4" /> Facebook</FormLabel>
+                    <FormControl><Input {...field} placeholder="Facebook URL" style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={socialForm.control} name="whatsapp" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><MessageCircle className="w-4 h-4" /> WhatsApp</FormLabel>
+                    <FormControl><Input {...field} placeholder="WhatsApp URL" style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+                <FormField control={socialForm.control} name="website" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><Globe className="w-4 h-4" /> Website</FormLabel>
+                    <FormControl><Input {...field} placeholder="Website URL" style={{ background: 'hsl(var(--input))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
               </div>
               <div className="flex justify-end">
-                <Button type="submit" disabled={!socialForm.formState.isDirty} style={{ background: 'var(--gradient-primary)' }}>
-                  Save Changes
-                </Button>
+                <Button type="submit" disabled={!socialForm.formState.isDirty} style={{ background: 'var(--gradient-primary)' }}>Save Changes</Button>
               </div>
             </form>
           </Form>
@@ -282,7 +181,7 @@ const AdminSettings = () => {
                 <p className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>Auto-accept orders</p>
                 <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>Automatically confirm all incoming orders</p>
               </div>
-              <Switch />
+              <Switch checked={prefs.autoAcceptOrders} onCheckedChange={() => togglePreference('autoAcceptOrders')} />
             </div>
             <Separator />
             <div className="flex items-center justify-between">
@@ -290,7 +189,7 @@ const AdminSettings = () => {
                 <p className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>Email notifications</p>
                 <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>Receive email alerts for new orders</p>
               </div>
-              <Switch defaultChecked />
+              <Switch checked={prefs.emailNotifications} onCheckedChange={() => togglePreference('emailNotifications')} />
             </div>
             <Separator />
             <div className="flex items-center justify-between">
@@ -298,7 +197,7 @@ const AdminSettings = () => {
                 <p className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>Low stock alerts</p>
                 <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>Get notified when inventory drops below 20 units</p>
               </div>
-              <Switch defaultChecked />
+              <Switch checked={prefs.lowStockAlerts} onCheckedChange={() => togglePreference('lowStockAlerts')} />
             </div>
           </div>
         </div>

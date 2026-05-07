@@ -1,24 +1,35 @@
-
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AdminProfileProvider } from "@/context/AdminProfileContext";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import RouteLoading from "@/components/RouteLoading";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminCustomers from "./pages/admin/AdminCustomers";
-import AdminOrders from "./pages/admin/AdminOrders";
-import AdminProducts from "./pages/admin/AdminProducts";
-import AdminNotifications from "./pages/admin/AdminNotifications";
-import AdminProfile from "./pages/admin/AdminProfile";
-import AdminSettings from "./pages/admin/AdminSettings";
-import TermsPage from "./pages/legal/Terms";
-import PrivacyPage from "./pages/legal/Privacy";
-import AboutPage from "./pages/legal/About";
+
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminCustomers = lazy(() => import("./pages/admin/AdminCustomers"));
+const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
+const AdminProducts = lazy(() => import("./pages/admin/AdminProducts"));
+const AdminNotifications = lazy(() => import("./pages/admin/AdminNotifications"));
+const AdminProfile = lazy(() => import("./pages/admin/AdminProfile"));
+const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
+const TermsPage = lazy(() => import("./pages/legal/Terms"));
+const PrivacyPage = lazy(() => import("./pages/legal/Privacy"));
+const AboutPage = lazy(() => import("./pages/legal/About"));
 
 const queryClient = new QueryClient();
+
+const AdminLayout = ({ children }: { children: React.ReactNode }) => (
+  <ErrorBoundary>
+    <Suspense fallback={<RouteLoading />}>
+      {children}
+    </Suspense>
+  </ErrorBoundary>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -29,16 +40,16 @@ const App = () => (
         <AdminProfileProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/customers" element={<AdminCustomers />} />
-            <Route path="/admin/orders" element={<AdminOrders />} />
-            <Route path="/admin/products" element={<AdminProducts />} />
-            <Route path="/admin/notifications" element={<AdminNotifications />} />
-            <Route path="/admin/profile" element={<AdminProfile />} />
-            <Route path="/admin/settings" element={<AdminSettings />} />
-            <Route path="/legal/terms" element={<TermsPage />} />
-            <Route path="/legal/privacy" element={<PrivacyPage />} />
-            <Route path="/legal/about" element={<AboutPage />} />
+            <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+            <Route path="/admin/customers" element={<AdminLayout><AdminCustomers /></AdminLayout>} />
+            <Route path="/admin/orders" element={<AdminLayout><AdminOrders /></AdminLayout>} />
+            <Route path="/admin/products" element={<AdminLayout><AdminProducts /></AdminLayout>} />
+            <Route path="/admin/notifications" element={<AdminLayout><AdminNotifications /></AdminLayout>} />
+            <Route path="/admin/profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
+            <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
+            <Route path="/legal/terms" element={<AdminLayout><TermsPage /></AdminLayout>} />
+            <Route path="/legal/privacy" element={<AdminLayout><PrivacyPage /></AdminLayout>} />
+            <Route path="/legal/about" element={<AdminLayout><AboutPage /></AdminLayout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AdminProfileProvider>

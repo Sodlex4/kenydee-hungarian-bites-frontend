@@ -1,18 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
+import CustomerDetailDialog from '@/components/admin/CustomerDetailDialog';
+import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
+import Pagination from '@/components/admin/Pagination';
+import { getCustomers, getCustomerOrders, exportCustomersToCSV, getOrders } from '@/data/orders';
+import type { Customer, Order } from '@/data/orders';
+import { Download, Eye } from 'lucide-react';
+import { toast } from 'sonner';
 
-const customers = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+254700123456', orders: 12, total: 'Ksh 4,200', joined: '2024-01-15', status: 'Active' },
-  { id: 2, name: 'Sarah Wilson', email: 'sarah@example.com', phone: '+254700234567', orders: 8, total: 'Ksh 2,800', joined: '2024-02-20', status: 'Active' },
-  { id: 3, name: 'Mike Omondi', email: 'mike@example.com', phone: '+254700345678', orders: 15, total: 'Ksh 5,250', joined: '2024-01-05', status: 'Active' },
-  { id: 4, name: 'Grace Wanjiku', email: 'grace@example.com', phone: '+254700456789', orders: 3, total: 'Ksh 1,050', joined: '2024-03-10', status: 'Active' },
-  { id: 5, name: 'Peter Kamau', email: 'peter@example.com', phone: '+254700567890', orders: 0, total: 'Ksh 0', joined: '2024-03-15', status: 'Inactive' },
-  { id: 6, name: 'Ann Njeri', email: 'ann@example.com', phone: '+254700678901', orders: 6, total: 'Ksh 2,100', joined: '2024-02-01', status: 'Active' },
-  { id: 7, name: 'David Mwangi', email: 'david@example.com', phone: '+254700789012', orders: 20, total: 'Ksh 7,000', joined: '2024-01-01', status: 'Active' },
-  { id: 8, name: 'Lucy Wambui', email: 'lucy@example.com', phone: '+254700890123', orders: 1, total: 'Ksh 350', joined: '2024-03-12', status: 'Active' },
-];
+const ITEMS_PER_PAGE = 10;
 
 const statusColors = {
   Active: 'bg-emerald-500/80 hover:bg-emerald-500',
@@ -20,7 +19,26 @@ const statusColors = {
 };
 
 const AdminCustomers = () => {
+  const [customers, setCustomers] = useState<Customer[]>(getCustomers);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [isCustomerOpen, setIsCustomerOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
+  const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
+
+  const handleViewCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setCustomerOrders(getCustomerOrders(customer.name));
+    setIsCustomerOpen(true);
+  };
+
+  const handleViewOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setIsOrderOpen(true);
+    setIsCustomerOpen(false);
+  };
 
   const filteredCustomers = useMemo(() => {
     if (!searchTerm) return customers;
@@ -31,10 +49,19 @@ const AdminCustomers = () => {
       customer.phone.includes(term) ||
       customer.status.toLowerCase().includes(term)
     );
-  }, [searchTerm]);
+  }, [customers, searchTerm]);
+
+  const totalPages = Math.ceil(filteredCustomers.length / ITEMS_PER_PAGE);
+  const paginatedCustomers = filteredCustomers.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
+  const handleExport = () => {
+    exportCustomersToCSV();
+    toast.success('Customers exported to CSV');
   };
 
   return (
@@ -43,6 +70,15 @@ const AdminCustomers = () => {
       description="Manage your customer base and view their order history."
       onSearch={handleSearch}
     >
+      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+        <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+          {filteredCustomers.length} total customers
+        </p>
+        <Button variant="outline" size="sm" onClick={handleExport}>
+          <Download className="w-4 h-4 mr-2" /> Export CSV
+        </Button>
+      </div>
+
       <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
@@ -58,28 +94,45 @@ const AdminCustomers = () => {
                 <TableHead className="hidden sm:table-cell">Total Spent</TableHead>
                 <TableHead className="hidden lg:table-cell">Joined</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredCustomers.length > 0 ? (
-                filteredCustomers.map((customer) => (
+              {paginatedCustomers.length > 0 ? (
+                paginatedCustomers.map((customer) => (
                   <TableRow key={customer.id}>
-                    <TableCell className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{customer.name}</TableCell>
+                    <TableCell
+                      className="font-medium cursor-pointer hover:underline"
+                      style={{ color: 'hsl(var(--foreground))' }}
+                      onClick={() => handleViewCustomer(customer)}
+                    >
+                      {customer.name}
+                    </TableCell>
                     <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--muted-foreground))', maxWidth: '160px' }}>{customer.email}</TableCell>
                     <TableCell className="hidden md:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.phone}</TableCell>
                     <TableCell style={{ color: 'hsl(var(--foreground))' }}>{customer.orders}</TableCell>
                     <TableCell className="hidden sm:table-cell" style={{ color: 'hsl(var(--foreground))' }}>{customer.total}</TableCell>
                     <TableCell className="hidden lg:table-cell" style={{ color: 'hsl(var(--muted-foreground))' }}>{customer.joined}</TableCell>
                     <TableCell>
-                      <Badge className={statusColors[customer.status as keyof typeof statusColors]}>
+                      <Badge className={statusColors[customer.status]}>
                         {customer.status}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleViewCustomer(customer)}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  <TableCell colSpan={8} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
                     No customers found matching "{searchTerm}"
                   </TableCell>
                 </TableRow>
@@ -88,6 +141,29 @@ const AdminCustomers = () => {
           </Table>
         </div>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={filteredCustomers.length}
+        itemsPerPage={ITEMS_PER_PAGE}
+        onPageChange={setCurrentPage}
+      />
+
+      <CustomerDetailDialog
+        customer={selectedCustomer}
+        orders={customerOrders}
+        isOpen={isCustomerOpen}
+        onClose={() => setIsCustomerOpen(false)}
+        onViewOrder={handleViewOrder}
+      />
+
+      <OrderDetailDialog
+        order={selectedOrder}
+        isOpen={isOrderOpen}
+        onClose={() => setIsOrderOpen(false)}
+        onStatusChange={() => {}}
+      />
     </AdminLayout>
   );
 };
