@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Star, Quote } from 'lucide-react';
 import { prefersReducedMotion } from '../lib/motion';
+import { testimonials, getAverageRating, getInitials } from '../data/testimonials';
 
 const TestimonialsSection = () => {
   useEffect(() => {
@@ -35,27 +36,6 @@ const TestimonialsSection = () => {
     });
   }, []);
 
-  const testimonials = [
-    {
-      text: "Absolutely incredible! The perfect blend of traditional Hungarian flavors with modern presentation. Every bite is pure perfection.",
-      author: "trainWithSteve.",
-      rating: 5,
-      image: "/image/trainwithsteve.webp"
-    },
-    {
-      text: "These hot dog rolls have become my go-to for parties. Guests always ask where I got them - they're truly exceptional!",
-      author: "Jimmy .",
-      rating: 5,
-      image: "/image/jimmy.webp"
-    },
-    {
-      text: "The quality is outstanding and the flavors are authentic. Hungarian Bites never fails to impress!",
-      author: "Mc Wizzy",
-      rating: 5,
-      image: "/image/mc-wizzy.webp"
-    }
-  ];
-
   return (
     <section id="testimonials" className="testimonials-section py-20 relative overflow-hidden" style={{
       background: 'linear-gradient(135deg, hsl(330 40% 10%), hsl(270 50% 15%), hsl(230 40% 10%))'
@@ -74,7 +54,7 @@ const TestimonialsSection = () => {
             borderColor: 'hsl(var(--primary) / 0.3)',
             color: 'hsl(var(--primary))'
           }}>
-            Customer Love Stories
+            Wenye wameonja wanasema...
           </div>
 
           <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
@@ -82,7 +62,7 @@ const TestimonialsSection = () => {
           </h2>
 
           <p className="text-xl max-w-2xl mx-auto" style={{ color: 'hsl(var(--muted-foreground))' }}>
-            Real experiences from real customers who've fallen in love with our authentic Hungarian flavors.
+            The people have spoken. No cap.
           </p>
         </div>
 
@@ -112,7 +92,7 @@ const TestimonialsSection = () => {
                 </blockquote>
 
                 <div className="text-center">
-                  {testimonial.image && (
+                  {testimonial.image ? (
                     <img
                       src={testimonial.image}
                       alt={testimonial.author}
@@ -123,14 +103,29 @@ const TestimonialsSection = () => {
                       loading="lazy"
                       decoding="async"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        const parent = (e.target as HTMLImageElement).parentElement;
+                        if (parent) {
+                          const fallback = parent.querySelector('.initials-fallback');
+                          if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                        }
                       }}
                     />
-                  )}
+                  ) : null}
+                  <div className="initials-fallback w-20 h-20 rounded-full mx-auto mb-3 border-2 flex items-center justify-center text-xl font-bold" style={{
+                    borderColor: 'hsl(var(--primary))',
+                    background: 'hsl(var(--primary) / 0.15)',
+                    color: 'hsl(var(--primary))',
+                    display: testimonial.image ? 'none' : 'flex'
+                  }}>
+                    {testimonial.image ? '' : getInitials(testimonial.author)}
+                  </div>
                   <h4 className="text-xl font-bold tracking-wide" style={{ fontFamily: 'Bebas Neue, sans-serif', backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     {testimonial.author}
                   </h4>
-                  <div className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Verified Customer</div>
+                  {testimonial.verified && (
+                    <div className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Verified Customer</div>
+                  )}
                 </div>
 
                 <div className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-60" style={{ background: 'hsl(var(--primary))' }}></div>
@@ -145,10 +140,10 @@ const TestimonialsSection = () => {
             background: 'hsl(var(--card) / 0.5)',
             borderColor: 'hsl(var(--primary) / 0.2)'
           }}>
-            <p className="text-lg mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>Join our community of satisfied customers</p>
+            <p className="text-lg mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>Weka order, ujionee mwenyewe.</p>
             <div className="flex justify-center items-center space-x-2" style={{ color: 'hsl(var(--primary))' }}>
               <Star className="w-5 h-5 fill-current" />
-              <span className="text-2xl font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>4.9/5</span>
+              <span className="text-2xl font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{getAverageRating(testimonials)}/5</span>
               <span className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>average rating</span>
             </div>
           </div>
