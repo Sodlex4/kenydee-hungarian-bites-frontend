@@ -87,6 +87,10 @@ const Cart = () => {
 
   const handleClose = useCallback(() => {
     closeCart();
+    setTimeout(() => {
+      const cartButton = document.querySelector('[aria-label*="Shopping cart"]') as HTMLButtonElement;
+      cartButton?.focus();
+    }, 0);
   }, [closeCart]);
 
   useEffect(() => {
@@ -173,7 +177,7 @@ const Cart = () => {
                   <ShoppingCart className="w-10 h-10" style={{ color: 'hsl(var(--muted))' }} />
                 </div>
                 <p className="text-lg font-semibold mb-2" style={{ color: 'hsl(var(--foreground))' }}>Your cart is empty</p>
-                <p className="text-sm mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Hungarian Hot Dog Rolls from Ksh 70/piece</p>
+                <p className="text-sm mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Bites from Ksh 69/piece</p>
                 <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>Free delivery within Murang'a Town</p>
                 <button
                   onClick={() => {

@@ -174,6 +174,157 @@ All colors MUST be HSL.
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* Glass card effect - frosted glass with backdrop blur */
+  .glass-card {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--primary) / 0.2);
+    border-radius: 1.5rem;
+    background: hsl(var(--card) / 0.5);
+  }
+
+  .glass-card:hover {
+    border-color: hsl(var(--primary) / 0.4);
+  }
+
+  .glass-card-accent {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--accent) / 0.2);
+    border-radius: 1.5rem;
+    background: hsl(var(--card) / 0.5);
+  }
+
+  /* Section gradient presets */
+  .section-gradient-dark {
+    background: linear-gradient(to bottom, hsl(270 40% 8%), hsl(230 50% 12%), hsl(270 40% 8%));
+  }
+
+  .section-gradient-purple {
+    background: linear-gradient(135deg, hsl(330 40% 10%), hsl(270 50% 15%), hsl(230 40% 10%));
+  }
+
+  .section-gradient-order {
+    background: linear-gradient(135deg, hsl(330 30% 8%), hsl(270 40% 12%), hsl(330 50% 8%));
+  }
+
+  .section-gradient-hero {
+    background: linear-gradient(to bottom, hsl(330 80% 20%), hsl(270 70% 20%), hsl(230 70% 20%));
+  }
+
+  .section-gradient-footer {
+    background: linear-gradient(to bottom, hsl(230 70% 15%), hsl(0 0% 0%));
+  }
+
+  .section-gradient-features {
+    background: linear-gradient(to bottom, hsl(230 50% 12%), hsl(260 40% 15%), hsl(330 50% 12%));
+  }
+
+  /* Badge/chip styling */
+  .badge-chip {
+    display: inline-flex;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid hsl(var(--primary) / 0.3);
+    border-radius: 9999px;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary));
+  }
+
+  /* Gradient text using CSS variables */
+  .text-gradient-primary {
+    background-image: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Gradient button */
+  .btn-gradient {
+    background-image: var(--gradient-primary);
+    color: white;
+    font-weight: 700;
+    border-radius: 1rem;
+    padding: 1rem 3rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px hsl(var(--primary) / 0.3);
+  }
+
+  .btn-gradient:active {
+    transform: scale(0.95);
+  }
+
+  .btn-gradient:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Outline button */
+  .btn-outline-primary {
+    background: transparent;
+    border: 2px solid hsl(var(--primary));
+    color: hsl(var(--primary));
+    font-weight: 700;
+    border-radius: 1rem;
+    padding: 1rem 3rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-primary:hover {
+    background: hsl(var(--primary));
+    color: white;
+    transform: scale(1.05);
+  }
+
+  /* Skeleton loading animation */
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .skeleton {
+    background: hsl(var(--muted) / 0.5);
+    border-radius: 0.5rem;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* Mobile nav slide animation */
+  @keyframes slideDown {
+    from { max-height: 0; opacity: 0; }
+    to { max-height: 300px; opacity: 1; }
+  }
+
+  .animate-slideDown {
+    animation: slideDown 0.3s ease-out;
+    overflow: hidden;
+  }
+
+  /* Grid-based accordion animation (smooth, no hard-coded max-height) */
+  .accordion-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  .accordion-grid.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .accordion-grid > div {
+    overflow: hidden;
+  }
 }
 
 /* Performance optimizations */

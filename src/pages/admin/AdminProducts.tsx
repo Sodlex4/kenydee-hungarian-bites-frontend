@@ -159,8 +159,29 @@ const AdminProducts = () => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                    No products found matching "{searchTerm}"
+                  <TableCell colSpan={7} className="text-center py-12">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
+                        <svg className="w-8 h-8" style={{ color: 'hsl(var(--muted-foreground))' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                      </div>
+                      <p className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>
+                        {searchTerm ? `No products found matching "${searchTerm}"` : 'No products yet'}
+                      </p>
+                      <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                        {searchTerm ? 'Try a different search term' : 'Add your first product to start selling'}
+                      </p>
+                      {!searchTerm && (
+                        <button
+                          className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all hover:scale-105"
+                          style={{ background: 'var(--gradient-primary)' }}
+                          onClick={() => { setEditingProduct(null); setIsFormOpen(true); }}
+                        >
+                          <Plus className="w-4 h-4 mr-1 inline-block" /> Add Your First Product
+                        </button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               )}

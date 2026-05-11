@@ -211,7 +211,7 @@ const Header = () => {
       {isMenuOpen && (
         <nav
           ref={mobileNavRef}
-          className="md:hidden"
+          className="md:hidden animate-slideDown"
           style={{
             background: 'hsl(var(--background) / 0.98)',
             borderTop: '1px solid hsl(var(--primary) / 0.2)'

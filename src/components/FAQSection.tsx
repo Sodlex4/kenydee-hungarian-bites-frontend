@@ -50,18 +50,14 @@ const FAQSection = () => {
     }}>
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-block backdrop-blur-sm border rounded-full px-6 py-2 text-sm font-medium mb-6" style={{
-            background: 'hsl(var(--primary) / 0.2)',
-            borderColor: 'hsl(var(--primary) / 0.3)',
-            color: 'hsl(var(--primary))'
-          }}>
-            Got Questions?
+          <div className="badge-chip">
+            Una Doubt?
           </div>
           <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
-            Frequently <span style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Asked</span>
+            Frequently <span className="text-gradient-primary">Asked</span>
           </h2>
           <p className="text-xl max-w-2xl mx-auto" style={{ color: 'hsl(var(--muted-foreground))' }}>
-            Everything you need to know about ordering Hungarian Hot Dog Rolls.
+            All the deets you need.
           </p>
         </div>
 
@@ -93,16 +89,12 @@ const FAQSection = () => {
                   )}
                 </div>
               </button>
-              <div
-                className="overflow-hidden transition-all duration-300"
-                style={{
-                  maxHeight: openIndex === index ? '300px' : '0',
-                  opacity: openIndex === index ? 1 : 0
-                }}
-              >
-                <p className="px-6 pb-6 leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                  {faq.answer}
-                </p>
+              <div className={`accordion-grid ${openIndex === index ? 'open' : ''}`}>
+                <div>
+                  <p className="px-6 pb-6 leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                    {faq.answer}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

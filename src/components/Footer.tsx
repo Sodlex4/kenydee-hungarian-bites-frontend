@@ -12,9 +12,7 @@ const Footer = () => {
   };
 
   return (
-    <footer id="contact" className="py-16 relative overflow-hidden" style={{
-      background: 'linear-gradient(to bottom, hsl(230 70% 15%), hsl(0 0% 0%))'
-    }}>
+    <footer id="contact" className="py-16 relative overflow-hidden section-gradient-footer">
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'hsl(var(--primary) / 0.05)' }}></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'hsl(var(--accent) / 0.05)' }}></div>
@@ -25,16 +23,13 @@ const Footer = () => {
 
           <div className="space-y-6">
             <div>
-              <h3 className="text-3xl font-bold mb-4 tracking-wider" style={{
+              <h3 className="text-3xl font-bold mb-4 tracking-wider text-gradient-primary" style={{
                 fontFamily: 'Bebas Neue, sans-serif',
-                backgroundImage: 'var(--gradient-primary)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
               }}>
                 HUNGARIAN BITES
               </h3>
               <p className="leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                Bringing authentic Hungarian street food to Kenya/Murang'a with premium quality, traditional recipes, and modern excellence.
+                Hungarian recipe. Kenyan heat. Murang'a's finest. Bites that slap, delivered to your door.
               </p>
             </div>
 
@@ -138,7 +133,7 @@ const Footer = () => {
                   <span style={{ color: 'hsl(var(--foreground))' }}>1:00 PM - 9:00 PM</span>
                 </p>
                 <div className="border-t pt-2 mt-3" style={{ borderColor: 'hsl(var(--primary) / 0.2)' }}>
-                    <p className="text-center font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    <p className="text-center font-bold text-gradient-primary">
                     Order via WhatsApp: 24/7
                     <br />
                     call us: +254 (0) 759 233 065
@@ -156,7 +151,7 @@ const Footer = () => {
             </p>
             <p style={{ color: 'hsl(var(--muted-foreground))' }}>
               Made BY{" "}
-              <span className="font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>trainWithSteve</span>
+              <span className="font-bold text-gradient-primary">trainWithSteve</span>
               <span className="text-pink-400 inline-block mx-3">❤</span>
               in Kenya
             </p>

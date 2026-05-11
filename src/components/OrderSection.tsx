@@ -71,9 +71,7 @@ const OrderSection = () => {
   };
 
   return (
-    <section id="order" className="py-20 relative overflow-hidden" style={{
-      background: 'linear-gradient(135deg, hsl(330 30% 8%), hsl(270 40% 12%), hsl(330 50% 8%))'
-    }}>
+    <section id="order" className="py-20 relative overflow-hidden section-gradient-order">
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--primary) / 0.1)' }}></div>
         <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--accent) / 0.1)' }}></div>
@@ -81,17 +79,13 @@ const OrderSection = () => {
 
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="mb-4">
-          <div className="inline-block backdrop-blur-sm border rounded-full px-6 py-2 text-sm font-medium mb-6" style={{
-            background: 'hsl(var(--primary) / 0.2)',
-            borderColor: 'hsl(var(--primary) / 0.3)',
-            color: 'hsl(var(--primary))'
-          }}>
+          <div className="badge-chip">
             Limited Time Offers
           </div>
         </div>
 
         <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
-          Ready to <span style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Experience</span> Perfection?
+          Ready to <span className="text-gradient-primary">Experience</span> Perfection?
         </h2>
 
         <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
@@ -131,18 +125,11 @@ const OrderSection = () => {
                   </div>
                 )}
 
-                <div className={`backdrop-blur-xl border-2 rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl ${
+                <div className={`border-2 rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl ${
                   selectedQuantity === pkg.id
-                    ? 'border-pink-500'
-                    : 'hover:border-pink-500/40'
-                }`} style={{
-                  background: selectedQuantity === pkg.id
-                    ? 'hsl(var(--primary) / 0.2)'
-                    : 'hsl(var(--card) / 0.5)',
-                  borderColor: selectedQuantity === pkg.id
-                    ? 'hsl(var(--primary))'
-                    : 'hsl(var(--primary) / 0.2)'
-                }}>
+                    ? 'glass-card border-pink-500'
+                    : 'glass-card hover:border-pink-500/40'
+                }`}>
 
                   <div className="text-center">
                     <div className="relative mb-4">
@@ -167,7 +154,7 @@ const OrderSection = () => {
                     <h3 className="text-2xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>{pkg.label}</h3>
 
                     <div className="mb-6">
-                      <div className="text-4xl font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                      <div className="text-4xl font-bold text-gradient-primary">
                         Ksh {pkg.price}
                       </div>
                       {pkg.originalPrice !== pkg.price && (
@@ -232,25 +219,16 @@ const OrderSection = () => {
               }}>
                 <span className="text-sm font-medium" style={{ color: 'hsl(var(--muted-foreground))' }}>Selected:</span>
                 <span className="text-lg font-bold" style={{ color: 'hsl(var(--foreground))' }}>{selected?.label} × {qty}</span>
-                <span className="text-lg font-bold" style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ksh {selected ? selected.price * qty : 0}</span>
+                <span className="text-lg font-bold text-gradient-primary">Ksh {selected ? selected.price * qty : 0}</span>
               </div>
             );
           })()}
 
           <button
             onClick={handleAddToCart}
-            className={`px-12 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
-              selectedQuantity
-                ? 'hover:scale-105 active:scale-95'
-                : 'cursor-not-allowed opacity-50'
-            }`}
+            className={`btn-gradient ${!selectedQuantity ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={!selectedQuantity || isAdding}
-            style={{
-              background: selectedQuantity ? 'var(--gradient-primary)' : 'hsl(var(--muted))',
-              color: selectedQuantity ? 'white' : 'hsl(var(--muted-foreground))',
-              boxShadow: selectedQuantity ? '0 10px 30px hsl(var(--primary) / 0.3)' : 'none',
-              transform: isAdding ? 'scale(0.95)' : undefined
-            }}
+            style={{ transform: isAdding ? 'scale(0.95)' : '' }}
           >
             {isAdding ? (
               <span className="flex items-center gap-2">
@@ -265,12 +243,7 @@ const OrderSection = () => {
 
           <button
             onClick={handleQuickWhatsApp}
-            className="mt-4 px-12 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
-            style={{
-              background: 'transparent',
-              border: '2px solid hsl(var(--primary))',
-              color: 'hsl(var(--primary))'
-            }}
+            className="btn-outline-primary mt-4 flex items-center justify-center gap-2"
           >
             <MessageCircle className="w-5 h-5" />
             Order via WhatsApp

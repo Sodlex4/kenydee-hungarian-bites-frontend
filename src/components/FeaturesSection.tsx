@@ -38,25 +38,23 @@ const FeaturesSection = () => {
   const features = [
     {
       icon: Crown,
-      title: 'Royal Quality',
-      description: 'Crafted with the finest ingredients and time-honored Hungarian traditions for an unmatched taste experience.'
+      title: 'Top Tier',
+      description: 'Real ingredients. Real recipe. Real taste. We don\'t cut corners.'
     },
     {
       icon: Sparkles,
-      title: 'Artisan Crafted',
-      description: 'Each roll is carefully handcrafted by our master chefs, ensuring perfect texture and flavor in every bite.'
+      title: 'Made Proper',
+      description: 'Hungarian recipe, Kenyan style. Fresh daily, made with love.'
     },
     {
       icon: Shield,
-      title: 'Trusted Excellence',
-      description: 'Over 500 satisfied customers trust us for consistent quality and authentic Hungarian street food experience.'
+      title: 'People Love Us',
+      description: '500+ customers keep coming back. Word on the street says it all.'
     }
   ];
 
   return (
-    <section id="products" className="features-section py-20 relative" style={{
-      background: 'linear-gradient(to bottom, hsl(230 50% 12%), hsl(260 40% 15%), hsl(330 50% 12%))'
-    }}>
+    <section id="products" className="features-section py-20 relative section-gradient-features">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,hsl(var(--accent)_/_0.4),transparent_70%)]"></div>
       </div>
@@ -64,7 +62,7 @@ const FeaturesSection = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
-            Why Choose Our <span style={{ backgroundImage: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Masterpiece</span>
+            Why Choose Our <span className="text-gradient-primary">Masterpiece</span>
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed" style={{ color: 'hsl(var(--muted-foreground))' }}>
             Experience the perfect harmony of traditional Hungarian recipes and modern culinary innovation.
@@ -77,10 +75,7 @@ const FeaturesSection = () => {
               key={index}
               className="feature-card group relative"
             >
-              <div className="backdrop-blur-xl border rounded-3xl p-8 text-center hover:scale-105 transition-all duration-500" style={{
-                background: 'hsl(var(--card) / 0.5)',
-                borderColor: 'hsl(var(--primary) / 0.2)'
-              }}>
+              <div className="glass-card p-8 text-center hover:scale-105 transition-all duration-500">
                 <div className="feature-icon relative mb-6">
                   <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto shadow-lg" style={{
                     background: 'var(--gradient-primary)'

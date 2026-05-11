@@ -79,6 +79,16 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     };
   }, [isCartOpen]);
 
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === CART_STORAGE_KEY) {
+        setCartItems(loadCartFromStorage());
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   const persistCart = (updated: CartItem[]) => {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
   };
