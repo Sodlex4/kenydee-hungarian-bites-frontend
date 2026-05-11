@@ -164,21 +164,21 @@ const HeroSection = () => {
             />
           </div>
 
-          <div className="floating-card absolute -top-4 -left-4 glass-card !rounded-2xl p-4 shadow-xl">
+          <div className="floating-card hidden sm:block absolute -top-4 -left-4 glass-card !rounded-2xl p-4 shadow-xl">
             <div className="flex items-center space-x-2">
               <Star className="w-5 h-5 text-pink-400" />
               <span className="font-semibold text-pink-400">Premium</span>
             </div>
           </div>
 
-          <div className="floating-card absolute -top-4 -right-4 glass-card !rounded-2xl p-4 shadow-xl">
+          <div className="floating-card hidden sm:block absolute -top-4 -right-4 glass-card !rounded-2xl p-4 shadow-xl">
             <div className="flex items-center space-x-2">
               <Zap className="w-5 h-5 text-purple-400" />
               <span className="font-semibold text-purple-400">Fast</span>
             </div>
           </div>
 
-          <div className="floating-card absolute -bottom-4 left-1/2 transform -translate-x-1/2 glass-card !rounded-2xl p-4 shadow-xl">
+          <div className="floating-card hidden sm:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 glass-card !rounded-2xl p-4 shadow-xl">
             <div className="flex items-center space-x-2">
               <Heart className="w-5 h-5 text-pink-400" />
               <span className="font-semibold text-pink-400">Loved</span>

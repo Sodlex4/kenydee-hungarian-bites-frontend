@@ -17,6 +17,7 @@ interface CartContextType {
   removeFromCart: (id: string) => void;
   undoRemove: () => void;
   updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
   toggleCart: () => void;
   closeCart: () => void;
 }
@@ -172,6 +173,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setIsCartOpen(prev => !prev);
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem(CART_STORAGE_KEY);
+  };
+
   const closeCart = () => {
     setIsCartOpen(false);
   };
@@ -184,6 +190,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     removeFromCart,
     undoRemove,
     updateQuantity,
+    clearCart,
     toggleCart,
     closeCart,
   };

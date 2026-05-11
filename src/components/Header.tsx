@@ -208,38 +208,39 @@ const Header = () => {
       </div>
 
       {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <nav
-          ref={mobileNavRef}
-          className="md:hidden animate-slideDown"
-          style={{
-            background: 'hsl(var(--background) / 0.98)',
-            borderTop: '1px solid hsl(var(--primary) / 0.2)'
-          }}
-          aria-label="Mobile navigation"
-        >
-          <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
-            {navButtons.map((item) => (
-              <button
-                key={item.id}
-                ref={item.ref}
-                onClick={() => scrollToSection(item.id)}
-                className={`transition-colors text-left py-2 text-lg font-medium ${
-                  activeSection === item.id ? 'font-semibold' : ''
-                }`}
-                style={{
-                  color: activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))',
-                  borderBottom: activeSection === item.id ? '2px solid hsl(var(--primary))' : '2px solid transparent'
-                }}
-                aria-label={`Navigate to ${item.label}`}
-                aria-current={activeSection === item.id ? 'page' : undefined}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </nav>
-      )}
+      <div className={`md:hidden accordion-grid ${isMenuOpen ? 'open' : ''}`}>
+        <div>
+          <nav
+            ref={mobileNavRef}
+            style={{
+              background: 'hsl(var(--background) / 0.98)',
+              borderTop: '1px solid hsl(var(--primary) / 0.2)'
+            }}
+            aria-label="Mobile navigation"
+          >
+            <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
+              {navButtons.map((item) => (
+                <button
+                  key={item.id}
+                  ref={item.ref}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`transition-colors text-left py-2 text-lg font-medium ${
+                    activeSection === item.id ? 'font-semibold' : ''
+                  }`}
+                  style={{
+                    color: activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))',
+                    borderBottom: activeSection === item.id ? '2px solid hsl(var(--primary))' : '2px solid transparent'
+                  }}
+                  aria-label={`Navigate to ${item.label}`}
+                  aria-current={activeSection === item.id ? 'page' : undefined}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </nav>
+        </div>
+      </div>
     </header>
   );
 };
