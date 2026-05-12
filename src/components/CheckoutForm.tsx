@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { ArrowLeft, Package, Clock, MessageCircle, Mail, Phone, Smartphone, Banknote } from 'lucide-react';
+import { ArrowLeft, Package, Clock, MessageCircle, Mail, Phone, Smartphone, Banknote, Lock, Shield, Truck } from 'lucide-react';
 import type { CartItem } from '../context/CartContext';
 
 const checkoutSchema = z.object({
@@ -62,9 +62,15 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   const paymentMethod = watch('paymentMethod');
   const specialInstructions = watch('specialInstructions');
 
+  const eta = new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleTimeString('en-KE', { hour: 'numeric', minute: '2-digit' });
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
+        <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
+          Checkout as a guest &mdash; no account needed
+        </p>
+
         {/* Order Summary */}
         <div
           className="rounded-xl p-4 space-y-2"
@@ -246,6 +252,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               </label>
             ))}
           </div>
+          {deliveryTime === 'asap' && (
+            <p className="text-xs mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              Estimated delivery by <strong>{eta}</strong> (within 2 hours)
+            </p>
+          )}
           {deliveryTime === 'schedule' && (
             <div>
               <input
@@ -343,11 +354,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         style={{ borderTop: '1px solid hsl(var(--border))' }}
       >
         <div className="relative">
-          <div className="absolute inset-0 rounded-lg" style={{
-            background: '#25D366',
-            animation: 'wa-pulse 2s ease-in-out infinite',
-            opacity: 0.3,
-          }} />
+          {!isSubmitting && (
+            <div className="absolute inset-0 rounded-lg" style={{
+              background: '#25D366',
+              animation: 'wa-pulse 2s ease-in-out infinite',
+              opacity: 0.3,
+            }} />
+          )}
           <button
             type="submit"
             disabled={isSubmitting}
@@ -364,6 +377,17 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
           Your order details will be sent via WhatsApp for confirmation
         </p>
+        <div className="flex items-center justify-center gap-4 text-[10px]" style={{ color: 'hsl(var(--muted-foreground))' }}>
+          <span className="flex items-center gap-1">
+            <Lock className="w-3 h-3" /> Secure
+          </span>
+          <span className="flex items-center gap-1">
+            <Shield className="w-3 h-3" /> Quality Guaranteed
+          </span>
+          <span className="flex items-center gap-1">
+            <Truck className="w-3 h-3" /> Fast Delivery
+          </span>
+        </div>
       </div>
     </form>
   );

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2, ArrowLeft, Check } from 'lucide-react';
+import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2, ArrowLeft, Check, Percent } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import CheckoutForm from './CheckoutForm';
@@ -439,13 +439,35 @@ const Cart = () => {
                   <span style={{ color: 'hsl(var(--muted-foreground))' }}>Delivery</span>
                   <span style={{ color: '#22c55e' }}>Free</span>
                 </div>
-                <div className="flex items-center justify-between text-xl font-bold">
-                  <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
-                  <span style={{ color: 'hsl(var(--primary))' }}>Ksh {total.toLocaleString()}</span>
-                </div>
+              <div className="flex items-center justify-between text-xl font-bold">
+                <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
+                <span style={{ color: 'hsl(var(--primary))' }}>Ksh {total.toLocaleString()}</span>
               </div>
+            </div>
 
-              {total < MIN_ORDER_AMOUNT && (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Promo code"
+                className="flex-1 rounded-lg border px-3 py-2 text-sm"
+                style={{
+                  background: 'hsl(var(--input))',
+                  borderColor: 'hsl(var(--border))',
+                  color: 'hsl(var(--foreground))',
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'hsl(var(--primary))'}
+                onBlur={(e) => e.target.style.borderColor = 'hsl(var(--border))'}
+              />
+              <button
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all duration-300 hover:scale-105"
+                style={{ background: 'var(--gradient-primary)' }}
+                onClick={() => toast.info('Promo codes coming soon!')}
+              >
+                <Percent className="w-4 h-4" />
+              </button>
+            </div>
+
+            {total < MIN_ORDER_AMOUNT && (
                 <p className="text-xs text-center" style={{ color: 'hsl(var(--destructive))' }}>
                   Minimum order is Ksh {MIN_ORDER_AMOUNT.toLocaleString()} (Ksh {(MIN_ORDER_AMOUNT - total).toLocaleString()} more needed)
                 </p>
