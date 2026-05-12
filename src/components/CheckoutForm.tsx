@@ -187,14 +187,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>
             Delivery Time
           </label>
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             {[
               { value: 'asap' as const, label: 'ASAP', sub: 'within 2 hrs' },
               { value: 'schedule' as const, label: 'Schedule', sub: 'pick a time' },
             ].map((option) => (
               <label
                 key={option.value}
-                className={`flex-1 flex flex-col items-center justify-center gap-1 px-3 py-2.5 rounded-lg border text-sm font-medium cursor-pointer transition-all ${
+                className={`flex-1 flex flex-col items-center justify-center gap-1 px-2 sm:px-3 py-2.5 rounded-lg border cursor-pointer transition-all ${
                   deliveryTime === option.value ? 'ring-2' : ''
                 }`}
                 style={{
@@ -206,7 +206,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               >
                 <input type="radio" value={option.value} {...register('deliveryTime')} className="sr-only" />
                 <Clock className="w-4 h-4" />
-                <span>{option.label}</span>
+                <span className="text-xs sm:text-sm font-medium">{option.label}</span>
                 <span className="text-[10px] opacity-70">{option.sub}</span>
               </label>
             ))}
@@ -231,14 +231,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>
             Payment Method <span style={{ color: 'hsl(var(--destructive))' }}>*</span>
           </label>
-          <div className="flex gap-3">
+          <div className="flex sm:flex-row flex-col gap-2 sm:gap-3">
             {[
               { value: 'mpesa' as const, label: 'M-Pesa' },
               { value: 'cash' as const, label: 'Cash on Delivery' },
             ].map((option) => (
               <label
                 key={option.value}
-                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium cursor-pointer transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-3 sm:py-2.5 rounded-lg border font-medium cursor-pointer transition-all ${
                   paymentMethod === option.value ? 'ring-2' : ''
                 }`}
                 style={{
@@ -253,7 +253,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   {...register('paymentMethod')}
                   className="sr-only"
                 />
-                {option.label}
+                <span className="text-xs sm:text-sm font-medium">{option.label}</span>
               </label>
             ))}
           </div>

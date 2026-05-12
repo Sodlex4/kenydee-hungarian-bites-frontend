@@ -141,6 +141,7 @@ const OrderSection = () => {
                         height="128"
                         loading="lazy"
                         decoding="async"
+                        sizes="(max-width: 768px) 100vw, 300px"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/placeholder.svg';
                         }}

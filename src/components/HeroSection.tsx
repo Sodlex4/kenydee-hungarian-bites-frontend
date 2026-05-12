@@ -2,11 +2,11 @@
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { Star, Zap, Heart } from 'lucide-react';
-import { prefersReducedMotion } from '../lib/motion';
+import { shouldReduceAnimations, isMobileDevice } from '../lib/motion';
 
 const HeroSection = () => {
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (shouldReduceAnimations()) return;
 
     const tl = gsap.timeline({ delay: 0.5 });
 
@@ -31,21 +31,23 @@ const HeroSection = () => {
       ease: "power2.out"
     }, "-=0.5");
 
-    gsap.to(".floating-card", {
-      y: -5,
-      duration: 2,
-      yoyo: true,
-      repeat: -1,
-      stagger: 0.3,
-      ease: "power2.inOut"
-    });
+    if (!isMobileDevice()) {
+      gsap.to(".floating-card", {
+        y: -5,
+        duration: 2,
+        yoyo: true,
+        repeat: -1,
+        stagger: 0.3,
+        ease: "power2.inOut"
+      });
 
-    gsap.to(".product-rotate", {
-      rotation: 360,
-      duration: 20,
-      repeat: -1,
-      ease: "none"
-    });
+      gsap.to(".product-rotate", {
+        rotation: 360,
+        duration: 20,
+        repeat: -1,
+        ease: "none"
+      });
+    }
   }, []);
 
   const scrollToOrder = () => {
@@ -158,6 +160,7 @@ const HeroSection = () => {
               height="224"
               fetchPriority="high"
               decoding="async"
+              sizes="(max-width: 640px) 240px, 224px"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder.svg';
               }}

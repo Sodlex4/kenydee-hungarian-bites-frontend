@@ -3,13 +3,13 @@ import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Star, Quote } from 'lucide-react';
-import { prefersReducedMotion } from '../lib/motion';
+import { shouldReduceAnimations, isMobileDevice } from '../lib/motion';
 import { testimonials, getAverageRating, getInitials } from '../data/testimonials';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const TestimonialsSection = () => {
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (shouldReduceAnimations()) return;
 
     gsap.fromTo(".testimonial-card",
       { y: 50, opacity: 0, rotation: -5 },
@@ -27,14 +27,16 @@ const TestimonialsSection = () => {
       }
     );
 
-    gsap.to(".testimonial-card", {
-      y: -5,
-      duration: 3,
-      yoyo: true,
-      repeat: -1,
-      stagger: 0.5,
-      ease: "power2.inOut"
-    });
+    if (!isMobileDevice()) {
+      gsap.to(".testimonial-card", {
+        y: -5,
+        duration: 3,
+        yoyo: true,
+        repeat: -1,
+        stagger: 0.5,
+        ease: "power2.inOut"
+      });
+    }
   }, []);
 
   return (

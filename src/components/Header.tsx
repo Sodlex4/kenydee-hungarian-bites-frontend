@@ -168,7 +168,7 @@ const Header = () => {
             }}
             aria-label={`Shopping cart, ${totalItems} items`}
           >
-            <ShoppingCart className="w-6 h-6" style={{ color: 'hsl(var(--primary-foreground))' }} />
+            <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'hsl(var(--primary-foreground))' }} />
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 text-xs rounded-full min-w-[1.25rem] h-5 px-1 flex items-center justify-center font-bold shadow-lg animate-badgePop" style={{
                 background: 'hsl(var(--destructive))',
@@ -200,9 +200,9 @@ const Header = () => {
             aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6" style={{ color: 'hsl(var(--primary-foreground))' }} />
+              <X className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'hsl(var(--primary-foreground))' }} />
             ) : (
-              <Menu className="w-6 h-6" style={{ color: 'hsl(var(--primary-foreground))' }} />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'hsl(var(--primary-foreground))' }} />
             )}
           </button>
         </div>

@@ -3,11 +3,11 @@ import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Users, Clock, Award } from 'lucide-react';
-import { prefersReducedMotion } from '../lib/motion';
+import { shouldReduceAnimations } from '../lib/motion';
 
 const AboutSection = () => {
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (shouldReduceAnimations()) return;
 
     gsap.fromTo(".about-content",
       { y: 50, opacity: 0 },
@@ -91,6 +91,7 @@ const AboutSection = () => {
                     height="224"
                     loading="lazy"
                     decoding="async"
+                    sizes="(max-width: 640px) 50vw, 300px"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}
@@ -145,6 +146,7 @@ const AboutSection = () => {
                     height="224"
                     loading="lazy"
                     decoding="async"
+                    sizes="(max-width: 640px) 50vw, 300px"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/placeholder.svg';
                     }}

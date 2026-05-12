@@ -3,11 +3,11 @@ import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Crown, Sparkles, Shield } from 'lucide-react';
-import { prefersReducedMotion } from '../lib/motion';
+import { shouldReduceAnimations, isMobileDevice } from '../lib/motion';
 
 const FeaturesSection = () => {
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (shouldReduceAnimations()) return;
 
     gsap.fromTo(".feature-card",
       { y: 50, opacity: 0, scale: 0.9 },
@@ -25,14 +25,16 @@ const FeaturesSection = () => {
       }
     );
 
-    gsap.to(".feature-icon", {
-      y: -5,
-      duration: 2,
-      yoyo: true,
-      repeat: -1,
-      stagger: 0.3,
-      ease: "power2.inOut"
-    });
+    if (!isMobileDevice()) {
+      gsap.to(".feature-icon", {
+        y: -5,
+        duration: 2,
+        yoyo: true,
+        repeat: -1,
+        stagger: 0.3,
+        ease: "power2.inOut"
+      });
+    }
   }, []);
 
   const features = [
