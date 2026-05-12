@@ -14,9 +14,9 @@ const OrderSection = () => {
   const imgVersion = useRef(Date.now());
 
   const packages = [
-    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp' },
-    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp' },
-    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp' }
+    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg' },
+    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp', fallback: '/image/hotdog.jpg' },
+    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg' }
   ];
 
   const getQty = (id: string) => packageQty[id] || 1;
@@ -136,22 +136,33 @@ const OrderSection = () => {
 
                   <div className="text-center">
                     <div className="relative mb-4">
-                      {!loadedImages.has(pkg.id) && <Skeleton className="w-full h-32 rounded-xl" />}
-                      <img
-                        src={`${pkg.image}?v=${imgVersion.current}`}
-                        alt={pkg.label}
-                        className={`w-full h-32 object-cover rounded-xl ${!loadedImages.has(pkg.id) ? 'hidden' : ''}`}
-                        width="300"
-                        height="128"
-                        loading="lazy"
-                        decoding="async"
-                        sizes="(max-width: 768px) 100vw, 300px"
-                        onLoad={() => setLoadedImages(prev => new Set(prev).add(pkg.id))}
-                        onError={(e) => {
-                          setLoadedImages(prev => new Set(prev).add(pkg.id));
-                          (e.target as HTMLImageElement).src = '/placeholder.svg';
-                        }}
-                      />
+                      {!loadedImages.has(pkg.id) && <Skeleton className="absolute inset-0 h-32 rounded-xl" />}
+                      <picture>
+                        <source srcSet={`${pkg.image}?v=${imgVersion.current}`} type="image/webp" />
+                        <img
+                          src={`${pkg.fallback}?v=${imgVersion.current}`}
+                          alt={pkg.label}
+                          className="w-full h-32 object-cover rounded-xl"
+                          width="300"
+                          height="128"
+                          loading="lazy"
+                          decoding="async"
+                          sizes="(max-width: 768px) 100vw, 300px"
+                          onLoad={() => setLoadedImages(prev => new Set(prev).add(pkg.id))}
+                          onError={(e) => {
+                            setLoadedImages(prev => new Set(prev).add(pkg.id));
+                            (e.target as HTMLImageElement).src = '/placeholder.svg';
+                          }}
+                          ref={(el) => {
+                            if (el && el.complete) {
+                              setLoadedImages(prev => {
+                                if (prev.has(pkg.id)) return prev;
+                                return new Set(prev).add(pkg.id);
+                              });
+                            }
+                          }}
+                        />
+                      </picture>
                       <div className="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-bold text-white shadow-md" style={{
                         background: pkg.id === '20pieces' ? 'hsl(142 70% 40%)' : pkg.id === '10pieces' ? 'hsl(var(--primary))' : 'hsl(30 80% 50%)'
                       }}>
