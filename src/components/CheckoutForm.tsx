@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useEffect } from 'react';
 import { Package, Clock, MessageCircle, Lock, Shield, Truck, Loader2, Zap, CalendarClock, AlertCircle } from 'lucide-react';
 import type { CartItem } from '../context/CartContext';
 
@@ -48,6 +47,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     handleSubmit,
     watch,
     setValue,
+    trigger,
     formState: { errors, isValid },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -57,25 +57,21 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       scheduledTime: '',
     },
     mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   const deliveryTime = watch('deliveryTime');
   const specialInstructions = watch('specialInstructions');
-  const phoneValue = watch('phone');
 
   const eta = new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleTimeString('en-KE', { hour: 'numeric', minute: '2-digit' });
 
-  useEffect(() => {
-    if (!phoneValue) return;
-    const cleaned = phoneValue.replace(/[\s\-()]/g, '');
-    let formatted = cleaned;
+  const formatPhone = (raw: string) => {
+    const cleaned = raw.replace(/[\s\-()]/g, '');
     if (cleaned.startsWith('0') && cleaned.length > 1) {
-      formatted = '+254' + cleaned.slice(1);
+      return '+254' + cleaned.slice(1);
     }
-    if (formatted !== phoneValue) {
-      setValue('phone', formatted, { shouldValidate: true });
-    }
-  }, [phoneValue, setValue]);
+    return cleaned;
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
@@ -157,7 +153,15 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           <input
             id="phone"
             type="tel"
-            {...register('phone')}
+            {...register('phone', {
+              onChange: (e) => {
+                const formatted = formatPhone(e.target.value);
+                if (formatted !== e.target.value) {
+                  setValue('phone', formatted, { shouldDirty: true });
+                  trigger('phone');
+                }
+              },
+            })}
             placeholder="e.g. 0712345678"
             className="w-full h-14 rounded-lg border px-4 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
@@ -252,7 +256,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                     background: isSelected ? 'hsl(var(--primary) / 0.15)' : 'hsl(var(--input))',
                     borderColor: isSelected ? 'hsl(var(--primary))' : 'hsl(var(--border))',
                     color: isSelected ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
-                    ringColor: isSelected ? 'hsl(var(--primary))' : 'transparent',
                   }}
                 >
                   <input type="radio" value={option.value} {...register('deliveryTime')} className="sr-only" />
