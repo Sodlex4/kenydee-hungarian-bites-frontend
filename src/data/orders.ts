@@ -15,7 +15,7 @@ export interface Order {
   amount: number;
   date: string;
   status: 'Pending' | 'Processing' | 'Completed' | 'Cancelled';
-  method: 'M-Pesa' | 'Cash';
+  method?: 'M-Pesa' | 'Cash';
   deliveryAddress: string;
 }
 

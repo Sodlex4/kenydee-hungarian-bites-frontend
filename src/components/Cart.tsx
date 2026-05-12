@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2, ArrowLeft, Check, Percent } from 'lucide-react';
+import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2, ArrowLeft, Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import CheckoutForm from './CheckoutForm';
@@ -116,7 +116,6 @@ const Cart = () => {
       amount: total,
       date: new Date().toISOString().split('T')[0],
       status: 'Pending' as const,
-      method: data.paymentMethod === 'mpesa' ? 'M-Pesa' as const : 'Cash' as const,
       deliveryAddress: data.deliveryAddress,
     };
 
@@ -162,7 +161,7 @@ const Cart = () => {
       ? `\n\n📝 Notes: ${data.specialInstructions}`
       : '';
     const emailLine = data.email ? `\n📧 *Email:* ${data.email}` : '';
-    const message = `*Hungarian Bites - Order Confirmation*\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${cleanedPhone}${emailLine}\n📍 *Delivery:* ${data.deliveryAddress}\n⏰ *Time:* ${timeInfo}\n💳 *Payment:* ${order.method}\n\n*Items:*\n${itemsList}\n\n*Total: Ksh ${total.toLocaleString()}*${notes}\n\n_Please confirm my order and delivery details._`;
+    const message = `*Hungarian Bites - Order Confirmation*\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${cleanedPhone}${emailLine}\n📍 *Delivery:* ${data.deliveryAddress}\n⏰ *Time:* ${timeInfo}\n\n*Items:*\n${itemsList}\n\n*Total: Ksh ${total.toLocaleString()}*${notes}\n\n_Please confirm my order and delivery details._`;
 
     const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -443,28 +442,6 @@ const Cart = () => {
                 <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
                 <span style={{ color: 'hsl(var(--primary))' }}>Ksh {total.toLocaleString()}</span>
               </div>
-            </div>
-
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Promo code"
-                className="flex-1 rounded-lg border px-3 py-2 text-sm"
-                style={{
-                  background: 'hsl(var(--input))',
-                  borderColor: 'hsl(var(--border))',
-                  color: 'hsl(var(--foreground))',
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'hsl(var(--primary))'}
-                onBlur={(e) => e.target.style.borderColor = 'hsl(var(--border))'}
-              />
-              <button
-                className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all duration-300 hover:scale-105"
-                style={{ background: 'var(--gradient-primary)' }}
-                onClick={() => toast.info('Promo codes coming soon!')}
-              >
-                <Percent className="w-4 h-4" />
-              </button>
             </div>
 
             {total < MIN_ORDER_AMOUNT && (

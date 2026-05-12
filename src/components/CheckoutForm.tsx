@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { ArrowLeft, Package, Clock, MessageCircle, Mail, Phone, Smartphone, Banknote, Lock, Shield, Truck } from 'lucide-react';
+import { useEffect } from 'react';
+import { Package, Clock, MessageCircle, Lock, Shield, Truck, Loader2, Zap, CalendarClock, AlertCircle } from 'lucide-react';
 import type { CartItem } from '../context/CartContext';
 
 const checkoutSchema = z.object({
@@ -18,7 +19,6 @@ const checkoutSchema = z.object({
   deliveryTime: z.enum(['asap', 'schedule']),
   scheduledTime: z.string().optional(),
   specialInstructions: z.string().max(200, 'Max 200 characters').optional(),
-  paymentMethod: z.enum(['mpesa', 'cash']),
 }).refine(data => data.deliveryTime !== 'schedule' || (data.scheduledTime && data.scheduledTime.length > 0), {
   message: 'Please select a delivery date and time',
   path: ['scheduledTime'],
@@ -47,22 +47,35 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    setValue,
+    formState: { errors, isValid },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
       deliveryTime: 'asap',
-      paymentMethod: 'mpesa',
       specialInstructions: '',
       scheduledTime: '',
     },
+    mode: 'onChange',
   });
 
   const deliveryTime = watch('deliveryTime');
-  const paymentMethod = watch('paymentMethod');
   const specialInstructions = watch('specialInstructions');
+  const phoneValue = watch('phone');
 
   const eta = new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleTimeString('en-KE', { hour: 'numeric', minute: '2-digit' });
+
+  useEffect(() => {
+    if (!phoneValue) return;
+    const cleaned = phoneValue.replace(/[\s\-()]/g, '');
+    let formatted = cleaned;
+    if (cleaned.startsWith('0') && cleaned.length > 1) {
+      formatted = '+254' + cleaned.slice(1);
+    }
+    if (formatted !== phoneValue) {
+      setValue('phone', formatted, { shouldValidate: true });
+    }
+  }, [phoneValue, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
@@ -71,14 +84,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           Checkout as a guest &mdash; no account needed
         </p>
 
-        {/* Order Summary */}
-        <div
-          className="rounded-xl p-4 space-y-2"
-          style={{
-            background: 'hsl(var(--card))',
-            border: '1px solid hsl(var(--border) / 0.5)',
-          }}
-        >
+        {/* Order Summary - Glassmorphism */}
+        <div className="glass-card p-4">
           <div className="flex items-center gap-2 mb-2">
             <Package className="w-4 h-4" style={{ color: 'hsl(var(--primary))' }} />
             <span className="text-sm font-semibold" style={{ color: 'hsl(var(--foreground))' }}>
@@ -124,7 +131,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             id="name"
             {...register('name')}
             placeholder="e.g. John Kamau"
-            className="w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2"
+            className="w-full h-14 rounded-lg border px-4 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
               background: 'hsl(var(--input))',
               borderColor: errors.name ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -151,8 +158,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             id="phone"
             type="tel"
             {...register('phone')}
-            placeholder="e.g. +254712345678"
-            className="w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2"
+            placeholder="e.g. 0712345678"
+            className="w-full h-14 rounded-lg border px-4 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
               background: 'hsl(var(--input))',
               borderColor: errors.phone ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -183,7 +190,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             type="email"
             {...register('email')}
             placeholder="e.g. john@example.com"
-            className="w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2"
+            className="w-full h-14 rounded-lg border px-4 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
               background: 'hsl(var(--input))',
               borderColor: 'hsl(var(--border))',
@@ -206,7 +213,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             {...register('deliveryAddress')}
             placeholder="e.g. Murang'a Town, near Post Office"
             rows={2}
-            className="w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 resize-none"
+            className="w-full min-h-[56px] rounded-lg border px-4 py-3.5 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             style={{
               background: 'hsl(var(--input))',
               borderColor: errors.deliveryAddress ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -230,30 +237,35 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           </label>
           <div className="flex gap-2 sm:gap-3">
             {[
-              { value: 'asap' as const, label: 'ASAP', sub: 'within 2 hrs' },
-              { value: 'schedule' as const, label: 'Schedule', sub: 'pick a time' },
-            ].map((option) => (
-              <label
-                key={option.value}
-                className={`flex-1 flex flex-col items-center justify-center gap-1 px-2 sm:px-3 py-2.5 rounded-lg border cursor-pointer transition-all ${
-                  deliveryTime === option.value ? 'ring-2' : ''
-                }`}
-                style={{
-                  background: deliveryTime === option.value ? 'hsl(var(--primary) / 0.15)' : 'hsl(var(--input))',
-                  borderColor: deliveryTime === option.value ? 'hsl(var(--primary))' : 'hsl(var(--border))',
-                  color: deliveryTime === option.value ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
-                  ringColor: deliveryTime === option.value ? 'hsl(var(--primary))' : 'transparent',
-                }}
-              >
-                <input type="radio" value={option.value} {...register('deliveryTime')} className="sr-only" />
-                <Clock className="w-4 h-4" />
-                <span className="text-xs sm:text-sm font-medium">{option.label}</span>
-                <span className="text-[10px] opacity-70">{option.sub}</span>
-              </label>
-            ))}
+              { value: 'asap' as const, label: 'ASAP', sub: 'within 2 hrs', icon: Zap },
+              { value: 'schedule' as const, label: 'Schedule', sub: 'pick a time', icon: CalendarClock },
+            ].map((option) => {
+              const Icon = option.icon;
+              const isSelected = deliveryTime === option.value;
+              return (
+                <label
+                  key={option.value}
+                  className={`flex-1 flex flex-col items-center justify-center gap-1 px-2 sm:px-3 py-2.5 rounded-lg border cursor-pointer transition-all ${
+                    isSelected ? 'ring-2 animate-glowPulse' : ''
+                  }`}
+                  style={{
+                    background: isSelected ? 'hsl(var(--primary) / 0.15)' : 'hsl(var(--input))',
+                    borderColor: isSelected ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                    color: isSelected ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                    ringColor: isSelected ? 'hsl(var(--primary))' : 'transparent',
+                  }}
+                >
+                  <input type="radio" value={option.value} {...register('deliveryTime')} className="sr-only" />
+                  <Icon className="w-4 h-4" />
+                  <span className="text-xs sm:text-sm font-medium">{option.label}</span>
+                  <span className="text-[10px] opacity-70">{option.sub}</span>
+                </label>
+              );
+            })}
           </div>
           {deliveryTime === 'asap' && (
-            <p className="text-xs mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
+            <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              <Clock className="w-3 h-3" />
               Estimated delivery by <strong>{eta}</strong> (within 2 hours)
             </p>
           )}
@@ -263,7 +275,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 type="datetime-local"
                 {...register('scheduledTime')}
                 min={new Date().toISOString().slice(0, 16)}
-                className="w-full rounded-lg border px-3 py-2 text-sm mt-2 transition-colors focus:outline-none focus:ring-2"
+                className="w-full h-14 rounded-lg border px-4 text-[15px] mt-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                 style={{
                   background: 'hsl(var(--input))',
                   borderColor: errors.scheduledTime ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -271,50 +283,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 }}
               />
               {errors.scheduledTime && (
-                <p className="text-xs mt-1" style={{ color: 'hsl(var(--destructive))' }}>
+                <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'hsl(var(--destructive))' }}>
+                  <AlertCircle className="w-3 h-3" />
                   {errors.scheduledTime.message}
                 </p>
               )}
             </div>
           )}
-        </div>
-
-        {/* Payment Method */}
-        <div>
-          <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>
-            Payment Method <span style={{ color: 'hsl(var(--destructive))' }}>*</span>
-          </label>
-          <div className="flex sm:flex-row flex-col gap-2 sm:gap-3">
-            {[
-              { value: 'mpesa' as const, label: 'M-Pesa' },
-              { value: 'cash' as const, label: 'Cash on Delivery' },
-            ].map((option) => (
-              <label
-                key={option.value}
-                className={`flex-1 flex items-center justify-center gap-2 px-3 py-3 sm:py-2.5 rounded-lg border font-medium cursor-pointer transition-all ${
-                  paymentMethod === option.value ? 'ring-2' : ''
-                }`}
-                style={{
-                  background: paymentMethod === option.value ? 'hsl(var(--primary) / 0.15)' : 'hsl(var(--input))',
-                  borderColor: paymentMethod === option.value ? 'hsl(var(--primary))' : 'hsl(var(--border))',
-                  color: paymentMethod === option.value ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
-                }}
-              >
-                <input
-                  type="radio"
-                  value={option.value}
-                  {...register('paymentMethod')}
-                  className="sr-only"
-                />
-                {option.value === 'mpesa' ? (
-                  <Smartphone className="w-5 h-5" style={{ color: '#4CAF50' }} />
-                ) : (
-                  <Banknote className="w-5 h-5" />
-                )}
-                <span className="text-xs sm:text-sm font-medium">{option.label}</span>
-              </label>
-            ))}
-          </div>
         </div>
 
         {/* Special Instructions */}
@@ -335,7 +310,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             placeholder="Any special requests?"
             rows={2}
             maxLength={200}
-            className="w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 resize-none"
+            className="w-full min-h-[56px] rounded-lg border px-4 py-3.5 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             style={{
               background: 'hsl(var(--input))',
               borderColor: 'hsl(var(--border))',
@@ -353,28 +328,26 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         className="flex-shrink-0 p-4 sm:p-6 space-y-3"
         style={{ borderTop: '1px solid hsl(var(--border))' }}
       >
-        <div className="relative">
-          {!isSubmitting && (
-            <div className="absolute inset-0 rounded-lg" style={{
-              background: '#25D366',
-              animation: 'wa-pulse 2s ease-in-out infinite',
-              opacity: 0.3,
-              pointerEvents: 'none',
-            }} />
-          )}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="relative w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-            style={{
-              background: '#25D366',
-              boxShadow: '0 8px 25px rgba(37, 211, 102, 0.4)',
-            }}
-          >
+        <button
+          type="submit"
+          disabled={isSubmitting || !isValid}
+          className="relative w-full h-14 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-white flex items-center justify-center gap-2 overflow-hidden"
+          style={{
+            background: 'var(--gradient-primary)',
+            boxShadow: '0 8px 25px hsl(var(--primary) / 0.4)',
+          }}
+        >
+          {/* Shimmer overlay */}
+          <div className="absolute inset-0 pointer-events-none animate-shimmer" style={{
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+          }} />
+          {isSubmitting ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
             <MessageCircle className="w-5 h-5" />
-            {isSubmitting ? 'Placing Order...' : 'Place Order via WhatsApp'}
-          </button>
-        </div>
+          )}
+          {isSubmitting ? 'Placing Order...' : 'Place Order via WhatsApp'}
+        </button>
         <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
           Your order details will be sent via WhatsApp for confirmation
         </p>
