@@ -48,7 +48,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     watch,
     setValue,
     trigger,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -57,7 +57,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       scheduledTime: '',
     },
     mode: 'onChange',
-    reValidateMode: 'onChange',
   });
 
   const deliveryTime = watch('deliveryTime');
@@ -333,7 +332,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       >
         <button
           type="submit"
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting}
           className="relative w-full h-14 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-white flex items-center justify-center gap-2 overflow-hidden"
           style={{
             background: 'var(--gradient-primary)',
