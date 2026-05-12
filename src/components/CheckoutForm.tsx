@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { ArrowLeft, Package, Clock, MessageCircle, Mail, Phone } from 'lucide-react';
+import { ArrowLeft, Package, Clock, MessageCircle, Mail, Phone, Smartphone, Banknote } from 'lucide-react';
 import type { CartItem } from '../context/CartContext';
 
 const checkoutSchema = z.object({
@@ -295,6 +295,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                   {...register('paymentMethod')}
                   className="sr-only"
                 />
+                {option.value === 'mpesa' ? (
+                  <Smartphone className="w-5 h-5" style={{ color: '#4CAF50' }} />
+                ) : (
+                  <Banknote className="w-5 h-5" />
+                )}
                 <span className="text-xs sm:text-sm font-medium">{option.label}</span>
               </label>
             ))}

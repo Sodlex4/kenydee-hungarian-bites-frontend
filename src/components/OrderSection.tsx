@@ -14,9 +14,9 @@ const OrderSection = () => {
   const imgVersion = useRef(Date.now());
 
   const packages = [
-    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg' },
-    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp', fallback: '/image/hotdog.jpg' },
-    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg' }
+    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 120 },
+    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp', fallback: '/image/hotdog.jpg', stock: 85 },
+    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 15 }
   ];
 
   const getQty = (id: string) => packageQty[id] || 1;
@@ -45,7 +45,8 @@ const OrderSection = () => {
         name: `Hungarian Hot Dog Rolls - ${selectedPackage.label}`,
         price: selectedPackage.price,
         quantity: qty,
-        image: selectedPackage.image
+        image: selectedPackage.image,
+        stock: selectedPackage.stock,
       });
 
       toast.success(`Added ${qty}x ${selectedPackage.label} to cart!`);

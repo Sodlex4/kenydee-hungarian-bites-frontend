@@ -203,10 +203,17 @@ const Cart = () => {
   }, [isCartOpen, handleClose]);
 
   useEffect(() => {
+    if (checkoutStep === 'checkout') {
+      const timer = setTimeout(() => {
+        const nameInput = document.querySelector<HTMLInputElement>('#name');
+        nameInput?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
     if (isCartOpen && firstFocusableRef.current) {
       firstFocusableRef.current.focus();
     }
-  }, [isCartOpen]);
+  }, [isCartOpen, checkoutStep]);
 
   const renderCartContent = () => (
     <div className="flex flex-col h-full">
@@ -237,10 +244,13 @@ const Cart = () => {
         <button
           ref={checkoutStep === 'cart' ? firstFocusableRef : undefined}
           onClick={handleClose}
-          className="p-2 rounded-full transition-colors hover:bg-gray-800"
+          className="p-3 rounded-full transition-colors"
+          style={{
+            color: 'hsl(var(--muted-foreground))',
+          }}
           aria-label="Close cart"
         >
-          <X className="w-6 h-6" style={{ color: 'hsl(var(--muted-foreground))' }} />
+          <X className="w-6 h-6" />
         </button>
       </div>
 
@@ -330,15 +340,25 @@ const Cart = () => {
                         </p>
                         {item.quantity > 1 && (
                           <p className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
-                            = Ksh {item.price * item.quantity}
+                            = Ksh {(item.price * item.quantity).toLocaleString()}
                           </p>
                         )}
                       </div>
+                      {item.stock !== undefined && item.stock <= 5 && item.stock > 0 && (
+                        <p className="text-xs mt-1 flex items-center gap-1" style={{ color: '#eab308' }}>
+                          Only {item.stock} left
+                        </p>
+                      )}
+                      {item.stock !== undefined && item.stock === 0 && (
+                        <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'hsl(var(--destructive))' }}>
+                          Currently out of stock
+                        </p>
+                      )}
                     </div>
 
                     <button
                       onClick={() => handleRemove(item.id, item.name)}
-                      className="p-1 rounded-full transition-colors hover:bg-red-500/20 flex-shrink-0"
+                      className="p-2.5 rounded-full transition-colors hover:bg-red-500/20 flex-shrink-0"
                       aria-label={`Remove ${item.name} from cart`}
                     >
                       <X className="w-4 h-4" style={{ color: 'hsl(var(--destructive) / 0.6)' }} />
@@ -349,22 +369,22 @@ const Cart = () => {
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleDecrease(item.id, item.quantity)}
-                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
-                        style={{ background: 'hsl(var(--muted))' }}
+                        className="w-11 h-11 rounded-full flex items-center justify-center transition-colors"
+                        style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
                         aria-label="Decrease quantity"
                       >
-                        <Minus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
+                        <Minus className="w-4 h-4" />
                       </button>
 
-                      <span className="font-semibold w-8 text-center text-sm" style={{ color: 'hsl(var(--foreground))' }}>{item.quantity}</span>
+                      <span className="font-semibold w-10 text-center text-sm" style={{ color: 'hsl(var(--foreground))' }}>{item.quantity}</span>
 
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
-                        style={{ background: 'hsl(var(--muted))' }}
+                        className="w-11 h-11 rounded-full flex items-center justify-center transition-colors"
+                        style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
                         aria-label="Increase quantity"
                       >
-                        <Plus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
+                        <Plus className="w-4 h-4" />
                       </button>
                     </div>
 
@@ -381,7 +401,11 @@ const Cart = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                 <span>{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
-                <span>Ksh {total}</span>
+                <span>Ksh {total.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span style={{ color: 'hsl(var(--muted-foreground))' }}>Delivery</span>
+                <span style={{ color: '#22c55e' }}>Free</span>
               </div>
               <div className="flex items-center justify-between text-xl font-bold">
                 <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
