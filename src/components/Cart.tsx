@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import CheckoutForm from './CheckoutForm';
 import type { CheckoutFormData } from './CheckoutForm';
-import { addOrder } from '../data/orders';
+import { addOrder, addNotification } from '../data/orders';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 
 const Cart = () => {
@@ -96,6 +96,13 @@ const Cart = () => {
     };
 
     addOrder(order);
+    addNotification({
+      type: 'order',
+      title: 'New Order Received',
+      message: `Order ${orderId} from ${data.name} - ${cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`,
+      time: 'Just now',
+      read: false,
+    });
 
     if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
       window.gtag('event', 'begin_checkout', {

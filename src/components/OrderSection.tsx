@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { Sparkles, MessageCircle, Plus, Minus } from 'lucide-react';
@@ -11,6 +11,7 @@ const OrderSection = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const { addToCartAndOpen } = useCart();
+  const imgVersion = useRef(Date.now());
 
   const packages = [
     { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp' },
@@ -137,7 +138,7 @@ const OrderSection = () => {
                     <div className="relative mb-4">
                       {!loadedImages.has(pkg.id) && <Skeleton className="w-full h-32 rounded-xl" />}
                       <img
-                        src={pkg.image}
+                        src={`${pkg.image}?v=${imgVersion.current}`}
                         alt={pkg.label}
                         className={`w-full h-32 object-cover rounded-xl ${!loadedImages.has(pkg.id) ? 'hidden' : ''}`}
                         width="300"

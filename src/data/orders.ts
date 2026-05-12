@@ -339,6 +339,14 @@ export const deleteNotification = (id: number): void => {
   localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(updated));
 };
 
+let notificationIdCounter = seedNotifications.length + 1;
+
+export const addNotification = (notification: Omit<Notification, 'id'>): void => {
+  const notifications = getNotifications();
+  const newNotification = { ...notification, id: notificationIdCounter++ };
+  localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify([newNotification, ...notifications]));
+};
+
 // --- Settings ---
 
 export interface AdminSettings {
