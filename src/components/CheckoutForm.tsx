@@ -1,19 +1,27 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { ArrowLeft, Package, Clock, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Package, Clock, MessageCircle, Mail, Phone } from 'lucide-react';
 import type { CartItem } from '../context/CartContext';
 
 const checkoutSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   phone: z
     .string()
-    .regex(/^(?:\+254|0)[17]\d{8}$/, 'Enter a valid Kenyan phone number (e.g., +254712345678)'),
+    .min(10, 'Enter a valid phone number (at least 10 digits)')
+    .refine(val => {
+      const cleaned = val.replace(/[\s\-()]/g, '');
+      return /^(?:\+254|0)[17]\d{8}$/.test(cleaned);
+    }, 'Enter a valid Kenyan number (e.g., +254712345678 or 0712345678)'),
+  email: z.string().optional().or(z.literal('')),
   deliveryAddress: z.string().min(5, 'Please enter a complete delivery address'),
   deliveryTime: z.enum(['asap', 'schedule']),
   scheduledTime: z.string().optional(),
   specialInstructions: z.string().max(200, 'Max 200 characters').optional(),
   paymentMethod: z.enum(['mpesa', 'cash']),
+}).refine(data => data.deliveryTime !== 'schedule' || (data.scheduledTime && data.scheduledTime.length > 0), {
+  message: 'Please select a delivery date and time',
+  path: ['scheduledTime'],
 });
 
 export type CheckoutFormData = z.infer<typeof checkoutSchema>;
@@ -52,6 +60,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
   const deliveryTime = watch('deliveryTime');
   const paymentMethod = watch('paymentMethod');
+  const specialInstructions = watch('specialInstructions');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
@@ -151,6 +160,32 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           )}
         </div>
 
+        {/* Email */}
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium mb-1.5"
+            style={{ color: 'hsl(var(--foreground))' }}
+          >
+            Email{' '}
+            <span className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              (optional)
+            </span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            {...register('email')}
+            placeholder="e.g. john@example.com"
+            className="w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2"
+            style={{
+              background: 'hsl(var(--input))',
+              borderColor: 'hsl(var(--border))',
+              color: 'hsl(var(--foreground))',
+            }}
+          />
+        </div>
+
         {/* Delivery Address */}
         <div>
           <label
@@ -212,17 +247,24 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             ))}
           </div>
           {deliveryTime === 'schedule' && (
-            <input
-              type="text"
-              {...register('scheduledTime')}
-              placeholder="e.g. Tomorrow 5 PM"
-              className="w-full rounded-lg border px-3 py-2 text-sm mt-2 transition-colors focus:outline-none focus:ring-2"
-              style={{
-                background: 'hsl(var(--input))',
-                borderColor: 'hsl(var(--border))',
-                color: 'hsl(var(--foreground))',
-              }}
-            />
+            <div>
+              <input
+                type="datetime-local"
+                {...register('scheduledTime')}
+                min={new Date().toISOString().slice(0, 16)}
+                className="w-full rounded-lg border px-3 py-2 text-sm mt-2 transition-colors focus:outline-none focus:ring-2"
+                style={{
+                  background: 'hsl(var(--input))',
+                  borderColor: errors.scheduledTime ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
+                  color: 'hsl(var(--foreground))',
+                }}
+              />
+              {errors.scheduledTime && (
+                <p className="text-xs mt-1" style={{ color: 'hsl(var(--destructive))' }}>
+                  {errors.scheduledTime.message}
+                </p>
+              )}
+            </div>
           )}
         </div>
 
@@ -276,6 +318,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             {...register('specialInstructions')}
             placeholder="Any special requests?"
             rows={2}
+            maxLength={200}
             className="w-full rounded-lg border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 resize-none"
             style={{
               background: 'hsl(var(--input))',
@@ -283,6 +326,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               color: 'hsl(var(--foreground))',
             }}
           />
+          <p className="text-xs mt-1 text-right" style={{ color: (specialInstructions?.length || 0) > 180 ? 'hsl(var(--destructive))' : 'hsl(var(--muted-foreground))' }}>
+            {(specialInstructions?.length || 0)}/200
+          </p>
         </div>
       </div>
 
@@ -311,7 +357,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           </button>
         </div>
         <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
-          You&apos;ll be redirected to WhatsApp to confirm your order
+          Your order details will be sent via WhatsApp for confirmation
         </p>
       </div>
     </form>

@@ -1,11 +1,11 @@
 
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2, ArrowLeft } from 'lucide-react';
+import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2, ArrowLeft, Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import CheckoutForm from './CheckoutForm';
 import type { CheckoutFormData } from './CheckoutForm';
-import { addOrder, addNotification } from '../data/orders';
+import { addOrder, addNotification, getAdminSettings } from '../data/orders';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 
 const Cart = () => {
@@ -14,7 +14,7 @@ const Cart = () => {
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
   const isPointerReady = useRef(false);
   const [pointerEventsEnabled, setPointerEventsEnabled] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState<'cart' | 'checkout'>('cart');
+  const [checkoutStep, setCheckoutStep] = useState<'cart' | 'checkout' | 'confirmed'>('cart');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   useEffect(() => {
@@ -75,13 +75,18 @@ const Cart = () => {
   const handleCheckoutSubmit = useCallback((data: CheckoutFormData) => {
     setIsPlacingOrder(true);
 
+    const settings = getAdminSettings();
+    const waMatch = settings.whatsapp.match(/wa\.me\/(\d+)/);
+    const waNumber = waMatch ? waMatch[1] : '254759233065';
+
+    const cleanedPhone = data.phone.replace(/[\s\-()]/g, '');
     const orderId = `#${Date.now().toString(36).toUpperCase()}`;
     const order = {
       id: orderId,
       customer: {
         name: data.name,
-        email: '',
-        phone: data.phone,
+        email: data.email || '',
+        phone: cleanedPhone,
       },
       items: cartItems.map(item => ({
         name: item.name,
@@ -119,24 +124,38 @@ const Cart = () => {
 
     const timeInfo = data.deliveryTime === 'asap'
       ? 'ASAP (within 2 hours)'
-      : data.scheduledTime || 'Scheduled';
+      : data.scheduledTime
+        ? new Date(data.scheduledTime).toLocaleString('en-KE', {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+          })
+        : 'Scheduled';
     const itemsList = cartItems.map(item =>
       `• ${item.name} × ${item.quantity} = Ksh ${item.price * item.quantity}`
     ).join('\n');
     const notes = data.specialInstructions
       ? `\n\n📝 Notes: ${data.specialInstructions}`
       : '';
-    const message = `*Hungarian Bites - Order Confirmation*\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${data.phone}\n📍 *Delivery:* ${data.deliveryAddress}\n⏰ *Time:* ${timeInfo}\n💳 *Payment:* ${order.method}\n\n*Items:*\n${itemsList}\n\n*Total: Ksh ${total.toLocaleString()}*${notes}\n\n_Please confirm my order and delivery details._`;
+    const emailLine = data.email ? `\n📧 *Email:* ${data.email}` : '';
+    const message = `*Hungarian Bites - Order Confirmation*\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${cleanedPhone}${emailLine}\n📍 *Delivery:* ${data.deliveryAddress}\n⏰ *Time:* ${timeInfo}\n💳 *Payment:* ${order.method}\n\n*Items:*\n${itemsList}\n\n*Total: Ksh ${total.toLocaleString()}*${notes}\n\n_Please confirm my order and delivery details._`;
 
-    const whatsappUrl = `https://wa.me/254759233065?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
-    clearCart();
-    setCheckoutStep('cart');
     setIsPlacingOrder(false);
-    closeCart();
-    toast.success('Order placed! Check WhatsApp for confirmation.', {
-      duration: 5000,
+    setCheckoutStep('confirmed');
+
+    setTimeout(() => {
+      clearCart();
+      closeCart();
+    }, 3500);
+
+    toast.success('Order saved! Please send the message in WhatsApp to confirm.', {
+      duration: 6000,
     });
   }, [cartItems, total, clearCart, closeCart]);
 
@@ -225,7 +244,25 @@ const Cart = () => {
         </button>
       </div>
 
-      {checkoutStep === 'checkout' ? (
+      {checkoutStep === 'confirmed' ? (
+        <div className="flex flex-col items-center justify-center flex-1 p-6 text-center space-y-4">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: 'rgba(34, 197, 94, 0.15)' }}>
+            <Check className="w-8 h-8" style={{ color: '#22c55e' }} />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold" style={{ color: 'hsl(var(--foreground))' }}>
+              Order Saved!
+            </h3>
+            <p className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              Your order is saved. Please send the message in WhatsApp to confirm it.
+            </p>
+          </div>
+          <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: 'hsl(var(--primary))', borderTopColor: 'transparent' }} />
+          <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
+            Closing automatically...
+          </p>
+        </div>
+      ) : checkoutStep === 'checkout' ? (
         <CheckoutForm
           cartItems={cartItems}
           total={total}
