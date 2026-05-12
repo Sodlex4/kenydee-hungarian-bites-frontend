@@ -22,7 +22,8 @@ const FloatingWhatsApp = () => {
 
   return (
     <div
-      className="fixed z-[60] sm:bottom-6 bottom-4 sm:right-6 right-4 group"
+      className="fixed z-[60] group"
+      style={{ bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))', right: 'calc(1rem + env(safe-area-inset-right, 0px))' }}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >

@@ -77,7 +77,7 @@ const OrderSection = () => {
         <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--accent) / 0.1)' }}></div>
       </div>
 
-      <div className="container mx-auto px-4 text-center relative z-10">
+      <div className="container text-center relative z-10">
         <div className="mb-4">
           <div className="badge-chip">
             Limited Time Offers

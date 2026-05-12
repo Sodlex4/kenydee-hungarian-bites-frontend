@@ -90,11 +90,11 @@ const AdminOrders = () => {
         </Button>
       </div>
 
-      <div className="backdrop-blur-sm border rounded-xl overflow-hidden" style={{
+      <div className="backdrop-blur-sm border rounded-xl" style={{
         background: 'hsl(var(--card))',
         borderColor: 'hsl(var(--border))'
       }}>
-        <div className="overflow-x-auto" role="region" aria-label="Orders table">
+        <div className="hidden sm:block overflow-x-auto" role="region" aria-label="Orders table">
           <Table>
             <TableHeader>
               <TableRow>
@@ -195,6 +195,46 @@ const AdminOrders = () => {
               )}
             </TableBody>
           </Table>
+        </div>
+
+        <div className="sm:hidden p-4 space-y-3">
+          {paginatedOrders.length > 0 ? (
+            paginatedOrders.map((order) => (
+              <div
+                key={order.id}
+                className="rounded-lg p-4 border cursor-pointer transition-colors"
+                style={{ background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }}
+                onClick={() => handleViewOrder(order)}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium text-sm" style={{ color: 'hsl(var(--foreground))' }}>{order.id}</span>
+                  <Badge className={statusColors[order.status]}>{order.status}</Badge>
+                </div>
+                <p className="text-sm font-medium truncate" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.customer.name}</p>
+                <p className="text-xs truncate mt-0.5" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.items.map(i => `${i.quantity}x ${i.name}`).join(', ')}</p>
+                <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid hsl(var(--border))' }}>
+                  <span className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>{order.date} · {order.method}</span>
+                  <span className="font-semibold text-sm" style={{ color: 'hsl(var(--primary))' }}>Ksh {order.amount}</span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
+                  <svg className="w-8 h-8" style={{ color: 'hsl(var(--muted-foreground))' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <p className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>
+                  {searchTerm ? `No orders found matching "${searchTerm}"` : 'No orders yet'}
+                </p>
+                <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  {searchTerm ? 'Try a different search term' : 'Orders will appear here once customers start ordering'}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

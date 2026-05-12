@@ -48,7 +48,7 @@ const FAQSection = () => {
     <section id="faq" className="py-20 relative overflow-hidden" style={{
       background: 'linear-gradient(to bottom, hsl(270 40% 8%), hsl(330 30% 10%), hsl(270 40% 8%))'
     }}>
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container relative z-10">
         <div className="text-center mb-16">
           <div className="badge-chip">
             Una Doubt?

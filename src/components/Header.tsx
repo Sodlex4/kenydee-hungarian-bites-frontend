@@ -94,10 +94,11 @@ const Header = () => {
       style={{
         zIndex: 40,
         background: 'hsl(var(--background) / 0.8)',
-        borderBottom: '1px solid hsl(var(--primary) / 0.15)'
+        borderBottom: '1px solid hsl(var(--primary) / 0.15)',
+        paddingTop: 'env(safe-area-inset-top, 0px)'
       }}
     >
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="container py-4 flex items-center justify-between">
         {/* Logo */}
         <button
           className="font-bold bg-gradient-to-r bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform leading-tight truncate max-w-[140px] sm:max-w-none sm:text-2xl text-xl tracking-wider"
@@ -218,7 +219,7 @@ const Header = () => {
             }}
             aria-label="Mobile navigation"
           >
-            <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
+            <div className="container py-6 flex flex-col space-y-4">
               {navButtons.map((item) => (
                 <button
                   key={item.id}

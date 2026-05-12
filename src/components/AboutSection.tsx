@@ -45,7 +45,7 @@ const AboutSection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,hsl(var(--primary)_/_0.3),transparent_50%),radial-gradient(circle_at_75%_75%,hsl(var(--accent)_/_0.3),transparent_50%)]"></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container relative z-10">
         <div className="about-content max-w-6xl mx-auto">
 
           <div className="text-center mb-16">

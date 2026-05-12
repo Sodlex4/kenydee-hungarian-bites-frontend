@@ -22,10 +22,12 @@ const BackToTop = () => {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed z-[55] bottom-24 sm:bottom-28 right-4 sm:right-6 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 animate-fadeIn"
+      className="fixed z-[55] w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 animate-fadeIn"
       style={{
         background: 'var(--gradient-primary)',
-        border: '1px solid hsl(var(--primary) / 0.3)'
+        border: '1px solid hsl(var(--primary) / 0.3)',
+        bottom: 'calc(6rem + env(safe-area-inset-bottom, 0px))',
+        right: 'calc(1rem + env(safe-area-inset-right, 0px))'
       }}
       aria-label="Back to top"
     >

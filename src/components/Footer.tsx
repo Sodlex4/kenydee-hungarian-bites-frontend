@@ -18,7 +18,7 @@ const Footer = () => {
         <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl" style={{ background: 'hsl(var(--accent) / 0.05)' }}></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container relative z-10">
         <div className="grid md:grid-cols-4 gap-8 mb-12">
 
           <div className="space-y-6">

@@ -45,7 +45,7 @@ const TestimonialsSection = () => {
         <div className="absolute bottom-20 right-20 w-96 h-96 rounded-full blur-3xl animate-pulse" style={{ background: 'hsl(var(--accent) / 0.1)' }}></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container relative z-10">
 
         <div className="text-center mb-16">
           <div className="badge-chip mb-6">
