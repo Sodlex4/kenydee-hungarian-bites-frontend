@@ -197,7 +197,7 @@ const Cart = () => {
         aria-modal="true"
         aria-label="Shopping cart"
         className="ml-auto w-full max-w-md shadow-2xl animate-slideInRight"
-        style={{ background: 'hsl(var(--background))', height: '100vh' }}
+        style={{ background: 'hsl(var(--background))', height: '100dvh' }}
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'hsl(var(--border))' }}>

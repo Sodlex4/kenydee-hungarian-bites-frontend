@@ -125,7 +125,7 @@ const OrderSection = () => {
                   </div>
                 )}
 
-                <div className={`border-2 rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl ${
+                <div className={`border-2 rounded-3xl p-6 sm:p-8 transition-all duration-300 hover:shadow-2xl ${
                   selectedQuantity === pkg.id
                     ? 'glass-card border-pink-500'
                     : 'glass-card hover:border-pink-500/40'

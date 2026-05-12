@@ -75,7 +75,7 @@ const FeaturesSection = () => {
               key={index}
               className="feature-card group relative"
             >
-              <div className="glass-card p-8 text-center hover:scale-105 transition-all duration-500">
+              <div className="glass-card p-6 sm:p-8 text-center hover:scale-105 transition-all duration-500">
                 <div className="feature-icon relative mb-6">
                   <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto shadow-lg" style={{
                     background: 'var(--gradient-primary)'

@@ -64,7 +64,7 @@ const HeroSection = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'hsl(var(--primary) / 0.08)' }}></div>
       </div>
 
-      <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-6 lg:gap-12 items-center relative z-10">
         <div className="hero-content space-y-8 text-center lg:text-left">
           <div className="badge-chip">
             Bites That Slap
@@ -146,7 +146,7 @@ const HeroSection = () => {
         </div>
 
         <div className="product-showcase relative flex justify-center items-center">
-          <div className="product-rotate relative w-80 h-80 rounded-full backdrop-blur-sm flex items-center justify-center shadow-2xl" style={{
+          <div className="product-rotate relative w-60 h-60 sm:w-80 sm:h-80 rounded-full backdrop-blur-sm flex items-center justify-center shadow-2xl" style={{
             background: 'hsl(var(--primary) / 0.1)',
             border: '1px solid hsl(var(--primary) / 0.3)'
           }}>
