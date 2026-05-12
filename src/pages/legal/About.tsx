@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import Cart from '../../components/Cart';
+import FloatingWhatsApp from '../../components/FloatingWhatsApp';
+import BackToTop from '../../components/BackToTop';
+import MobileBottomNav from '../../components/MobileBottomNav';
+import { CartProvider } from '../../context/CartContext';
 import { Heart, Award, Users, MapPin, Mail, Phone } from 'lucide-react';
 
 const About = () => {
@@ -32,6 +37,7 @@ const About = () => {
   ];
 
   return (
+    <CartProvider>
     <div className="min-h-screen">
       <Header />
 
@@ -217,7 +223,12 @@ const About = () => {
       </main>
 
       <Footer />
+      <Cart />
+      <FloatingWhatsApp />
+      <BackToTop />
+      <MobileBottomNav />
     </div>
+    </CartProvider>
   );
 };
 

@@ -9,6 +9,16 @@ import { getProducts, addProduct, updateProduct, deleteProduct, exportProductsTo
 import type { Product } from '@/data/orders';
 import { Download, Plus, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -24,6 +34,7 @@ const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
   const refreshProducts = useCallback(() => {
     setProducts(getProducts());
@@ -66,11 +77,15 @@ const AdminProducts = () => {
   };
 
   const handleDeleteProduct = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      deleteProduct(id);
-      toast.success('Product deleted');
-      refreshProducts();
-    }
+    setDeleteTarget(id);
+  };
+
+  const confirmDeleteProduct = () => {
+    if (deleteTarget === null) return;
+    deleteProduct(deleteTarget);
+    toast.success('Product deleted');
+    setDeleteTarget(null);
+    refreshProducts();
   };
 
   const handleExport = () => {
@@ -269,6 +284,21 @@ const AdminProducts = () => {
         onClose={() => { setIsFormOpen(false); setEditingProduct(null); }}
         onSave={editingProduct ? handleEditProduct : handleAddProduct}
       />
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Product</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this product? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteProduct} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 };

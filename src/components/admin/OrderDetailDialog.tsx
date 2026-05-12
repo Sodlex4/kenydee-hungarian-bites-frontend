@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ResponsiveModal from '@/components/ResponsiveModal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,16 @@ import { MapPin, Phone, Mail, Package, Clock } from 'lucide-react';
 import type { Order } from '@/data/orders';
 import { updateOrderStatus } from '@/data/orders';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface OrderDetailDialogProps {
   order: Order | null;
@@ -23,12 +33,19 @@ const statusColors: Record<string, string> = {
 };
 
 const OrderDetailDialog: React.FC<OrderDetailDialogProps> = ({ order, isOpen, onClose, onStatusChange }) => {
+  const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
+
   if (!order) return null;
 
   const handleStatusChange = (newStatus: Order['status']) => {
     updateOrderStatus(order.id, newStatus);
     toast.success(`Order ${order.id} marked as ${newStatus}`);
     onStatusChange();
+  };
+
+  const handleCancelConfirm = () => {
+    handleStatusChange('Cancelled');
+    setCancelConfirmOpen(false);
   };
 
   return (
@@ -150,7 +167,7 @@ const OrderDetailDialog: React.FC<OrderDetailDialogProps> = ({ order, isOpen, on
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleStatusChange('Cancelled')}
+                  onClick={() => setCancelConfirmOpen(true)}
                   className="border-red-500 text-red-500 hover:bg-red-500/10"
                 >
                   Cancel
@@ -160,6 +177,21 @@ const OrderDetailDialog: React.FC<OrderDetailDialogProps> = ({ order, isOpen, on
           </div>
         </div>
       </div>
+
+      <AlertDialog open={cancelConfirmOpen} onOpenChange={setCancelConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel Order</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to cancel {order.id}? This will mark the order as cancelled.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Keep Order</AlertDialogCancel>
+            <AlertDialogAction onClick={handleCancelConfirm} className="bg-red-500 hover:bg-red-600">Yes, Cancel Order</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ResponsiveModal>
   );
 };

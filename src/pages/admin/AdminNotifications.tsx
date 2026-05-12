@@ -7,6 +7,16 @@ import { getNotifications, markNotificationRead, markAllNotificationsRead, delet
 import type { Notification } from '@/data/orders';
 import { Bell, Package, User, AlertCircle, DollarSign, Check, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,6 +38,7 @@ const AdminNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>(getNotifications);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
   const refreshNotifications = useCallback(() => {
     setNotifications(getNotifications());
@@ -65,8 +76,14 @@ const AdminNotifications = () => {
   };
 
   const handleDelete = (id: number) => {
-    deleteNotification(id);
+    setDeleteTarget(id);
+  };
+
+  const confirmDeleteNotification = () => {
+    if (deleteTarget === null) return;
+    deleteNotification(deleteTarget);
     toast.success('Notification deleted');
+    setDeleteTarget(null);
     refreshNotifications();
   };
 
@@ -172,6 +189,21 @@ const AdminNotifications = () => {
         itemsPerPage={ITEMS_PER_PAGE}
         onPageChange={setCurrentPage}
       />
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Notification</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this notification? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteNotification} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 };
