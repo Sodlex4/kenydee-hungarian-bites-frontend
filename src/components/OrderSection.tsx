@@ -135,19 +135,20 @@ const OrderSection = () => {
                 }`}>
 
                   <div className="text-center">
-                    <div className="relative mb-4">
-                      {!loadedImages.has(pkg.id) && <Skeleton className="absolute inset-0 h-32 rounded-xl" />}
+                    <div className="relative mb-4" style={{ minHeight: '128px' }}>
+                      <div className={`absolute inset-0 rounded-xl bg-muted animate-pulse transition-opacity duration-500 ${loadedImages.has(pkg.id) ? 'opacity-0 pointer-events-none' : ''}`} />
                       <picture>
                         <source srcSet={`${pkg.image}?v=${imgVersion.current}`} type="image/webp" />
                         <img
                           src={`${pkg.fallback}?v=${imgVersion.current}`}
                           alt={pkg.label}
-                          className="w-full h-32 object-cover rounded-xl"
+                          className="w-full h-32 object-cover rounded-xl relative z-10"
                           width="300"
                           height="128"
                           loading="lazy"
                           decoding="async"
                           sizes="(max-width: 768px) 100vw, 300px"
+                          style={{ background: 'transparent' }}
                           onLoad={() => setLoadedImages(prev => new Set(prev).add(pkg.id))}
                           onError={(e) => {
                             setLoadedImages(prev => new Set(prev).add(pkg.id));
