@@ -70,7 +70,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const lastRemovedItemRef = React.useRef<CartItem | null>(null);
 
   useEffect(() => {
-    if (isCartOpen) {
+    if (isCartOpen && window.innerWidth >= 768) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';

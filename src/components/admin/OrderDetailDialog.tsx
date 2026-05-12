@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import ResponsiveModal from '@/components/ResponsiveModal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -32,22 +32,16 @@ const OrderDetailDialog: React.FC<OrderDetailDialogProps> = ({ order, isOpen, on
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" style={{ background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }}>
-        <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>{order.id}</span>
-            <Badge className={statusColors[order.status]}>
-              {order.status}
-            </Badge>
-          </DialogTitle>
-          <DialogDescription className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <Clock className="w-4 h-4" /> {order.date}
-            </span>
-            <span>{order.method}</span>
-          </DialogDescription>
-        </DialogHeader>
+    <ResponsiveModal open={isOpen} onClose={onClose} className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="p-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{order.id}</h2>
+          <Badge className={statusColors[order.status]}>{order.status}</Badge>
+        </div>
+        <div className="flex items-center gap-4 text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+          <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {order.date}</span>
+          <span>{order.method}</span>
+        </div>
 
         <div className="space-y-6">
           {/* Customer Info */}
@@ -165,8 +159,8 @@ const OrderDetailDialog: React.FC<OrderDetailDialogProps> = ({ order, isOpen, on
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ResponsiveModal>
   );
 };
 

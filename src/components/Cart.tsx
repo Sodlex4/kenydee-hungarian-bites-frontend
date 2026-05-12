@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import CheckoutForm from './CheckoutForm';
 import type { CheckoutFormData } from './CheckoutForm';
 import { addOrder } from '../data/orders';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 
 const Cart = () => {
   const { cartItems, isCartOpen, toggleCart, closeCart, updateQuantity, removeFromCart, undoRemove, clearCart } = useCart();
@@ -149,6 +150,7 @@ const Cart = () => {
 
     const trapFocus = (e: KeyboardEvent) => {
       if (e.key !== 'Tab' || !drawerRef.current) return;
+      if (window.innerWidth < 768) return;
 
       const focusable = drawerRef.current.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -180,204 +182,218 @@ const Cart = () => {
     }
   }, [isCartOpen]);
 
+  const renderCartContent = () => (
+    <div className="flex flex-col h-full">
+      <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'hsl(var(--border))' }}>
+        {checkoutStep === 'cart' ? (
+          <h2 className="text-xl font-bold flex items-center" style={{ color: 'hsl(var(--foreground))' }}>
+            <ShoppingCart className="w-6 h-6 mr-2" style={{ color: 'hsl(var(--primary))' }} />
+            Your Cart ({totalItems}{totalItems !== 1 ? ' items' : ' item'})
+          </h2>
+        ) : (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setCheckoutStep('cart')}
+              className="p-2 rounded-full transition-colors hover:bg-gray-700"
+              aria-label="Back to cart"
+            >
+              <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--muted-foreground))' }} />
+            </button>
+            <h2 className="text-xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>
+              Checkout
+            </h2>
+          </div>
+        )}
+        <button
+          ref={checkoutStep === 'cart' ? firstFocusableRef : undefined}
+          onClick={handleClose}
+          className="p-2 rounded-full transition-colors hover:bg-gray-800"
+          aria-label="Close cart"
+        >
+          <X className="w-6 h-6" style={{ color: 'hsl(var(--muted-foreground))' }} />
+        </button>
+      </div>
+
+      {checkoutStep === 'checkout' ? (
+        <CheckoutForm
+          cartItems={cartItems}
+          total={total}
+          totalItems={totalItems}
+          onBack={() => setCheckoutStep('cart')}
+          onSubmit={handleCheckoutSubmit}
+          isSubmitting={isPlacingOrder}
+        />
+      ) : cartItems.length === 0 ? (
+        <div className="flex-1 overflow-y-auto p-6">
+          <div className="text-center py-12">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{
+              background: 'hsl(var(--muted) / 0.3)'
+            }}>
+              <ShoppingCart className="w-10 h-10" style={{ color: 'hsl(var(--muted))' }} />
+            </div>
+            <p className="text-lg font-semibold mb-2" style={{ color: 'hsl(var(--foreground))' }}>Your cart is empty</p>
+            <p className="text-sm mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Bites from Ksh 69/piece</p>
+            <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>Free delivery within Murang'a Town</p>
+            <button
+              onClick={() => {
+                closeCart();
+                document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105 text-white"
+              style={{
+                background: 'var(--gradient-primary)',
+                boxShadow: '0 4px 15px hsl(var(--primary) / 0.3)'
+              }}
+            >
+              Browse Products
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="space-y-4">
+              {cartItems.map((item) => (
+                <div key={item.id} className="rounded-lg p-3 sm:p-4" style={{
+                  background: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border) / 0.5)'
+                }}>
+                  <div className="flex items-start gap-3">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
+                      width="56"
+                      height="56"
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/placeholder.svg';
+                      }}
+                    />
+
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-sm leading-tight mb-1 truncate" style={{ color: 'hsl(var(--foreground))' }}>
+                        {item.name}
+                      </h3>
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                          Ksh {item.price} each
+                        </p>
+                        {item.quantity > 1 && (
+                          <p className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
+                            = Ksh {item.price * item.quantity}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleRemove(item.id, item.name)}
+                      className="p-1 rounded-full transition-colors hover:bg-red-500/20 flex-shrink-0"
+                      aria-label={`Remove ${item.name} from cart`}
+                    >
+                      <X className="w-4 h-4" style={{ color: 'hsl(var(--destructive) / 0.6)' }} />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-3 pt-3" style={{ borderColor: 'hsl(var(--border) / 0.3)' }}>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleDecrease(item.id, item.quantity)}
+                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
+                        style={{ background: 'hsl(var(--muted))' }}
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
+                      </button>
+
+                      <span className="font-semibold w-8 text-center text-sm" style={{ color: 'hsl(var(--foreground))' }}>{item.quantity}</span>
+
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
+                        style={{ background: 'hsl(var(--muted))' }}
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
+                      </button>
+                    </div>
+
+                    <span className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
+                      Ksh {item.price * item.quantity}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t p-6 space-y-4 flex-shrink-0" style={{ borderColor: 'hsl(var(--border))' }}>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                <span>{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
+                <span>Ksh {total}</span>
+              </div>
+              <div className="flex items-center justify-between text-xl font-bold">
+                <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
+                <span style={{ color: 'hsl(var(--primary))' }}>Ksh {total.toLocaleString()}</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleProceedToCheckout}
+              className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2"
+              style={{
+                background: 'var(--gradient-primary)',
+                boxShadow: '0 10px 30px hsl(var(--primary) / 0.3)'
+              }}
+            >
+              <MessageCircle className="w-5 h-5" />
+              Continue to Checkout
+            </button>
+
+            <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              Free delivery within Murang'a Town &bull; Delivered in 2 hours
+            </p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
   if (!isCartOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"
-        onClick={handleBackdropClick}
-        style={{ pointerEvents: pointerEventsEnabled ? 'auto' : 'none', touchAction: 'none' }}
-        aria-hidden="true"
-      ></div>
+    <>
+      <div className="md:hidden">
+        <Drawer open={isCartOpen} onOpenChange={(open) => { if (!open) closeCart(); }}>
+          <DrawerContent className="max-h-[90dvh] border-0 rounded-t-[10px]">
+            {renderCartContent()}
+          </DrawerContent>
+        </Drawer>
+      </div>
 
-      <div
-        ref={drawerRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Shopping cart"
-        className="ml-auto w-full max-w-md shadow-2xl animate-slideInRight"
-        style={{ background: 'hsl(var(--background))', height: '100dvh' }}
-      >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'hsl(var(--border))' }}>
-            {checkoutStep === 'cart' ? (
-              <h2 className="text-xl font-bold flex items-center" style={{ color: 'hsl(var(--foreground))' }}>
-                <ShoppingCart className="w-6 h-6 mr-2" style={{ color: 'hsl(var(--primary))' }} />
-                Your Cart ({totalItems}{totalItems !== 1 ? ' items' : ' item'})
-              </h2>
-            ) : (
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setCheckoutStep('cart')}
-                  className="p-2 rounded-full transition-colors hover:bg-gray-700"
-                  aria-label="Back to cart"
-                >
-                  <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--muted-foreground))' }} />
-                </button>
-                <h2 className="text-xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>
-                  Checkout
-                </h2>
-              </div>
-            )}
-            <button
-              ref={checkoutStep === 'cart' ? firstFocusableRef : undefined}
-              onClick={handleClose}
-              className="p-2 rounded-full transition-colors hover:bg-gray-800"
-              aria-label="Close cart"
-            >
-              <X className="w-6 h-6" style={{ color: 'hsl(var(--muted-foreground))' }} />
-            </button>
-          </div>
+      <div className="hidden md:flex fixed inset-0 z-50">
+        <div
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"
+          onClick={handleBackdropClick}
+          style={{ pointerEvents: pointerEventsEnabled ? 'auto' : 'none', touchAction: 'none' }}
+          aria-hidden="true"
+        ></div>
 
-          {checkoutStep === 'checkout' ? (
-            <CheckoutForm
-              cartItems={cartItems}
-              total={total}
-              totalItems={totalItems}
-              onBack={() => setCheckoutStep('cart')}
-              onSubmit={handleCheckoutSubmit}
-              isSubmitting={isPlacingOrder}
-            />
-          ) : cartItems.length === 0 ? (
-            <div className="flex-1 overflow-y-auto p-6">
-              <div className="text-center py-12">
-                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{
-                  background: 'hsl(var(--muted) / 0.3)'
-                }}>
-                  <ShoppingCart className="w-10 h-10" style={{ color: 'hsl(var(--muted))' }} />
-                </div>
-                <p className="text-lg font-semibold mb-2" style={{ color: 'hsl(var(--foreground))' }}>Your cart is empty</p>
-                <p className="text-sm mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Bites from Ksh 69/piece</p>
-                <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>Free delivery within Murang'a Town</p>
-                <button
-                  onClick={() => {
-                    closeCart();
-                    document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105 text-white"
-                  style={{
-                    background: 'var(--gradient-primary)',
-                    boxShadow: '0 4px 15px hsl(var(--primary) / 0.3)'
-                  }}
-                >
-                  Browse Products
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="flex-1 overflow-y-auto p-6">
-                <div className="space-y-4">
-                  {cartItems.map((item) => (
-                    <div key={item.id} className="rounded-lg p-3 sm:p-4" style={{
-                      background: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border) / 0.5)'
-                    }}>
-                      <div className="flex items-start gap-3">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-16 h-16 sm:w-14 sm:h-14 object-cover rounded-lg flex-shrink-0"
-                          width="64"
-                          height="64"
-                          loading="lazy"
-                          decoding="async"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/placeholder.svg';
-                          }}
-                        />
-
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-sm leading-tight mb-1 truncate" style={{ color: 'hsl(var(--foreground))' }}>
-                            {item.name}
-                          </h3>
-                          <div className="flex items-baseline gap-2 flex-wrap">
-                            <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                              Ksh {item.price} each
-                            </p>
-                            {item.quantity > 1 && (
-                              <p className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
-                                = Ksh {item.price * item.quantity}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => handleRemove(item.id, item.name)}
-                          className="p-1 rounded-full transition-colors hover:bg-red-500/20 flex-shrink-0"
-                          aria-label={`Remove ${item.name} from cart`}
-                        >
-                          <X className="w-4 h-4" style={{ color: 'hsl(var(--destructive) / 0.6)' }} />
-                        </button>
-                      </div>
-
-                      <div className="flex items-center justify-between mt-3 pt-3" style={{ borderColor: 'hsl(var(--border) / 0.3)' }}>
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleDecrease(item.id, item.quantity)}
-                            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
-                            style={{ background: 'hsl(var(--muted))' }}
-                            aria-label="Decrease quantity"
-                          >
-                            <Minus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
-                          </button>
-
-                          <span className="font-semibold w-8 text-center text-sm" style={{ color: 'hsl(var(--foreground))' }}>{item.quantity}</span>
-
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-gray-700"
-                            style={{ background: 'hsl(var(--muted))' }}
-                            aria-label="Increase quantity"
-                          >
-                            <Plus className="w-4 h-4" style={{ color: 'hsl(var(--foreground))' }} />
-                          </button>
-                        </div>
-
-                        <span className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
-                          Ksh {item.price * item.quantity}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t p-6 space-y-4 flex-shrink-0" style={{ borderColor: 'hsl(var(--border))' }}>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                    <span>{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
-                    <span>Ksh {total}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xl font-bold">
-                    <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
-                    <span style={{ color: 'hsl(var(--primary))' }}>Ksh {total.toLocaleString()}</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleProceedToCheckout}
-                  className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2"
-                  style={{
-                    background: 'var(--gradient-primary)',
-                    boxShadow: '0 10px 30px hsl(var(--primary) / 0.3)'
-                  }}
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  Continue to Checkout
-                </button>
-
-                <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                  Free delivery within Murang'a Town &bull; Delivered in 2 hours
-                </p>
-              </div>
-            </>
-          )}
+        <div
+          ref={drawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Shopping cart"
+          className="ml-auto w-full max-w-md shadow-2xl animate-slideInRight"
+          style={{ background: 'hsl(var(--background))', height: '100dvh' }}
+        >
+          {renderCartContent()}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

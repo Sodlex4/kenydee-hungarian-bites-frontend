@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import ResponsiveModal from '@/components/ResponsiveModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,11 +37,9 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({ product, isOpen, 
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent style={{ background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }}>
-        <DialogHeader>
-          <DialogTitle>{product ? 'Edit Product' : 'Add Product'}</DialogTitle>
-        </DialogHeader>
+    <ResponsiveModal open={isOpen} onClose={onClose}>
+      <div className="p-6">
+        <h2 className="text-lg font-semibold mb-6" style={{ color: 'hsl(var(--foreground))' }}>{product ? 'Edit Product' : 'Add Product'}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="name">Product Name</Label>
@@ -95,8 +93,8 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({ product, isOpen, 
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ResponsiveModal>
   );
 };
 

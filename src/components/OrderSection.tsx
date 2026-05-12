@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { Sparkles, MessageCircle, Plus, Minus } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const OrderSection = () => {
   const [selectedQuantity, setSelectedQuantity] = useState('');
   const [packageQty, setPackageQty] = useState<{ [key: string]: number }>({});
   const [isAdding, setIsAdding] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const { addToCartAndOpen } = useCart();
 
   const packages = [
@@ -133,16 +135,19 @@ const OrderSection = () => {
 
                   <div className="text-center">
                     <div className="relative mb-4">
+                      {!loadedImages.has(pkg.id) && <Skeleton className="w-full h-32 rounded-xl" />}
                       <img
                         src={pkg.image}
                         alt={pkg.label}
-                        className="w-full h-32 object-cover rounded-xl"
+                        className={`w-full h-32 object-cover rounded-xl ${!loadedImages.has(pkg.id) ? 'hidden' : ''}`}
                         width="300"
                         height="128"
                         loading="lazy"
                         decoding="async"
                         sizes="(max-width: 768px) 100vw, 300px"
+                        onLoad={() => setLoadedImages(prev => new Set(prev).add(pkg.id))}
                         onError={(e) => {
+                          setLoadedImages(prev => new Set(prev).add(pkg.id));
                           (e.target as HTMLImageElement).src = '/placeholder.svg';
                         }}
                       />

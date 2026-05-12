@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import ResponsiveModal from '@/components/ResponsiveModal';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Phone, Mail } from 'lucide-react';
@@ -24,31 +24,27 @@ const CustomerDetailDialog: React.FC<CustomerDetailDialogProps> = ({ customer, o
   if (!customer) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" style={{ background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }}>
-        <DialogHeader>
-          <DialogTitle>{customer.name}</DialogTitle>
-          <DialogDescription className="flex flex-wrap gap-4">
-            <span className="flex items-center gap-1">
-              <Mail className="w-4 h-4" /> {customer.email}
-            </span>
-            <span className="flex items-center gap-1">
-              <Phone className="w-4 h-4" /> {customer.phone}
-            </span>
-          </DialogDescription>
-        </DialogHeader>
+    <ResponsiveModal open={isOpen} onClose={onClose} className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="p-6 space-y-6">
+        <div>
+          <h2 className="text-lg font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{customer.name}</h2>
+          <div className="flex flex-wrap gap-4 mt-1 text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+            <span className="flex items-center gap-1"><Mail className="w-4 h-4" /> {customer.email}</span>
+            <span className="flex items-center gap-1"><Phone className="w-4 h-4" /> {customer.phone}</span>
+          </div>
+        </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
           <div className="p-3 rounded-lg text-center" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
-            <p className="text-2xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>{customer.orders}</p>
+            <p className="text-xl sm:text-2xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>{customer.orders}</p>
             <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>Total Orders</p>
           </div>
           <div className="p-3 rounded-lg text-center" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
-            <p className="text-2xl font-bold" style={{ color: 'hsl(var(--primary))' }}>{customer.total}</p>
+            <p className="text-lg sm:text-xl font-bold leading-tight sm:leading-normal" style={{ color: 'hsl(var(--primary))' }}>{customer.total}</p>
             <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>Total Spent</p>
           </div>
-          <div className="p-3 rounded-lg text-center" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
+          <div className="p-3 rounded-lg text-center col-span-2 sm:col-span-1" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
             <p className="text-sm font-bold" style={{ color: 'hsl(var(--foreground))' }}>{customer.joined}</p>
             <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>Joined</p>
           </div>
@@ -90,8 +86,8 @@ const CustomerDetailDialog: React.FC<CustomerDetailDialogProps> = ({ customer, o
             <p className="text-center py-6" style={{ color: 'hsl(var(--muted-foreground))' }}>No orders found for this customer.</p>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </ResponsiveModal>
   );
 };
 
