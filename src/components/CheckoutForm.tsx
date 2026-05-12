@@ -359,6 +359,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               background: '#25D366',
               animation: 'wa-pulse 2s ease-in-out infinite',
               opacity: 0.3,
+              pointerEvents: 'none',
             }} />
           )}
           <button
