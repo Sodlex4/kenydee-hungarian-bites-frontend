@@ -43,6 +43,7 @@ const Cart = () => {
   const handleRemove = useCallback((id: string, name: string) => {
     removeFromCart(id);
     toast.info(`Removed ${name}`, {
+      duration: 6000,
       action: {
         label: <><Undo2 className="w-3 h-3" /> Undo</>,
         onClick: () => undoRemove()
@@ -54,6 +55,7 @@ const Cart = () => {
     if (currentQty <= 1) {
       removeFromCart(id);
       toast.info('Item removed from cart', {
+        duration: 6000,
         action: {
           label: <><Undo2 className="w-3 h-3" /> Undo</>,
           onClick: () => undoRemove()
@@ -64,10 +66,28 @@ const Cart = () => {
     updateQuantity(id, currentQty - 1);
   }, [updateQuantity, removeFromCart, undoRemove]);
 
+  const MIN_ORDER_AMOUNT = 200;
+
   const handleProceedToCheckout = () => {
     if (cartItems.length === 0) {
       toast.error('Your cart is empty!');
       return;
+    }
+    if (total < MIN_ORDER_AMOUNT) {
+      toast.error(`Minimum order is Ksh ${MIN_ORDER_AMOUNT.toLocaleString()}. Add Ksh ${(MIN_ORDER_AMOUNT - total).toLocaleString()} more.`);
+      return;
+    }
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', 'begin_checkout', {
+        currency: 'KES',
+        value: total,
+        items: cartItems.map(item => ({
+          item_id: item.id,
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity
+        }))
+      });
     }
     setCheckoutStep('checkout');
   };
@@ -110,7 +130,8 @@ const Cart = () => {
     });
 
     if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      window.gtag('event', 'begin_checkout', {
+      window.gtag('event', 'purchase', {
+        transaction_id: orderId,
         currency: 'KES',
         value: total,
         items: cartItems.map(item => ({
@@ -272,7 +293,9 @@ const Cart = () => {
             Closing automatically...
           </p>
         </div>
-      ) : checkoutStep === 'checkout' ? (
+      ) : null}
+
+      <div className={checkoutStep === 'checkout' ? 'flex-1 flex flex-col' : 'hidden'}>
         <CheckoutForm
           cartItems={cartItems}
           total={total}
@@ -281,156 +304,173 @@ const Cart = () => {
           onSubmit={handleCheckoutSubmit}
           isSubmitting={isPlacingOrder}
         />
-      ) : cartItems.length === 0 ? (
-        <div className="flex-1 overflow-y-auto p-6">
-          <div className="text-center py-12">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{
-              background: 'hsl(var(--muted) / 0.3)'
-            }}>
-              <ShoppingCart className="w-10 h-10" style={{ color: 'hsl(var(--muted))' }} />
-            </div>
-            <p className="text-lg font-semibold mb-2" style={{ color: 'hsl(var(--foreground))' }}>Your cart is empty</p>
-            <p className="text-sm mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Bites from Ksh 69/piece</p>
-            <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>Free delivery within Murang'a Town</p>
-            <button
-              onClick={() => {
-                closeCart();
-                document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105 text-white"
-              style={{
-                background: 'var(--gradient-primary)',
-                boxShadow: '0 4px 15px hsl(var(--primary) / 0.3)'
-              }}
-            >
-              Browse Products
-            </button>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="space-y-4">
-              {cartItems.map((item) => (
-                <div key={item.id} className="rounded-lg p-3 sm:p-4" style={{
-                  background: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border) / 0.5)'
-                }}>
-                  <div className="flex items-start gap-3">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
-                      width="56"
-                      height="56"
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/placeholder.svg';
-                      }}
-                    />
+      </div>
 
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-sm leading-tight mb-1 truncate" style={{ color: 'hsl(var(--foreground))' }}>
-                        {item.name}
-                      </h3>
-                      <div className="flex items-baseline gap-2 flex-wrap">
-                        <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                          Ksh {item.price} each
-                        </p>
-                        {item.quantity > 1 && (
-                          <p className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
-                            = Ksh {(item.price * item.quantity).toLocaleString()}
+      {checkoutStep !== 'checkout' && checkoutStep !== 'confirmed' ? (
+        cartItems.length === 0 ? (
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="text-center py-12">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{
+                background: 'hsl(var(--muted) / 0.3)'
+              }}>
+                <ShoppingCart className="w-10 h-10" style={{ color: 'hsl(var(--muted))' }} />
+              </div>
+              <p className="text-lg font-semibold mb-2" style={{ color: 'hsl(var(--foreground))' }}>Your cart is empty</p>
+              <p className="text-sm mb-1" style={{ color: 'hsl(var(--muted-foreground))' }}>Bites from Ksh 69/piece</p>
+              <p className="text-sm mb-6" style={{ color: 'hsl(var(--muted-foreground))' }}>Free delivery within Murang'a Town</p>
+              <button
+                onClick={() => {
+                  closeCart();
+                  document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105 text-white"
+                style={{
+                  background: 'var(--gradient-primary)',
+                  boxShadow: '0 4px 15px hsl(var(--primary) / 0.3)'
+                }}
+              >
+                Browse Products
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="space-y-4">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="rounded-lg p-3 sm:p-4" style={{
+                    background: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border) / 0.5)'
+                  }}>
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
+                        width="56"
+                        height="56"
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        }}
+                      />
+
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm leading-tight mb-1 truncate" style={{ color: 'hsl(var(--foreground))' }}>
+                          {item.name}
+                        </h3>
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                            Ksh {item.price} each
+                          </p>
+                          {item.quantity > 1 && (
+                            <p className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
+                              = Ksh {(item.price * item.quantity).toLocaleString()}
+                            </p>
+                          )}
+                        </div>
+                        {item.stock !== undefined && item.stock <= 5 && item.stock > 0 && (
+                          <p className="text-xs mt-1 flex items-center gap-1" style={{ color: '#eab308' }}>
+                            Only {item.stock} left
+                          </p>
+                        )}
+                        {item.stock !== undefined && item.stock === 0 && (
+                          <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'hsl(var(--destructive))' }}>
+                            Currently out of stock
                           </p>
                         )}
                       </div>
-                      {item.stock !== undefined && item.stock <= 5 && item.stock > 0 && (
-                        <p className="text-xs mt-1 flex items-center gap-1" style={{ color: '#eab308' }}>
-                          Only {item.stock} left
-                        </p>
-                      )}
-                      {item.stock !== undefined && item.stock === 0 && (
-                        <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'hsl(var(--destructive))' }}>
-                          Currently out of stock
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => handleRemove(item.id, item.name)}
-                      className="p-2.5 rounded-full transition-colors hover:bg-red-500/20 flex-shrink-0"
-                      aria-label={`Remove ${item.name} from cart`}
-                    >
-                      <X className="w-4 h-4" style={{ color: 'hsl(var(--destructive) / 0.6)' }} />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-3 pt-3" style={{ borderColor: 'hsl(var(--border) / 0.3)' }}>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => handleDecrease(item.id, item.quantity)}
-                        className="w-11 h-11 rounded-full flex items-center justify-center transition-colors"
-                        style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
-                        aria-label="Decrease quantity"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-
-                      <span className="font-semibold w-10 text-center text-sm" style={{ color: 'hsl(var(--foreground))' }}>{item.quantity}</span>
 
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-11 h-11 rounded-full flex items-center justify-center transition-colors"
-                        style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
-                        aria-label="Increase quantity"
+                        onClick={() => handleRemove(item.id, item.name)}
+                        className="p-2.5 rounded-full transition-colors hover:bg-red-500/20 flex-shrink-0"
+                        aria-label={`Remove ${item.name} from cart`}
                       >
-                        <Plus className="w-4 h-4" />
+                        <X className="w-4 h-4" style={{ color: 'hsl(var(--destructive) / 0.6)' }} />
                       </button>
                     </div>
 
-                    <span className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
-                      Ksh {item.price * item.quantity}
-                    </span>
+                    <div className="flex items-center justify-between mt-3 pt-3" style={{ borderColor: 'hsl(var(--border) / 0.3)' }}>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleDecrease(item.id, item.quantity)}
+                          className="w-11 h-11 rounded-full flex items-center justify-center transition-colors"
+                          style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+
+                        <span className="font-semibold w-10 text-center text-sm" style={{ color: 'hsl(var(--foreground))' }}>{item.quantity}</span>
+
+                        <button
+                          onClick={() => {
+                            if (item.stock !== undefined && item.quantity >= item.stock) {
+                              toast.warning(`Only ${item.stock} available`);
+                              return;
+                            }
+                            updateQuantity(item.id, item.quantity + 1);
+                          }}
+                          className="w-11 h-11 rounded-full flex items-center justify-center transition-colors"
+                          style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
+                          aria-label="Increase quantity"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <span className="font-bold text-sm" style={{ color: 'hsl(var(--primary))' }}>
+                        Ksh {item.price * item.quantity}
+                      </span>
+                    </div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t p-6 space-y-4 flex-shrink-0" style={{ borderColor: 'hsl(var(--border))' }}>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  <span>{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
+                  <span>Ksh {total.toLocaleString()}</span>
                 </div>
-              ))}
+                <div className="flex items-center justify-between text-sm">
+                  <span style={{ color: 'hsl(var(--muted-foreground))' }}>Delivery</span>
+                  <span style={{ color: '#22c55e' }}>Free</span>
+                </div>
+                <div className="flex items-center justify-between text-xl font-bold">
+                  <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
+                  <span style={{ color: 'hsl(var(--primary))' }}>Ksh {total.toLocaleString()}</span>
+                </div>
+              </div>
+
+              {total < MIN_ORDER_AMOUNT && (
+                <p className="text-xs text-center" style={{ color: 'hsl(var(--destructive))' }}>
+                  Minimum order is Ksh {MIN_ORDER_AMOUNT.toLocaleString()} (Ksh {(MIN_ORDER_AMOUNT - total).toLocaleString()} more needed)
+                </p>
+              )}
+
+              <button
+                onClick={handleProceedToCheckout}
+                disabled={total < MIN_ORDER_AMOUNT}
+                className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                style={{
+                  background: 'var(--gradient-primary)',
+                  boxShadow: '0 10px 30px hsl(var(--primary) / 0.3)'
+                }}
+              >
+                <MessageCircle className="w-5 h-5" />
+                Continue to Checkout
+              </button>
+
+              <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                Free delivery within Murang'a Town &bull; Delivered in 2 hours
+              </p>
             </div>
-          </div>
-
-          <div className="border-t p-6 space-y-4 flex-shrink-0" style={{ borderColor: 'hsl(var(--border))' }}>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                <span>{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
-                <span>Ksh {total.toLocaleString()}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span style={{ color: 'hsl(var(--muted-foreground))' }}>Delivery</span>
-                <span style={{ color: '#22c55e' }}>Free</span>
-              </div>
-              <div className="flex items-center justify-between text-xl font-bold">
-                <span style={{ color: 'hsl(var(--foreground))' }}>Total:</span>
-                <span style={{ color: 'hsl(var(--primary))' }}>Ksh {total.toLocaleString()}</span>
-              </div>
-            </div>
-
-            <button
-              onClick={handleProceedToCheckout}
-              className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2"
-              style={{
-                background: 'var(--gradient-primary)',
-                boxShadow: '0 10px 30px hsl(var(--primary) / 0.3)'
-              }}
-            >
-              <MessageCircle className="w-5 h-5" />
-              Continue to Checkout
-            </button>
-
-            <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
-              Free delivery within Murang'a Town &bull; Delivered in 2 hours
-            </p>
-          </div>
-        </>
-      )}
+          </>
+        )
+      ) : null}
     </div>
   );
 
