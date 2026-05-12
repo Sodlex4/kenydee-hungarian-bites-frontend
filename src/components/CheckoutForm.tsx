@@ -291,18 +291,25 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         className="flex-shrink-0 p-4 sm:p-6 space-y-3"
         style={{ borderTop: '1px solid hsl(var(--border))' }}
       >
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-          style={{
-            background: 'var(--gradient-primary)',
-            boxShadow: '0 10px 30px hsl(var(--primary) / 0.3)',
-          }}
-        >
-          <MessageCircle className="w-5 h-5" />
-          {isSubmitting ? 'Placing Order...' : 'Place Order via WhatsApp'}
-        </button>
+        <div className="relative">
+          <div className="absolute inset-0 rounded-lg" style={{
+            background: '#25D366',
+            animation: 'wa-pulse 2s ease-in-out infinite',
+            opacity: 0.3,
+          }} />
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="relative w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            style={{
+              background: '#25D366',
+              boxShadow: '0 8px 25px rgba(37, 211, 102, 0.4)',
+            }}
+          >
+            <MessageCircle className="w-5 h-5" />
+            {isSubmitting ? 'Placing Order...' : 'Place Order via WhatsApp'}
+          </button>
+        </div>
         <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
           You&apos;ll be redirected to WhatsApp to confirm your order
         </p>

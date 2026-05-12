@@ -201,10 +201,14 @@ const Cart = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setCheckoutStep('cart')}
-              className="p-2 rounded-full transition-colors hover:bg-gray-700"
+              className="p-2.5 rounded-full transition-all duration-200 active:scale-90"
+              style={{
+                background: 'hsl(var(--muted))',
+                color: 'hsl(var(--muted-foreground))',
+              }}
               aria-label="Back to cart"
             >
-              <ArrowLeft className="w-5 h-5" style={{ color: 'hsl(var(--muted-foreground))' }} />
+              <ArrowLeft className="w-5 h-5" />
             </button>
             <h2 className="text-xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>
               Checkout
