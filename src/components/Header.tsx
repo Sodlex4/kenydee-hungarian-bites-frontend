@@ -8,7 +8,7 @@ const sections = ['home', 'products', 'about', 'testimonials', 'faq', 'order'];
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const { cartItems, toggleCart, isCartOpen } = useCart();
+  const { cartItems, toggleCart } = useCart();
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const firstMobileButtonRef = useRef<HTMLButtonElement>(null);
 

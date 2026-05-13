@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
 import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
 import Pagination from '@/components/admin/Pagination';
-import { updateOrderStatus, deleteOrder, exportOrdersToCSV, getOrders, getDashboardStats } from '@/data/orders';
+import { updateOrderStatus, deleteOrder, exportOrdersToCSV, getOrders } from '@/data/orders';
 import type { Order } from '@/data/orders';
 import { Download, MoreVertical, Eye, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';

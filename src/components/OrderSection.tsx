@@ -1,9 +1,9 @@
 
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { Sparkles, MessageCircle, Plus, Minus } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { WHATSAPP_NUMBER } from '../lib/env';
 
 const OrderSection = () => {
   const [selectedQuantity, setSelectedQuantity] = useState('');
@@ -70,7 +70,7 @@ const OrderSection = () => {
 
   const handleQuickWhatsApp = () => {
     const message = `Hello! I'd like to order Hungarian Hot Dog Rolls. Please confirm availability and delivery details.`;
-    const whatsappUrl = `https://wa.me/254759233065?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 

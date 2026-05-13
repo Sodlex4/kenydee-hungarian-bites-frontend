@@ -1,7 +1,6 @@
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Users, Clock, Award } from 'lucide-react';
 import { shouldReduceAnimations } from '../lib/motion';
 

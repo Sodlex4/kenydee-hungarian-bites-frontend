@@ -4,8 +4,8 @@ import DashboardCards from '../../components/admin/DashboardCards';
 import RevenueChart from '../../components/admin/RevenueChart';
 import NotificationPanel from '../../components/admin/NotificationPanel';
 import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
-import { getOrders, getDashboardStats, getNotifications } from '@/data/orders';
-import type { Order, Notification } from '@/data/orders';
+import { getDashboardStats, getNotifications } from '@/data/orders';
+import type { Order } from '@/data/orders';
 import { Badge } from '@/components/ui/badge';
 
 const AdminDashboard = () => {

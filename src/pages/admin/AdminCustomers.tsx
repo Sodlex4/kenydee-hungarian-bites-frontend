@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import CustomerDetailDialog from '@/components/admin/CustomerDetailDialog';
 import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
 import Pagination from '@/components/admin/Pagination';
-import { getCustomers, getCustomerOrders, exportCustomersToCSV, getOrders } from '@/data/orders';
+import { getCustomers, getCustomerOrders, exportCustomersToCSV } from '@/data/orders';
 import type { Customer, Order } from '@/data/orders';
 import { Download, Eye } from 'lucide-react';
 import { toast } from 'sonner';
@@ -19,7 +19,7 @@ const statusColors = {
 };
 
 const AdminCustomers = () => {
-  const [customers, setCustomers] = useState<Customer[]>(getCustomers);
+  const [customers] = useState<Customer[]>(getCustomers);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);

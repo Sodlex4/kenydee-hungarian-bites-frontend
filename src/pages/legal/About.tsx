@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Cart from '../../components/Cart';
@@ -7,6 +7,7 @@ import BackToTop from '../../components/BackToTop';
 import MobileBottomNav from '../../components/MobileBottomNav';
 import { CartProvider } from '../../context/CartContext';
 import { Heart, Award, Users, MapPin, Mail, Phone } from 'lucide-react';
+import { CONTACT_EMAIL, WHATSAPP_NUMBER } from '../../lib/env';
 
 const About = () => {
   useEffect(() => {
@@ -157,7 +158,7 @@ const About = () => {
             </p>
             <div className="mt-8">
               <a
-                href="mailto:orders@hungarianbites.co.ke"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="inline-block px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105"
                 style={{
                   background: 'var(--gradient-primary)',
@@ -172,7 +173,7 @@ const About = () => {
           {/* Contact Info */}
           <div className="grid sm:grid-cols-3 gap-6">
             <a
-              href="mailto:orders@hungarianbites.co.ke"
+              href={`mailto:${CONTACT_EMAIL}`}
               className="flex items-center gap-3 p-6 rounded-2xl border transition-colors hover:scale-105"
               style={{
                 background: 'hsl(var(--card))',
@@ -183,7 +184,23 @@ const About = () => {
               <div className="text-left">
                 <p className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>Email Us</p>
                 <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                  orders@hungarianbites.co.ke
+                  {CONTACT_EMAIL}
+                </p>
+              </div>
+            </a>
+            <a
+              href={`tel:+${WHATSAPP_NUMBER}`}
+              className="flex items-center gap-3 p-6 rounded-2xl border transition-colors hover:scale-105"
+              style={{
+                background: 'hsl(var(--card))',
+                borderColor: 'hsl(var(--border))'
+              }}
+            >
+              <Phone className="w-6 h-6 flex-shrink-0" style={{ color: 'hsl(var(--primary))' }} />
+              <div className="text-left">
+                <p className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>Call Us</p>
+                <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                  +254 759 233 065
                 </p>
               </div>
             </a>

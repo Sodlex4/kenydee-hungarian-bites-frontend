@@ -1,7 +1,6 @@
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Crown, Sparkles, Shield } from 'lucide-react';
 import { shouldReduceAnimations, isMobileDevice } from '../lib/motion';
 

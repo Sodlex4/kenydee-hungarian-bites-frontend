@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Cart from '../../components/Cart';
@@ -7,6 +7,7 @@ import BackToTop from '../../components/BackToTop';
 import MobileBottomNav from '../../components/MobileBottomNav';
 import { CartProvider } from '../../context/CartContext';
 import { FileText, ShoppingCart, Truck, AlertTriangle, Phone, Mail, MapPin } from 'lucide-react';
+import { CONTACT_EMAIL, WHATSAPP_NUMBER } from '../../lib/env';
 
 const Terms = () => {
   useEffect(() => {
@@ -187,7 +188,7 @@ const Terms = () => {
                   </p>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <a
-                      href="mailto:orders@hungarianbites.co.ke"
+                      href={`mailto:${CONTACT_EMAIL}`}
                       className="flex items-center gap-3 p-4 rounded-lg border transition-colors hover:scale-105"
                       style={{
                         background: 'hsl(var(--muted))',
@@ -198,12 +199,12 @@ const Terms = () => {
                       <div>
                         <p className="font-medium text-sm">Email</p>
                         <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                          orders@hungarianbites.co.ke
+                          {CONTACT_EMAIL}
                         </p>
                       </div>
                     </a>
                     <a
-                      href="tel:+254759233065"
+                      href={`tel:+${WHATSAPP_NUMBER}`}
                       className="flex items-center gap-3 p-4 rounded-lg border transition-colors hover:scale-105"
                       style={{
                         background: 'hsl(var(--muted))',

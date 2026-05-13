@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { WHATSAPP_NUMBER } from '../lib/env';
 
 interface FAQ {
   question: string;
@@ -105,7 +106,7 @@ const FAQSection = () => {
             Still have questions?
           </p>
           <a
-            href="https://wa.me/254759233065?text=Hello!%20I%20have%20a%20question%20about%20Hungarian%20Hot%20Dog%20Rolls."
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hello!%20I%20have%20a%20question%20about%20Hungarian%20Hot%20Dog%20Rolls.`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 hover:scale-105 text-white"

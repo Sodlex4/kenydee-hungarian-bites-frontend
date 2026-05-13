@@ -1,8 +1,7 @@
-import React, { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useNavigate } from 'react-router-dom';
 import { useAdminProfile } from '@/context/AdminProfileContext';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,6 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 const AdminProfile = () => {
-  const navigate = useNavigate();
   const { profile, updateProfile, updateAvatar, removeAvatar, isLoading } = useAdminProfile();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(profile.avatar || null);
   const [isUploading, setIsUploading] = useState(false);

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { X, Plus, Minus, ShoppingCart, MessageCircle, Undo2, ArrowLeft, Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
@@ -7,9 +7,10 @@ import CheckoutForm from './CheckoutForm';
 import type { CheckoutFormData } from './CheckoutForm';
 import { addOrder, addNotification, getAdminSettings } from '../data/orders';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
+import { WHATSAPP_NUMBER } from '../lib/env';
 
 const Cart = () => {
-  const { cartItems, isCartOpen, toggleCart, closeCart, updateQuantity, removeFromCart, undoRemove, clearCart } = useCart();
+  const { cartItems, isCartOpen, closeCart, updateQuantity, removeFromCart, undoRemove, clearCart } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
   const firstFocusableRef = useRef<HTMLButtonElement>(null);
   const isPointerReady = useRef(false);
@@ -97,7 +98,7 @@ const Cart = () => {
 
     const settings = getAdminSettings();
     const waMatch = settings.whatsapp.match(/wa\.me\/(\d+)/);
-    const waNumber = waMatch ? waMatch[1] : '254759233065';
+    const waNumber = waMatch ? waMatch[1] : WHATSAPP_NUMBER;
 
     const cleanedPhone = data.phone.replace(/[\s\-()]/g, '');
     const orderId = `#${Date.now().toString(36).toUpperCase()}`;

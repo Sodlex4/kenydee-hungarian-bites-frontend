@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-
-const WHATSAPP_NUMBER = '254759233065';
+import { WHATSAPP_NUMBER } from '../lib/env';
 
 const FloatingWhatsApp = () => {
   const { isCartOpen } = useCart();

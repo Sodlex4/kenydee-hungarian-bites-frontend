@@ -38,7 +38,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   cartItems,
   total,
   totalItems,
-  onBack,
   onSubmit,
   isSubmitting,
 }) => {

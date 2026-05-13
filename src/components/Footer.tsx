@@ -1,7 +1,7 @@
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, MessageCircle, MapPin, Phone, Mail } from 'lucide-react';
+import { WHATSAPP_NUMBER } from '../lib/env';
 
 const Footer = () => {
   const scrollToSection = (sectionId: string) => {
@@ -38,7 +38,7 @@ const Footer = () => {
                 { icon: Facebook, href: 'https://facebook.com/hungarianbites', label: 'Facebook', color: 'hsl(var(--primary))' },
                 { icon: Instagram, href: 'https://www.instagram.com/vdj_kenydee/?next=%2F', label: 'Instagram', color: 'hsl(var(--primary))' },
                 { icon: Twitter, href: 'https://twitter.com/hungarianbites', label: 'Twitter', color: 'hsl(var(--primary))' },
-                { icon: MessageCircle, href: 'https://wa.me/254759233065', label: 'WhatsApp', color: 'hsl(var(--primary))' }
+                { icon: MessageCircle, href: `https://wa.me/${WHATSAPP_NUMBER}`, label: 'WhatsApp', color: 'hsl(var(--primary))' }
               ].map((social, index) => (
                 <a
                   key={index}

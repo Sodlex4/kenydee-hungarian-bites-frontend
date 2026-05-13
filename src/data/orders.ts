@@ -1,3 +1,5 @@
+import { WHATSAPP_NUMBER, CONTACT_EMAIL, SITE_URL } from '../lib/env';
+
 export interface OrderItem {
   name: string;
   quantity: number;
@@ -371,13 +373,13 @@ const PREFS_STORAGE_KEY = 'hb-admin-prefs';
 
 const defaultSettings: AdminSettings = {
   businessName: 'Hungarian Bites',
-  businessEmail: 'kennedygikonyo3@gmail.com',
-  phoneNumber: '+254 (0) 759 233 065',
+  businessEmail: CONTACT_EMAIL,
+  phoneNumber: `+254 (0) ${WHATSAPP_NUMBER.slice(3)}`,
   location: "Murang'a, Kenya",
   instagram: 'https://www.instagram.com/vdj_kenydee/',
   facebook: 'https://facebook.com/hungarianbites',
-  whatsapp: 'https://wa.me/254759233065',
-  website: 'https://kenydee-hungarian-bites-frontend.vercel.app',
+  whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,
+  website: SITE_URL,
 };
 
 const defaultPreferences: AdminPreferences = {

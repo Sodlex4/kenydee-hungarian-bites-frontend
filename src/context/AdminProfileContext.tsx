@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { WHATSAPP_NUMBER, CONTACT_EMAIL } from '../lib/env';
 
 export interface AdminProfile {
   name: string;
@@ -25,8 +26,8 @@ const AVATAR_STORAGE_KEY = 'hungarian-bites-admin-avatar';
 
 const getDefaultProfile = (): AdminProfile => ({
   name: 'Kenydee',
-  email: 'kennedygikonyo3@gmail.com',
-  phone: '+254 (0) 759 233 065',
+  email: CONTACT_EMAIL,
+  phone: `+254 (0) ${WHATSAPP_NUMBER.slice(3)}`,
   bio: 'Admin of Hungarian Bites - Bringing premium Hungarian hot dog rolls to Kenya.',
   avatar: '',
   role: 'Administrator',
