@@ -153,6 +153,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             id="phone"
             type="tel"
             autoComplete="tel"
+            inputMode="numeric"
+            autoCapitalize="none"
             {...register('phone', {
               onBlur: (e) => {
                 const formatted = formatPhone(e.target.value);
@@ -193,6 +195,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             id="email"
             type="email"
             autoComplete="email"
+            autoCapitalize="none"
+            autoCorrect="off"
             {...register('email')}
             placeholder="e.g. john@example.com"
             className="w-full h-12 sm:h-14 rounded-lg border px-4 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary"

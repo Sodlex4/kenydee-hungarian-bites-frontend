@@ -50,26 +50,50 @@ const Terms = () => {
             </p>
 
             <div className="grid md:grid-cols-[250px_1fr] gap-8">
-              <nav className="hidden md:block">
-                <div className="sticky top-28">
-                  <h3 className="font-semibold mb-3 text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                    TABLE OF CONTENTS
-                  </h3>
-                  <ul className="space-y-2">
+              <div className="space-y-4">
+                <div className="md:hidden">
+                  <select
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const el = document.getElementById(e.target.value);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    className="w-full h-12 rounded-lg border px-4 text-sm"
+                    style={{
+                      background: 'hsl(var(--input))',
+                      borderColor: 'hsl(var(--border))',
+                      color: 'hsl(var(--foreground))',
+                    }}
+                    aria-label="Jump to section"
+                  >
+                    <option value="">Jump to section...</option>
                     {tableOfContents.map((item) => (
-                      <li key={item.id}>
-                        <a
-                          href={`#${item.id}`}
-                          className="text-sm hover:underline transition-colors"
-                          style={{ color: 'hsl(var(--foreground))' }}
-                        >
-                          {item.title}
-                        </a>
-                      </li>
+                      <option key={item.id} value={item.id}>{item.title}</option>
                     ))}
-                  </ul>
+                  </select>
                 </div>
-              </nav>
+                <nav className="hidden md:block">
+                  <div className="sticky top-28">
+                    <h3 className="font-semibold mb-3 text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
+                      TABLE OF CONTENTS
+                    </h3>
+                    <ul className="space-y-2">
+                      {tableOfContents.map((item) => (
+                        <li key={item.id}>
+                          <a
+                            href={`#${item.id}`}
+                            className="text-sm hover:underline transition-colors"
+                            style={{ color: 'hsl(var(--foreground))' }}
+                          >
+                            {item.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </nav>
+              </div>
 
               <div className="space-y-10" style={{ color: 'hsl(var(--foreground))' }}>
                 <section id="agreement">

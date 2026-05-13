@@ -91,10 +91,10 @@ const MobileBottomNav = () => {
           }}
           aria-label={`Shopping cart, ${totalItems} items`}
         >
-          <div className="relative">
+          <div className="relative w-6 h-6 flex items-center justify-center">
             <ShoppingCart className="w-5 h-5" />
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 text-[9px] rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center font-bold shadow-lg" style={{
+              <span className="absolute -top-2 -right-2 text-[9px] rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center font-bold shadow-lg" style={{
                 background: 'hsl(var(--destructive))',
                 color: 'hsl(var(--destructive-foreground))'
               }}>
