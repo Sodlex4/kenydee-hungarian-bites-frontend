@@ -483,7 +483,7 @@ const Cart = () => {
     <>
       <div className="md:hidden">
         <Drawer open={isCartOpen} onOpenChange={(open) => { if (!open) closeCart(); }}>
-          <DrawerContent className="h-[90dvh] overflow-hidden border-0 rounded-t-[10px]">
+          <DrawerContent className="h-[95dvh] [margin-top:0] pt-8 border-0 rounded-t-[10px]">
             {renderCartContent()}
           </DrawerContent>
         </Drawer>
