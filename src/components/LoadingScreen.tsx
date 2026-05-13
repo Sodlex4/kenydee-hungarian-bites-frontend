@@ -13,9 +13,15 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
 
   useEffect(() => {
     if (prefersReducedMotion()) {
+      localStorage.setItem('has-visited', 'true');
       onSkip();
       return;
     }
+
+    const complete = () => {
+      localStorage.setItem('has-visited', 'true');
+      onSkip();
+    };
 
     const tl = gsap.timeline();
 
@@ -30,7 +36,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
         opacity: 0,
         duration: 0.2,
         ease: "power2.out",
-        onComplete: onSkip
+        onComplete: complete
       });
 
       setCanSkip(true);
@@ -61,7 +67,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
         duration: 0.8,
         delay: 0.3,
         ease: "power2.out",
-        onComplete: onSkip
+        onComplete: complete
       });
 
       return () => {
@@ -80,7 +86,10 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
       opacity: 0,
       duration: 0.3,
       ease: "power2.out",
-      onComplete: onSkip
+      onComplete: () => {
+        localStorage.setItem('has-visited', 'true');
+        onSkip();
+      }
     });
   }, [onSkip]);
 

@@ -60,8 +60,8 @@ const DashboardCards: React.FC<DashboardCardsProps> = ({ totalCustomers, ordersT
               <p className="text-2xl font-bold mt-1" style={{ color: 'hsl(var(--foreground))' }}>
                 {stat.value}
               </p>
-              <p className="text-sm mt-1 flex items-center gap-1" style={{ color: pendingOrders > 0 && index === 1 ? '#fbbf24' : 'hsl(var(--accent))' }}>
-                {index === 1 && pendingOrders > 0 && <AlertCircle className="w-3 h-3" />}
+              <p className="text-sm mt-1 flex items-center gap-1" style={{ color: pendingOrders > 0 && stat.title === 'Orders Today' ? '#fbbf24' : 'hsl(var(--accent))' }}>
+                {stat.title === 'Orders Today' && pendingOrders > 0 && <AlertCircle className="w-3 h-3" />}
                 {stat.change}
               </p>
             </div>

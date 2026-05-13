@@ -26,6 +26,7 @@ const FloatingWhatsApp = () => {
       className={`fixed z-[60] md:bottom-6 bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:right-6 right-4 group transition-all duration-300 ${
         isCartOpen ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'
       }`}
+      {...(isCartOpen ? { 'aria-hidden': true, tabIndex: -1 } : {})}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >

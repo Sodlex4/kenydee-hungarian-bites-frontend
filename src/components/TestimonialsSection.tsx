@@ -107,7 +107,7 @@ const TestimonialsSection = () => {
                     color: 'hsl(var(--primary))',
                     display: testimonial.image ? 'none' : 'flex'
                   }}>
-                    {testimonial.image ? '' : getInitials(testimonial.author)}
+                    {getInitials(testimonial.author)}
                   </div>
                   <h4 className="text-xl font-bold tracking-wide text-gradient-primary" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
                     {testimonial.author}
@@ -170,7 +170,7 @@ const TestimonialsSection = () => {
                         color: 'hsl(var(--primary))',
                         display: testimonial.image ? 'none' : 'flex'
                       }}>
-                        {testimonial.image ? '' : getInitials(testimonial.author)}
+                        {getInitials(testimonial.author)}
                       </div>
                       <h4 className="text-xl font-bold tracking-wide text-gradient-primary" style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
                         {testimonial.author}

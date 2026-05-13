@@ -47,9 +47,9 @@ const App = () => (
             <Route path="/admin/notifications" element={<AdminLayout><AdminNotifications /></AdminLayout>} />
             <Route path="/admin/profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
             <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
-            <Route path="/legal/terms" element={<AdminLayout><TermsPage /></AdminLayout>} />
-            <Route path="/legal/privacy" element={<AdminLayout><PrivacyPage /></AdminLayout>} />
-            <Route path="/legal/about" element={<AdminLayout><AboutPage /></AdminLayout>} />
+            <Route path="/legal/terms" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><TermsPage /></Suspense></ErrorBoundary>} />
+            <Route path="/legal/privacy" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><PrivacyPage /></Suspense></ErrorBoundary>} />
+            <Route path="/legal/about" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><AboutPage /></Suspense></ErrorBoundary>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AdminProfileProvider>

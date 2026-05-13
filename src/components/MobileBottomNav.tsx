@@ -6,7 +6,7 @@ const sections = ['home', 'products', 'about', 'order'];
 
 const MobileBottomNav = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const { cartItems, toggleCart } = useCart();
+  const { cartItems, toggleCart, isCartOpen } = useCart();
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -82,8 +82,13 @@ const MobileBottomNav = () => {
 
         <button
           onClick={toggleCart}
-          className="flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px] opacity-60"
-          style={{ color: 'hsl(var(--muted-foreground))' }}
+          className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px] ${
+            isCartOpen ? 'scale-105' : 'opacity-60'
+          }`}
+          style={{
+            color: isCartOpen ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+            background: isCartOpen ? 'hsl(var(--primary) / 0.12)' : 'transparent'
+          }}
           aria-label={`Shopping cart, ${totalItems} items`}
         >
           <div className="relative">

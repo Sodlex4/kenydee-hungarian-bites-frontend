@@ -154,7 +154,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             type="tel"
             autoComplete="tel"
             {...register('phone', {
-              onChange: (e) => {
+              onBlur: (e) => {
                 const formatted = formatPhone(e.target.value);
                 if (formatted !== e.target.value) {
                   setValue('phone', formatted, { shouldDirty: true });

@@ -18,7 +18,7 @@ const ResponsiveModal = ({ open, onClose, children, className, title, descriptio
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
-        <DrawerContent className={`${className || ''} max-h-[90vh]`}>
+        <DrawerContent className={`${className || ''} max-h-[90vh]`} aria-label={title || 'Dialog'}>
           {children}
         </DrawerContent>
       </Drawer>

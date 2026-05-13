@@ -50,7 +50,7 @@ const AdminOrders = () => {
       order.customer.name.toLowerCase().includes(term) ||
       order.items.some(i => i.name.toLowerCase().includes(term)) ||
       order.status.toLowerCase().includes(term) ||
-      order.method.toLowerCase().includes(term)
+      (order.method?.toLowerCase() ?? '').includes(term)
     );
   }, [orders, searchTerm]);
 
