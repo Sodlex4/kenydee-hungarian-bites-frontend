@@ -28,8 +28,8 @@ const ResponsiveModal = ({ open, onClose, children, className, title, descriptio
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className={className}>
-        {title && <DialogTitle className="sr-only">{title}</DialogTitle>}
-        {description && <DialogDescription className="sr-only">{description}</DialogDescription>}
+        <DialogTitle className="sr-only">{title || 'Dialog'}</DialogTitle>
+        <DialogDescription className="sr-only">{description || ''}</DialogDescription>
         {children}
       </DialogContent>
     </Dialog>
