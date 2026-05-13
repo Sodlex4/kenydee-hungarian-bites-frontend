@@ -74,7 +74,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5" data-vaul-no-drag>
         <p className="text-xs text-center" style={{ color: 'hsl(var(--muted-foreground))' }}>
           Checkout as a guest &mdash; no account needed
         </p>

@@ -164,7 +164,10 @@ const Cart = () => {
     const message = `*Hungarian Bites - Order Confirmation*\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${cleanedPhone}${emailLine}\n📍 *Delivery:* ${data.deliveryAddress}\n⏰ *Time:* ${timeInfo}\n\n*Items:*\n${itemsList}\n\n*Total: Ksh ${total.toLocaleString()}*${notes}\n\n_Please confirm my order and delivery details._`;
 
     const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const waWindow = window.open(whatsappUrl, '_blank');
+    if (!waWindow || waWindow.closed) {
+      window.location.href = whatsappUrl;
+    }
 
     setIsPlacingOrder(false);
     setCheckoutStep('confirmed');
@@ -334,7 +337,7 @@ const Cart = () => {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-6" data-vaul-no-drag>
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="rounded-lg p-3 sm:p-4" style={{
