@@ -360,6 +360,19 @@ All colors MUST be HSL.
   }
 }
 
+/* Override Android Chrome autofill yellow background for dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px hsl(var(--input)) inset !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  caret-color: hsl(var(--foreground));
+  border-radius: 0.5rem;
+}
+
 /* Badge pop animation */
 @keyframes badgePop {
   0% { transform: scale(0); }

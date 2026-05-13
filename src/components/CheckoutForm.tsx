@@ -123,9 +123,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           </label>
           <input
             id="name"
+            autoComplete="name"
             {...register('name')}
             placeholder="e.g. John Kamau"
-            className="w-full h-14 rounded-lg border px-4 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full h-14 rounded-lg border px-4 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
               background: 'hsl(var(--input))',
               borderColor: errors.name ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -151,6 +152,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           <input
             id="phone"
             type="tel"
+            autoComplete="tel"
             {...register('phone', {
               onChange: (e) => {
                 const formatted = formatPhone(e.target.value);
@@ -161,7 +163,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               },
             })}
             placeholder="e.g. 0712345678"
-            className="w-full h-14 rounded-lg border px-4 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full h-14 rounded-lg border px-4 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
               background: 'hsl(var(--input))',
               borderColor: errors.phone ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -190,9 +192,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           <input
             id="email"
             type="email"
+            autoComplete="email"
             {...register('email')}
             placeholder="e.g. john@example.com"
-            className="w-full h-14 rounded-lg border px-4 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full h-14 rounded-lg border px-4 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
               background: 'hsl(var(--input))',
               borderColor: 'hsl(var(--border))',
@@ -212,10 +215,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           </label>
           <textarea
             id="deliveryAddress"
+            autoComplete="street-address"
             {...register('deliveryAddress')}
             placeholder="e.g. Murang'a Town, near Post Office"
             rows={2}
-            className="w-full min-h-[56px] rounded-lg border px-4 py-3.5 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            className="w-full min-h-[56px] rounded-lg border px-4 py-3.5 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             style={{
               background: 'hsl(var(--input))',
               borderColor: errors.deliveryAddress ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -276,7 +280,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 type="datetime-local"
                 {...register('scheduledTime')}
                 min={new Date().toISOString().slice(0, 16)}
-                className="w-full h-14 rounded-lg border px-4 text-[15px] mt-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full h-14 rounded-lg border px-4 text-base mt-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                 style={{
                   background: 'hsl(var(--input))',
                   borderColor: errors.scheduledTime ? 'hsl(var(--destructive))' : 'hsl(var(--border))',
@@ -311,7 +315,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             placeholder="Any special requests?"
             rows={2}
             maxLength={200}
-            className="w-full min-h-[56px] rounded-lg border px-4 py-3.5 text-[15px] transition-colors focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            className="w-full min-h-[56px] rounded-lg border px-4 py-3.5 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             style={{
               background: 'hsl(var(--input))',
               borderColor: 'hsl(var(--border))',
