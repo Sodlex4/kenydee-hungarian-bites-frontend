@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
 import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
 import Pagination from '@/components/admin/Pagination';
-import { updateOrderStatus, deleteOrder, exportOrdersToCSV, getOrders } from '@/data/orders';
-import type { Order } from '@/data/orders';
+import { useApiData } from '@/hooks/useApiData';
+import { updateOrderStatus, deleteOrder, exportOrdersToCSV, getOrders } from '@/lib/api';
+import type { Order } from '@/lib/api';
 import { Download, MoreVertical, Eye, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -31,16 +32,12 @@ const statusColors: Record<string, string> = {
 };
 
 const AdminOrders = () => {
-  const [orders, setOrders] = useState<Order[]>(getOrders);
+  const { data: orders, refresh: refreshOrders } = useApiData(getOrders, [] as Order[]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
-
-  const refreshOrders = useCallback(() => {
-    setOrders(getOrders());
-  }, []);
 
   const filteredOrders = useMemo(() => {
     if (!searchTerm) return orders;
@@ -67,8 +64,8 @@ const AdminOrders = () => {
     setIsDetailOpen(true);
   };
 
-  const handleStatusChange = (id: string, status: Order['status']) => {
-    updateOrderStatus(id, status);
+  const handleStatusChange = async (id: string, status: Order['status']) => {
+    await updateOrderStatus(id, status);
     toast.success(`Order ${id} marked as ${status}`);
     refreshOrders();
   };
@@ -77,16 +74,16 @@ const AdminOrders = () => {
     setDeleteTarget(id);
   };
 
-  const confirmDeleteOrder = () => {
+  const confirmDeleteOrder = async () => {
     if (deleteTarget === null) return;
-    deleteOrder(deleteTarget);
+    await deleteOrder(deleteTarget);
     toast.success(`Order ${deleteTarget} deleted`);
     setDeleteTarget(null);
     refreshOrders();
   };
 
-  const handleExport = () => {
-    exportOrdersToCSV();
+  const handleExport = async () => {
+    await exportOrdersToCSV();
     toast.success('Orders exported to CSV');
   };
 

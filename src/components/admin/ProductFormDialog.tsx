@@ -3,7 +3,7 @@ import ResponsiveModal from '@/components/ResponsiveModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { Product } from '@/data/orders';
+import type { Product } from '@/lib/api';
 
 interface ProductFormDialogProps {
   product: Product | null;

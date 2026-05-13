@@ -3,7 +3,7 @@ import ResponsiveModal from '@/components/ResponsiveModal';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Phone, Mail } from 'lucide-react';
-import type { Order, Customer } from '@/data/orders';
+import type { Order, Customer } from '@/lib/api';
 
 interface CustomerDetailDialogProps {
   customer: Customer | null;

@@ -1,10 +1,11 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
 import Pagination from '@/components/admin/Pagination';
-import { getNotifications, markNotificationRead, markAllNotificationsRead, deleteNotification } from '@/data/orders';
-import type { Notification } from '@/data/orders';
+import { useApiData } from '@/hooks/useApiData';
+import { getNotifications, markNotificationRead, markAllNotificationsRead, deleteNotification } from '@/lib/api';
+import type { Notification } from '@/lib/api';
 import { Bell, Package, User, AlertCircle, DollarSign, Check, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -35,14 +36,10 @@ const iconColors: Record<string, string> = {
 };
 
 const AdminNotifications = () => {
-  const [notifications, setNotifications] = useState<Notification[]>(getNotifications);
+  const { data: notifications, refresh: refreshNotifications } = useApiData(getNotifications, [] as Notification[]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
-
-  const refreshNotifications = useCallback(() => {
-    setNotifications(getNotifications());
-  }, []);
 
   const filteredNotifications = useMemo(() => {
     if (!searchTerm) return notifications;
@@ -64,13 +61,13 @@ const AdminNotifications = () => {
     setCurrentPage(1);
   };
 
-  const handleMarkRead = (id: number) => {
-    markNotificationRead(id);
+  const handleMarkRead = async (id: number) => {
+    await markNotificationRead(id);
     refreshNotifications();
   };
 
-  const handleMarkAllRead = () => {
-    markAllNotificationsRead();
+  const handleMarkAllRead = async () => {
+    await markAllNotificationsRead();
     toast.success('All notifications marked as read');
     refreshNotifications();
   };
@@ -79,9 +76,9 @@ const AdminNotifications = () => {
     setDeleteTarget(id);
   };
 
-  const confirmDeleteNotification = () => {
+  const confirmDeleteNotification = async () => {
     if (deleteTarget === null) return;
-    deleteNotification(deleteTarget);
+    await deleteNotification(deleteTarget);
     toast.success('Notification deleted');
     setDeleteTarget(null);
     refreshNotifications();

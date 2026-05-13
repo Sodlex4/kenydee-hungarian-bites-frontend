@@ -6,8 +6,9 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import CustomerDetailDialog from '@/components/admin/CustomerDetailDialog';
 import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
 import Pagination from '@/components/admin/Pagination';
-import { getCustomers, getCustomerOrders, exportCustomersToCSV } from '@/data/orders';
-import type { Customer, Order } from '@/data/orders';
+import { useApiData } from '@/hooks/useApiData';
+import { getCustomers, getCustomerOrders, exportCustomersToCSV } from '@/lib/api';
+import type { Customer, Order } from '@/lib/api';
 import { Download, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -19,7 +20,7 @@ const statusColors = {
 };
 
 const AdminCustomers = () => {
-  const [customers] = useState<Customer[]>(getCustomers);
+  const { data: customers } = useApiData(getCustomers, [] as Customer[]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -28,9 +29,9 @@ const AdminCustomers = () => {
   const [isOrderOpen, setIsOrderOpen] = useState(false);
   const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
 
-  const handleViewCustomer = (customer: Customer) => {
+  const handleViewCustomer = async (customer: Customer) => {
     setSelectedCustomer(customer);
-    setCustomerOrders(getCustomerOrders(customer.name));
+    setCustomerOrders(await getCustomerOrders(customer.name));
     setIsCustomerOpen(true);
   };
 
@@ -59,8 +60,8 @@ const AdminCustomers = () => {
     setCurrentPage(1);
   };
 
-  const handleExport = () => {
-    exportCustomersToCSV();
+  const handleExport = async () => {
+    await exportCustomersToCSV();
     toast.success('Customers exported to CSV');
   };
 

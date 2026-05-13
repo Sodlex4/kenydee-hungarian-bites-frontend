@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Package, User, AlertCircle, DollarSign } from 'lucide-react';
-import { getNotifications } from '@/data/orders';
-import type { Notification } from '@/data/orders';
+import { getNotifications } from '@/lib/api';
+import type { Notification } from '@/lib/api';
 
 const iconMap: Record<string, React.ElementType> = {
   order: Package,

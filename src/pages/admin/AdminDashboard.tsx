@@ -1,29 +1,27 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import DashboardCards from '../../components/admin/DashboardCards';
 import RevenueChart from '../../components/admin/RevenueChart';
 import NotificationPanel from '../../components/admin/NotificationPanel';
 import OrderDetailDialog from '@/components/admin/OrderDetailDialog';
-import { getDashboardStats, getNotifications } from '@/data/orders';
-import type { Order } from '@/data/orders';
+import { useApiData } from '@/hooks/useApiData';
+import { getDashboardStats, getNotifications } from '@/lib/api';
+import type { Order, DashboardStats } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [stats, setStats] = useState(getDashboardStats());
+  const { data: stats, refresh: refreshStats } = useApiData(getDashboardStats, {} as DashboardStats);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
 
-  const refreshData = useCallback(() => {
-    setStats(getDashboardStats());
-    const unread = getNotifications().filter(n => !n.read).length;
+  const refreshData = useCallback(async () => {
+    await refreshStats();
+    const allNotifications = await getNotifications();
+    const unread = allNotifications.filter(n => !n.read).length;
     setNotificationCount(unread);
-  }, []);
-
-  useEffect(() => {
-    refreshData();
-  }, [refreshData]);
+  }, [refreshStats]);
 
   const filteredOrders = useMemo(() => {
     const orders = stats.recentOrders;

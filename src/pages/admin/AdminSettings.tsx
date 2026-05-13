@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,8 +15,8 @@ import {
   saveAdminSettings,
   getAdminPreferences,
   saveAdminPreference,
-  type AdminPreferences
-} from '@/data/orders';
+} from '@/lib/api';
+import type { AdminSettings, AdminPreferences } from '@/lib/api';
 
 const businessSchema = z.object({
   businessName: z.string().min(2, 'Business name is required'),
@@ -33,47 +33,81 @@ const socialSchema = z.object({
 });
 
 const AdminSettings = () => {
-  const settings = getAdminSettings();
-  const preferences = getAdminPreferences();
+  const [loaded, setLoaded] = useState(false);
+  const [settings, setSettings] = useState<AdminSettings | null>(null);
+  const [prefs, setPrefs] = useState<AdminPreferences | null>(null);
 
-  const [prefs, setPrefs] = useState<AdminPreferences>(preferences);
+  useEffect(() => {
+    Promise.all([getAdminSettings(), getAdminPreferences()]).then(([s, p]) => {
+      setSettings(s);
+      setPrefs(p);
+      setLoaded(true);
+    });
+  }, []);
 
   const businessForm = useForm<z.infer<typeof businessSchema>>({
     resolver: zodResolver(businessSchema),
     defaultValues: {
-      businessName: settings.businessName,
-      businessEmail: settings.businessEmail,
-      phoneNumber: settings.phoneNumber,
-      location: settings.location,
+      businessName: '',
+      businessEmail: '',
+      phoneNumber: '',
+      location: '',
     },
   });
 
   const socialForm = useForm<z.infer<typeof socialSchema>>({
     resolver: zodResolver(socialSchema),
     defaultValues: {
+      instagram: '',
+      facebook: '',
+      whatsapp: '',
+      website: '',
+    },
+  });
+
+  useEffect(() => {
+    if (!settings) return;
+    businessForm.reset({
+      businessName: settings.businessName,
+      businessEmail: settings.businessEmail,
+      phoneNumber: settings.phoneNumber,
+      location: settings.location,
+    });
+    socialForm.reset({
       instagram: settings.instagram,
       facebook: settings.facebook,
       whatsapp: settings.whatsapp,
       website: settings.website,
-    },
-  });
+    });
+  }, [settings]);
 
-  const onSaveBusiness = (data: z.infer<typeof businessSchema>) => {
-    saveAdminSettings(data);
+  const onSaveBusiness = async (data: z.infer<typeof businessSchema>) => {
+    await saveAdminSettings(data);
     toast.success('Business information saved successfully');
   };
 
-  const onSaveSocial = (data: z.infer<typeof socialSchema>) => {
-    saveAdminSettings(data);
+  const onSaveSocial = async (data: z.infer<typeof socialSchema>) => {
+    await saveAdminSettings(data);
     toast.success('Social media links saved successfully');
   };
 
-  const togglePreference = (key: keyof AdminPreferences) => {
+  const togglePreference = async (key: keyof AdminPreferences) => {
+    if (!prefs) return;
     const newVal = !prefs[key];
-    setPrefs(prev => ({ ...prev, [key]: newVal }));
-    saveAdminPreference(key, newVal);
+    setPrefs(prev => prev ? { ...prev, [key]: newVal } : prev);
+    await saveAdminPreference(key, newVal);
     toast.success(`${key === 'autoAcceptOrders' ? 'Auto-accept' : key === 'emailNotifications' ? 'Email notifications' : 'Low stock alerts'} ${newVal ? 'enabled' : 'disabled'}`);
   };
+
+  if (!loaded || !settings || !prefs) {
+    return (
+      <AdminLayout title="Settings" description="Loading settings...">
+        <div className="flex items-center justify-center h-64">
+          <div className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: 'hsl(var(--primary))', borderTopColor: 'transparent' }} />
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout title="Settings" description="Manage your store settings and contact information.">

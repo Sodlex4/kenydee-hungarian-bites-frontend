@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import CheckoutForm from './CheckoutForm';
 import type { CheckoutFormData } from './CheckoutForm';
-import { addOrder, addNotification, getAdminSettings } from '../data/orders';
+import { addOrder, addNotification, getAdminSettings } from '../lib/api';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { WHATSAPP_NUMBER } from '../lib/env';
 
@@ -93,10 +93,10 @@ const Cart = () => {
     setCheckoutStep('checkout');
   };
 
-  const handleCheckoutSubmit = useCallback((data: CheckoutFormData) => {
+  const handleCheckoutSubmit = useCallback(async (data: CheckoutFormData) => {
     setIsPlacingOrder(true);
 
-    const settings = getAdminSettings();
+    const settings = await getAdminSettings();
     const waMatch = settings.whatsapp.match(/wa\.me\/(\d+)/);
     const waNumber = waMatch ? waMatch[1] : WHATSAPP_NUMBER;
 
@@ -120,8 +120,8 @@ const Cart = () => {
       deliveryAddress: data.deliveryAddress,
     };
 
-    addOrder(order);
-    addNotification({
+    await addOrder(order);
+    await addNotification({
       type: 'order',
       title: 'New Order Received',
       message: `Order ${orderId} from ${data.name} - ${cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`,

@@ -1,12 +1,13 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ProductFormDialog from '@/components/admin/ProductFormDialog';
 import Pagination from '@/components/admin/Pagination';
-import { getProducts, addProduct, updateProduct, deleteProduct, exportProductsToCSV } from '@/data/orders';
-import type { Product } from '@/data/orders';
+import { useApiData } from '@/hooks/useApiData';
+import { getProducts, addProduct, updateProduct, deleteProduct, exportProductsToCSV } from '@/lib/api';
+import type { Product } from '@/lib/api';
 import { Download, Plus, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -29,16 +30,12 @@ const statusColors: Record<string, string> = {
 };
 
 const AdminProducts = () => {
-  const [products, setProducts] = useState<Product[]>(getProducts);
+  const { data: products, refresh: refreshProducts } = useApiData(getProducts, [] as Product[]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
-
-  const refreshProducts = useCallback(() => {
-    setProducts(getProducts());
-  }, []);
 
   const filteredProducts = useMemo(() => {
     if (!searchTerm) return products;
@@ -59,16 +56,16 @@ const AdminProducts = () => {
     setCurrentPage(1);
   };
 
-  const handleAddProduct = (product: Omit<Product, 'id'>) => {
-    addProduct(product);
+  const handleAddProduct = async (product: Omit<Product, 'id'>) => {
+    await addProduct(product);
     toast.success('Product added successfully');
     setIsFormOpen(false);
     refreshProducts();
   };
 
-  const handleEditProduct = (product: Omit<Product, 'id'>) => {
+  const handleEditProduct = async (product: Omit<Product, 'id'>) => {
     if (editingProduct) {
-      updateProduct(editingProduct.id, product);
+      await updateProduct(editingProduct.id, product);
       toast.success('Product updated successfully');
       setIsFormOpen(false);
       setEditingProduct(null);
@@ -80,16 +77,16 @@ const AdminProducts = () => {
     setDeleteTarget(id);
   };
 
-  const confirmDeleteProduct = () => {
+  const confirmDeleteProduct = async () => {
     if (deleteTarget === null) return;
-    deleteProduct(deleteTarget);
+    await deleteProduct(deleteTarget);
     toast.success('Product deleted');
     setDeleteTarget(null);
     refreshProducts();
   };
 
-  const handleExport = () => {
-    exportProductsToCSV();
+  const handleExport = async () => {
+    await exportProductsToCSV();
     toast.success('Products exported to CSV');
   };
 

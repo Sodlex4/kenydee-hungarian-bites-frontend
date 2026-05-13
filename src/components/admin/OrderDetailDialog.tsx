@@ -4,8 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { MapPin, Phone, Mail, Package, Clock } from 'lucide-react';
-import type { Order } from '@/data/orders';
-import { updateOrderStatus } from '@/data/orders';
+import type { Order } from '@/lib/api';
+import { updateOrderStatus } from '@/lib/api';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -37,8 +37,8 @@ const OrderDetailDialog: React.FC<OrderDetailDialogProps> = ({ order, isOpen, on
 
   if (!order) return null;
 
-  const handleStatusChange = (newStatus: Order['status']) => {
-    updateOrderStatus(order.id, newStatus);
+  const handleStatusChange = async (newStatus: Order['status']) => {
+    await updateOrderStatus(order.id, newStatus);
     toast.success(`Order ${order.id} marked as ${newStatus}`);
     onStatusChange();
   };
