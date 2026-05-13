@@ -241,7 +241,7 @@ const Cart = () => {
 
   const renderCartContent = () => (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'hsl(var(--border))' }}>
+      <div className="flex items-center justify-between p-4 sm:p-6 border-b" data-vaul-no-drag style={{ borderColor: 'hsl(var(--border))' }}>
         {checkoutStep === 'cart' ? (
           <h2 className="text-xl font-bold flex items-center" style={{ color: 'hsl(var(--foreground))' }}>
             <ShoppingCart className="w-6 h-6 mr-2" style={{ color: 'hsl(var(--primary))' }} />
@@ -279,7 +279,7 @@ const Cart = () => {
       </div>
 
       {checkoutStep === 'confirmed' ? (
-        <div className="flex flex-col items-center justify-center flex-1 p-6 text-center space-y-4">
+        <div className="flex flex-col items-center justify-center flex-1 p-4 sm:p-6 text-center space-y-4">
           <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: 'rgba(34, 197, 94, 0.15)' }}>
             <Check className="w-8 h-8" style={{ color: '#22c55e' }} />
           </div>
@@ -298,7 +298,7 @@ const Cart = () => {
         </div>
       ) : null}
 
-      <div className={checkoutStep === 'checkout' ? 'flex-1 flex flex-col' : 'hidden'}>
+      <div className={checkoutStep === 'checkout' ? 'flex-1 flex flex-col overflow-hidden' : 'hidden'}>
         <CheckoutForm
           cartItems={cartItems}
           total={total}
@@ -311,7 +311,7 @@ const Cart = () => {
 
       {checkoutStep !== 'checkout' && checkoutStep !== 'confirmed' ? (
         cartItems.length === 0 ? (
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
             <div className="text-center py-12">
               <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{
                 background: 'hsl(var(--muted) / 0.3)'
@@ -338,7 +338,7 @@ const Cart = () => {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto p-6" data-vaul-no-drag>
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6" data-vaul-no-drag>
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="rounded-lg p-3 sm:p-4" style={{
@@ -432,7 +432,7 @@ const Cart = () => {
               </div>
             </div>
 
-            <div className="border-t p-6 space-y-4 flex-shrink-0" style={{ borderColor: 'hsl(var(--border))' }}>
+            <div className="border-t p-4 sm:p-6 space-y-4 flex-shrink-0" data-vaul-no-drag style={{ borderColor: 'hsl(var(--border))' }}>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                   <span>{totalItems} item{totalItems !== 1 ? 's' : ''}</span>
@@ -457,7 +457,7 @@ const Cart = () => {
               <button
                 onClick={handleProceedToCheckout}
                 disabled={total < MIN_ORDER_AMOUNT}
-                className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 style={{
                   background: 'var(--gradient-primary)',
                   boxShadow: '0 10px 30px hsl(var(--primary) / 0.3)'
@@ -483,7 +483,7 @@ const Cart = () => {
     <>
       <div className="md:hidden">
         <Drawer open={isCartOpen} onOpenChange={(open) => { if (!open) closeCart(); }}>
-          <DrawerContent className="h-[95dvh] [margin-top:0] pt-8 border-0 rounded-t-[10px]">
+          <DrawerContent className="h-[95dvh] max-h-[95vh] [margin-top:0] pt-8 border-0 rounded-t-[10px]">
             {renderCartContent()}
           </DrawerContent>
         </Drawer>
