@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -8,9 +8,11 @@ interface ResponsiveModalProps {
   onClose: () => void;
   children: React.ReactNode;
   className?: string;
+  title?: string;
+  description?: string;
 }
 
-const ResponsiveModal = ({ open, onClose, children, className }: ResponsiveModalProps) => {
+const ResponsiveModal = ({ open, onClose, children, className, title, description }: ResponsiveModalProps) => {
   const isMobile = useIsMobile();
 
   if (isMobile) {
@@ -26,6 +28,8 @@ const ResponsiveModal = ({ open, onClose, children, className }: ResponsiveModal
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className={className}>
+        {title && <DialogTitle className="sr-only">{title}</DialogTitle>}
+        {description && <DialogDescription className="sr-only">{description}</DialogDescription>}
         {children}
       </DialogContent>
     </Dialog>

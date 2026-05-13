@@ -24,7 +24,7 @@ const CustomerDetailDialog: React.FC<CustomerDetailDialogProps> = ({ customer, o
   if (!customer) return null;
 
   return (
-    <ResponsiveModal open={isOpen} onClose={onClose} className="max-w-2xl max-h-[90vh] overflow-y-auto">
+    <ResponsiveModal open={isOpen} onClose={onClose} title={customer.name} className="max-w-2xl max-h-[90vh] overflow-y-auto">
       <div className="p-6 space-y-6">
         <div>
           <h2 className="text-lg font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{customer.name}</h2>

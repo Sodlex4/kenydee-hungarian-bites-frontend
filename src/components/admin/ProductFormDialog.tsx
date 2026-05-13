@@ -37,7 +37,7 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({ product, isOpen, 
   };
 
   return (
-    <ResponsiveModal open={isOpen} onClose={onClose}>
+    <ResponsiveModal open={isOpen} onClose={onClose} title={product ? 'Edit Product' : 'Add Product'}>
       <div className="p-6">
         <h2 className="text-lg font-semibold mb-6" style={{ color: 'hsl(var(--foreground))' }}>{product ? 'Edit Product' : 'Add Product'}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

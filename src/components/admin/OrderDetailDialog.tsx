@@ -49,7 +49,7 @@ const OrderDetailDialog: React.FC<OrderDetailDialogProps> = ({ order, isOpen, on
   };
 
   return (
-    <ResponsiveModal open={isOpen} onClose={onClose} className="max-w-2xl max-h-[90vh] overflow-y-auto">
+    <ResponsiveModal open={isOpen} onClose={onClose} title={order.id} className="max-w-2xl max-h-[90vh] overflow-y-auto">
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{order.id}</h2>
