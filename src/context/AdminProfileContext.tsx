@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef, FC } from 'react';
 import { WHATSAPP_NUMBER, CONTACT_EMAIL } from '../lib/env';
 
 export interface AdminProfile {
@@ -68,11 +68,11 @@ interface AdminProfileProviderProps {
   children: ReactNode;
 }
 
-export const AdminProfileProvider: React.FC<AdminProfileProviderProps> = ({ children }) => {
+export const AdminProfileProvider: FC<AdminProfileProviderProps> = ({ children }) => {
   const [profile, setProfile] = useState<AdminProfile>(loadProfileFromStorage);
   const [isLoading, setIsLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
-  const subscribersRef = React.useRef<Set<(profile: AdminProfile) => void>>(new Set());
+  const subscribersRef = useRef<Set<(profile: AdminProfile) => void>>(new Set());
 
   const persistProfile = (updated: AdminProfile) => {
     try {
