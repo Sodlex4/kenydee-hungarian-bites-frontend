@@ -13,4 +13,4 @@ export const GA_MEASUREMENT_ID: string =
   import.meta.env.VITE_GA_MEASUREMENT_ID || '';
 
 export const ADMIN_PASSWORD: string =
-  import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+  import.meta.env.VITE_ADMIN_PASSWORD || 'admin';
