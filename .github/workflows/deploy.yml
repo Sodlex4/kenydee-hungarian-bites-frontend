@@ -1,3 +1,37 @@
+# =============================================================================
+# GitHub Pages Deployment — React SPA with BrowserRouter
+# =============================================================================
+#
+# WHY SPA FALLBACK IS NEEDED:
+# React Router's BrowserRouter uses the History API (pushState, replaceState)
+# to manage client-side navigation. URLs like /admin, /checkout, /products
+# are handled entirely in the browser—the server only served index.html once.
+#
+# PROBLEM WITH STATIC HOSTING:
+# When a user navigates directly to /admin (via URL bar, bookmark, or refresh),
+# the static host (GitHub Pages) looks for a file at /admin/index.html which
+# doesn't exist. It returns 404 instead of serving index.html.
+#
+# WHY GITHUB PAGES NEEDS THE 404.HTML TRICK:
+# Vercel supports server-side rewrites (vercel.json rewrites → /index.html),
+# but GitHub Pages is purely static. However, GitHub Pages serves the
+# content of 404.html for ANY 404 response. By copying index.html → 404.html,
+# every route that doesn't exist as a static file falls through to 404.html,
+# which IS index.html, which boots React Router which reads the URL and
+# renders the correct client-side route.
+#
+# WHY VERCEL REWRITES WORK AUTOMATICALLY:
+# Vercel's vercel.json uses: { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+# This is a SERVER-SIDE rewrite: the server intercepts all requests and serves
+# index.html regardless of the URL path. React Router then handles the rest.
+# No 404.html trick needed because the server handles it before the file system.
+#
+# BOTH APPROACHES:
+# - Vercel: server-side rewrite via vercel.json (clean, professional)
+# - GitHub Pages: client-side fallback via 404.html (workaround for static hosting)
+# - Both achieve the same result: any URL path serves the React SPA entry point.
+# =============================================================================
+
 name: Deploy to GitHub Pages
 
 on:
@@ -31,13 +65,24 @@ jobs:
 
       - run: npm ci
 
+      # --base flag sets the Vite base path for asset resolution.
+      # For project sites (username.github.io/repo-name/), base must be /repo-name/.
+      # For user/organization sites (username.github.io/), base can be /.
+      # The trailing slash is REQUIRED — Vite treats it as the base URL path.
       - run: npm run build -- --base=/kenydee-hungarian-bites-frontend/
 
-      - name: Copy index.html to 404.html for SPA routing
+      # SPA FALLBACK: Copy index.html → 404.html
+      # GitHub Pages serves 404.html for ANY 404 error.
+      # Since no /admin/index.html file exists, GitHub Pages returns 404...
+      # which serves 404.html (which IS index.html).
+      # React Router boots, reads /admin from the URL bar, and renders
+      # the correct admin page. All deep links work on refresh.
+      - name: SPA fallback — copy index.html to 404.html
         run: cp dist/index.html dist/404.html
 
       - uses: actions/configure-pages@v4
 
+      # Upload the ENTIRE dist/ folder (including 404.html) as a Pages artifact.
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
