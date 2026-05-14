@@ -11,7 +11,16 @@ import { Badge } from '@/components/ui/badge';
 
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { data: stats, refresh: refreshStats } = useApiData(getDashboardStats, {} as DashboardStats);
+  const { data: stats, refresh: refreshStats } = useApiData(getDashboardStats, {
+    totalCustomers: 0,
+    ordersToday: 0,
+    revenue: 0,
+    growth: 0,
+    pendingOrders: 0,
+    completedOrders: 0,
+    cancelledOrders: 0,
+    recentOrders: [],
+  } as DashboardStats);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
