@@ -14,14 +14,10 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title, description, onSearch, notificationCount }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleLogout = () => {
-    setSidebarOpen(false);
-  };
-
   return (
     <div className="flex min-h-screen" style={{ background: 'hsl(var(--background))' }}>
-      <AdminSidebar onClose={() => setSidebarOpen(false)} onLogout={handleLogout} />
-      <MobileSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} onLogout={handleLogout} />
+      <AdminSidebar onClose={() => setSidebarOpen(false)} />
+      <MobileSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminTopbar onMenuToggle={() => setSidebarOpen(true)} notificationCount={notificationCount} />
         <main className="flex-1 p-3 sm:p-4 md:p-6">

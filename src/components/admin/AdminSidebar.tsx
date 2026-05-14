@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
 import {
   LayoutDashboard,
   Users,
@@ -26,11 +27,11 @@ import {
 interface AdminSidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
-  onLogout?: () => void;
 }
 
-const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose, onLogout }) => {
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   const handleLogout = () => {
@@ -39,12 +40,9 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose, onLogout }
 
   const confirmLogout = () => {
     setLogoutConfirmOpen(false);
-    if (onLogout) {
-      onLogout();
-    } else {
-      navigate('/');
-      toast.success('Logged out successfully');
-    }
+    logout();
+    navigate('/admin/login');
+    toast.success('Logged out successfully');
   };
 
   const menuItems = [
@@ -126,11 +124,11 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose, onLogout }
 interface MobileSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogout?: () => void;
 }
 
-export const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, onLogout }) => {
+export const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   const handleLogout = () => {
@@ -140,12 +138,9 @@ export const MobileSidebar: React.FC<MobileSidebarProps> = ({ isOpen, onClose, o
   const confirmLogout = () => {
     setLogoutConfirmOpen(false);
     onClose();
-    if (onLogout) {
-      onLogout();
-    } else {
-      navigate('/');
-      toast.success('Logged out successfully');
-    }
+    logout();
+    navigate('/admin/login');
+    toast.success('Logged out successfully');
   };
 
   const menuItems = [
