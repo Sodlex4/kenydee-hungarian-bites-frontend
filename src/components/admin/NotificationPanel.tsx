@@ -16,7 +16,7 @@ const NotificationPanel = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    setNotifications(getNotifications().slice(0, 3));
+    getNotifications().then(result => setNotifications(result.slice(0, 3)));
   }, []);
 
   return (
