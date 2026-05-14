@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { ADMIN_PASSWORD } from '../lib/env';
 
 const AUTH_KEY = 'admin-auth';
@@ -12,11 +12,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    setIsAuthenticated(sessionStorage.getItem(AUTH_KEY) === 'true');
-  }, []);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => sessionStorage.getItem(AUTH_KEY) === 'true'
+  );
 
   const login = useCallback((password: string): boolean => {
     const valid = password === ADMIN_PASSWORD;
