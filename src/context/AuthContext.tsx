@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import { ADMIN_PASSWORD } from '../lib/env';
 
-const AUTH_KEY = 'hb-admin-auth';
+const AUTH_KEY = 'admin-auth';
 
 interface AuthContextType {
   isAuthenticated: boolean;
