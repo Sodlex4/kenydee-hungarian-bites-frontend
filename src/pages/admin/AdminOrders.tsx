@@ -33,7 +33,6 @@ const statusColors: Record<string, string> = {
 
 const AdminOrders = () => {
   const { data: orders, refresh: refreshOrders } = useApiData(getOrders, [] as Order[]);
-  const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -57,13 +56,18 @@ const AdminOrders = () => {
   const paginatedOrders = filteredOrders.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const handleSearch = (term: string) => {
-    setSearchInput(term);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setSearchTerm(term);
       setCurrentPage(1);
     }, 300);
   };
+
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   useEffect(() => {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
