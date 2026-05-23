@@ -1,42 +1,10 @@
 
-import { useEffect } from 'react';
-import { gsap } from 'gsap';
 import { Users, Clock, Award } from 'lucide-react';
-import { shouldReduceAnimations } from '../lib/motion';
+import { useInView } from '../hooks/useInView';
 
 const AboutSection = () => {
-  useEffect(() => {
-    if (shouldReduceAnimations()) return;
-
-    gsap.fromTo(".about-content",
-      { y: 50, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        scrollTrigger: {
-          trigger: ".about-section",
-          start: "top 80%",
-          toggleActions: "play none none none"
-        }
-      }
-    );
-
-    gsap.fromTo(".stat-card",
-      { scale: 0.8, opacity: 0 },
-      {
-        scale: 1,
-        opacity: 1,
-        duration: 0.6,
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: ".stats-grid",
-          start: "top 85%",
-          toggleActions: "play none none none"
-        }
-      }
-    );
-  }, []);
+  const { ref: contentRef, inView: contentInView } = useInView(0.2);
+  const { ref: statsRef, inView: statsInView } = useInView(0.15);
 
   return (
     <section id="about" className="about-section py-20 relative section-gradient-dark">
@@ -45,8 +13,15 @@ const AboutSection = () => {
       </div>
 
       <div className="container relative z-10">
-        <div className="about-content max-w-6xl mx-auto">
-
+        <div
+          ref={contentRef}
+          className="max-w-6xl mx-auto"
+          style={{
+            opacity: contentInView ? 1 : 0,
+            transform: contentInView ? 'translateY(0)' : 'translateY(50px)',
+            transition: 'opacity 1s ease-out, transform 1s ease-out',
+          }}
+        >
           <div className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: 'hsl(var(--foreground))' }}>
               About <span className="text-gradient-primary">Hungarian Bites</span>
@@ -58,7 +33,6 @@ const AboutSection = () => {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-
             <div className="space-y-8">
               <div className="glass-card p-8">
                 <h3 className="text-2xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Our Story</h3>
@@ -162,13 +136,24 @@ const AboutSection = () => {
             </div>
           </div>
 
-          <div className="stats-grid grid md:grid-cols-3 gap-8">
+          <div
+            ref={statsRef}
+            className="stats-grid grid md:grid-cols-3 gap-8"
+          >
             {[
               { icon: Users, number: '500+', label: 'Happy Customers', color: 'var(--gradient-primary)' },
               { icon: Award, number: '100%', label: 'Premium Ingredients', color: 'var(--gradient-secondary)' },
               { icon: Clock, number: '2hr', label: 'Fast Delivery', color: 'var(--gradient-secondary)' }
             ].map((stat, index) => (
-              <div key={index} className="stat-card text-center group">
+              <div
+                key={index}
+                className="text-center group"
+                style={{
+                  opacity: statsInView ? 1 : 0,
+                  transform: statsInView ? 'scale(1)' : 'scale(0.8)',
+                  transition: `opacity 0.6s ease-out ${index * 0.2}s, transform 0.6s ease-out ${index * 0.2}s`,
+                }}
+              >
                 <div className="glass-card p-8 hover:scale-105 transition-all duration-300">
                   <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" style={{
                     background: stat.color

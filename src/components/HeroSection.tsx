@@ -1,55 +1,8 @@
 
-import React, { useEffect } from 'react';
-import { gsap } from 'gsap';
+import React from 'react';
 import { Star, Zap, Heart } from 'lucide-react';
-import { shouldReduceAnimations, isMobileDevice } from '../lib/motion';
 
 const HeroSection = () => {
-  useEffect(() => {
-    if (shouldReduceAnimations()) return;
-
-    const tl = gsap.timeline({ delay: 0.5 });
-
-    tl.from(".hero-content > *", {
-      y: 50,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.2,
-      ease: "power2.out"
-    })
-    .from(".product-showcase", {
-      scale: 0.8,
-      opacity: 0,
-      duration: 1.5,
-      ease: "back.out(1.7)"
-    }, "-=0.5")
-    .from(".floating-card", {
-      y: 20,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: "power2.out"
-    }, "-=0.5");
-
-    if (!isMobileDevice()) {
-      gsap.to(".floating-card", {
-        y: -5,
-        duration: 2,
-        yoyo: true,
-        repeat: -1,
-        stagger: 0.3,
-        ease: "power2.inOut"
-      });
-
-      gsap.to(".product-rotate", {
-        rotation: 360,
-        duration: 20,
-        repeat: -1,
-        ease: "none"
-      });
-    }
-  }, []);
-
   const scrollToOrder = () => {
     document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -68,11 +21,11 @@ const HeroSection = () => {
 
       <div className="container grid lg:grid-cols-2 gap-6 lg:gap-12 items-center relative z-10">
         <div className="hero-content space-y-8 text-center lg:text-left">
-          <div className="badge-chip">
+          <div className="badge-chip" style={{ animation: 'fade-slide-up 0.8s ease-out' }}>
             Bites That Slap
           </div>
 
-          <h1 className="space-y-4">
+          <h1 className="space-y-4" style={{ animation: 'fade-slide-up 0.8s ease-out 0.2s both' }}>
             <div className="text-5xl md:text-7xl font-bold text-gradient-primary tracking-wider" style={{
               fontFamily: 'Bebas Neue, sans-serif',
             }}>
@@ -88,19 +41,19 @@ const HeroSection = () => {
             </div>
           </h1>
 
-          <p className="text-lg leading-relaxed max-w-lg mx-auto lg:mx-0" style={{ color: 'hsl(var(--muted-foreground))' }}>
+          <p className="text-lg leading-relaxed max-w-lg mx-auto lg:mx-0" style={{ color: 'hsl(var(--muted-foreground))', animation: 'fade-slide-up 0.8s ease-out 0.4s both' }}>
             Hungarian recipe. Kenyan heat. Murang'a's finest.
             Kila bite ina flavor — real talk.
           </p>
 
-          <div className="flex items-center justify-center lg:justify-start space-x-4">
+          <div className="flex items-center justify-center lg:justify-start space-x-4" style={{ animation: 'fade-slide-up 0.8s ease-out 0.5s both' }}>
             <div className="text-4xl font-bold" style={{ color: 'hsl(var(--primary))' }}>
               <span className="text-2xl" style={{ color: 'hsl(var(--muted-foreground))' }}>Ksh</span> 70
             </div>
             <div className="font-semibold" style={{ color: 'hsl(var(--muted-foreground))' }}>per piece</div>
           </div>
 
-          <div className="flex items-center justify-center lg:justify-start gap-3 flex-wrap">
+          <div className="flex items-center justify-center lg:justify-start gap-3 flex-wrap" style={{ animation: 'fade-slide-up 0.8s ease-out 0.6s both' }}>
             <div className="inline-flex items-center gap-2">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
@@ -115,7 +68,7 @@ const HeroSection = () => {
             <span className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>500+ happy customers</span>
           </div>
 
-          <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap">
+          <div className="flex items-center justify-center lg:justify-start gap-4 flex-wrap" style={{ animation: 'fade-slide-up 0.8s ease-out 0.7s both' }}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm border"
               style={{
                 background: 'hsl(142 70% 40% / 0.15)',
@@ -131,7 +84,7 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start" style={{ animation: 'fade-slide-up 0.8s ease-out 0.8s both' }}>
             <button
               onClick={scrollToOrder}
               className="btn-gradient"
@@ -147,10 +100,11 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="product-showcase relative flex justify-center items-center">
-          <div className="product-rotate relative w-60 h-60 sm:w-80 sm:h-80 rounded-full backdrop-blur-sm flex items-center justify-center shadow-2xl" style={{
+        <div className="product-showcase relative flex justify-center items-center" style={{ animation: 'fade-scale-in 1.5s ease-out 0.3s both' }}>
+          <div className="relative w-60 h-60 sm:w-80 sm:h-80 rounded-full backdrop-blur-sm flex items-center justify-center shadow-2xl" style={{
             background: 'hsl(var(--primary) / 0.1)',
-            border: '1px solid hsl(var(--primary) / 0.3)'
+            border: '1px solid hsl(var(--primary) / 0.3)',
+            animation: 'rotate-slow 20s linear infinite',
           }}>
             <img
               src="/image/cheese-dog-bread-rolls.webp"
@@ -167,21 +121,21 @@ const HeroSection = () => {
             />
           </div>
 
-          <div className="floating-card hidden sm:block absolute -top-4 -left-4 glass-card !rounded-2xl p-4 shadow-xl">
+          <div className="floating-card hidden sm:block absolute -top-4 -left-4 glass-card !rounded-2xl p-4 shadow-xl" style={{ animation: 'fade-slide-up 0.8s ease-out 0.5s both, float 2s ease-in-out 1.5s infinite' }}>
             <div className="flex items-center space-x-2">
               <Star className="w-5 h-5 text-pink-400" />
               <span className="font-semibold text-pink-400">Premium</span>
             </div>
           </div>
 
-          <div className="floating-card hidden sm:block absolute -top-4 -right-4 glass-card !rounded-2xl p-4 shadow-xl">
+          <div className="floating-card hidden sm:block absolute -top-4 -right-4 glass-card !rounded-2xl p-4 shadow-xl" style={{ animation: 'fade-slide-up 0.8s ease-out 0.6s both, float 2s ease-in-out 1.8s infinite' }}>
             <div className="flex items-center space-x-2">
               <Zap className="w-5 h-5 text-purple-400" />
               <span className="font-semibold text-purple-400">Fast</span>
             </div>
           </div>
 
-          <div className="floating-card hidden sm:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 glass-card !rounded-2xl p-4 shadow-xl">
+          <div className="floating-card hidden sm:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 glass-card !rounded-2xl p-4 shadow-xl" style={{ animation: 'fade-slide-up 0.8s ease-out 0.7s both, float 2s ease-in-out 2.1s infinite' }}>
             <div className="flex items-center space-x-2">
               <Heart className="w-5 h-5 text-pink-400" />
               <span className="font-semibold text-pink-400">Loved</span>

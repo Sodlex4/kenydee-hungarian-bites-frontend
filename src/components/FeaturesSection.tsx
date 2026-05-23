@@ -1,40 +1,9 @@
 
-import { useEffect } from 'react';
-import { gsap } from 'gsap';
 import { Crown, Sparkles, Shield } from 'lucide-react';
-import { shouldReduceAnimations, isMobileDevice } from '../lib/motion';
+import { useInView } from '../hooks/useInView';
 
 const FeaturesSection = () => {
-  useEffect(() => {
-    if (shouldReduceAnimations()) return;
-
-    gsap.fromTo(".feature-card",
-      { y: 50, opacity: 0, scale: 0.9 },
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        duration: 0.8,
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: ".features-section",
-          start: "top 80%",
-          toggleActions: "play none none none"
-        }
-      }
-    );
-
-    if (!isMobileDevice()) {
-      gsap.to(".feature-icon", {
-        y: -5,
-        duration: 2,
-        yoyo: true,
-        repeat: -1,
-        stagger: 0.3,
-        ease: "power2.inOut"
-      });
-    }
-  }, []);
+  const { ref, inView } = useInView(0.2);
 
   const features = [
     {
@@ -70,14 +39,19 @@ const FeaturesSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div ref={ref} className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="feature-card group relative"
+              className="group relative"
+              style={{
+                opacity: inView ? 1 : 0,
+                transform: inView ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.9)',
+                transition: `opacity 0.8s ease-out ${index * 0.2}s, transform 0.8s ease-out ${index * 0.2}s`,
+              }}
             >
               <div className="glass-card p-6 sm:p-8 text-center hover:scale-105 transition-all duration-500">
-                <div className="feature-icon relative mb-6">
+                <div className="relative mb-6" style={{ animation: inView ? 'float 2s ease-in-out 1s infinite' : 'none' }}>
                   <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto shadow-lg" style={{
                     background: 'var(--gradient-primary)'
                   }}>

@@ -1,6 +1,5 @@
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { gsap } from 'gsap';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { prefersReducedMotion } from '../lib/motion';
 
 interface LoadingScreenProps {
@@ -8,7 +7,9 @@ interface LoadingScreenProps {
 }
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
+  const [phase, setPhase] = useState<'entering' | 'pulsing' | 'exiting'>('entering');
   const [canSkip, setCanSkip] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isReturning = typeof window !== 'undefined' && localStorage.getItem('has-visited') === null;
 
   useEffect(() => {
@@ -18,84 +19,50 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
       return;
     }
 
-    const complete = () => {
-      localStorage.setItem('has-visited', 'true');
-      onSkip();
-    };
+    const timeout = setTimeout(() => {
+      if (isReturning) {
+        setPhase('exiting');
+      } else {
+        setPhase('pulsing');
+      }
+    }, isReturning ? 300 : 600);
 
-    const tl = gsap.timeline();
-
-    if (isReturning) {
-      tl.fromTo(".loading-text", { opacity: 0, scale: 0.8 }, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.out"
-      })
-      .to(".loading-screen", {
-        opacity: 0,
-        duration: 0.2,
-        ease: "power2.out",
-        onComplete: complete
-      });
-
-      setCanSkip(true);
-    } else {
-      const enableSkipTimer = setTimeout(() => setCanSkip(true), 800);
-
-      tl.fromTo(".loading-text", { opacity: 0, scale: 0 }, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.6,
-        ease: "power2.out"
-      })
-      .to(".loading-text", {
-        scale: 1.1,
-        duration: 0.3,
-        yoyo: true,
-        repeat: 2,
-        ease: "power2.inOut"
-      })
-      .to(".loading-gradient", {
-        scale: 1.5,
-        opacity: 0.3,
-        duration: 0.6,
-        ease: "power2.out"
-      }, "-=0.6")
-      .to(".loading-screen", {
-        opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        ease: "power2.out",
-        onComplete: complete
-      });
-
-      return () => {
-        clearTimeout(enableSkipTimer);
-        tl.kill();
-      };
-    }
+    const enableSkipTimer = setTimeout(() => setCanSkip(true), 800);
 
     return () => {
-      tl.kill();
+      clearTimeout(timeout);
+      clearTimeout(enableSkipTimer);
     };
   }, [onSkip, isReturning]);
 
+  useEffect(() => {
+    if (phase === 'pulsing') {
+      const t = setTimeout(() => setPhase('exiting'), 900);
+      return () => clearTimeout(t);
+    }
+  }, [phase]);
+
+  const handleAnimationEnd = useCallback(() => {
+    if (phase === 'exiting') {
+      localStorage.setItem('has-visited', 'true');
+      onSkip();
+    }
+  }, [phase, onSkip]);
+
   const handleSkip = useCallback(() => {
-    gsap.to(".loading-screen", {
-      opacity: 0,
-      duration: 0.3,
-      ease: "power2.out",
-      onComplete: () => {
-        localStorage.setItem('has-visited', 'true');
-        onSkip();
-      }
-    });
-  }, [onSkip]);
+    setPhase('exiting');
+  }, []);
 
   return (
-    <div className="loading-screen fixed inset-0 bg-gradient-to-br from-purple-900 via-pink-800 to-indigo-900 flex items-center justify-center z-50">
-
+    <div
+      ref={containerRef}
+      className="loading-screen fixed inset-0 bg-gradient-to-br from-purple-900 via-pink-800 to-indigo-900 flex items-center justify-center z-50"
+      style={{
+        opacity: phase === 'exiting' ? 0 : 1,
+        transition: 'opacity 0.8s ease-out',
+      }}
+      onTransitionEnd={phase === 'exiting' ? handleAnimationEnd : undefined}
+    >
       <div className="loading-gradient absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-500/30 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
@@ -103,8 +70,17 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onSkip }) => {
       </div>
 
       <div className="relative z-10 text-center">
-        <h1 className="loading-text text-6xl md:text-8xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent"
-            style={{ fontFamily: 'Bebas Neue, sans-serif' }}>
+        <h1
+          className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent"
+          style={{
+            fontFamily: 'Bebas Neue, sans-serif',
+            animation: phase === 'entering'
+              ? 'fade-scale-in 0.6s ease-out both'
+              : phase === 'pulsing'
+                ? 'pulse-scale 0.3s ease-in-out 3'
+                : 'fade-in 0.3s ease-out both',
+          }}
+        >
           kila bite ina Slap
         </h1>
 

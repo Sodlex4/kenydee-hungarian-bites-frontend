@@ -1,42 +1,11 @@
 
-import { useEffect } from 'react';
-import { gsap } from 'gsap';
 import { Star, Quote } from 'lucide-react';
-import { shouldReduceAnimations, isMobileDevice } from '../lib/motion';
 import { testimonials, getAverageRating, getInitials } from '../data/testimonials';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { useInView } from '../hooks/useInView';
 
 const TestimonialsSection = () => {
-  useEffect(() => {
-    if (shouldReduceAnimations()) return;
-
-    gsap.fromTo(".testimonial-card",
-      { y: 50, opacity: 0, rotation: -5 },
-      {
-        y: 0,
-        opacity: 1,
-        rotation: 0,
-        duration: 0.8,
-        stagger: 0.3,
-        scrollTrigger: {
-          trigger: ".testimonials-section",
-          start: "top 80%",
-          toggleActions: "play none none none"
-        }
-      }
-    );
-
-    if (!isMobileDevice()) {
-      gsap.to(".testimonial-card", {
-        y: -5,
-        duration: 3,
-        yoyo: true,
-        repeat: -1,
-        stagger: 0.5,
-        ease: "power2.inOut"
-      });
-    }
-  }, []);
+  const { ref, inView } = useInView(0.2);
 
   return (
     <section id="testimonials" className="testimonials-section py-20 relative overflow-hidden section-gradient-purple">
@@ -62,10 +31,19 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        {/* Desktop: 3-column grid */}
-        <div className="hidden md:grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div ref={ref} className="hidden md:grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="testimonial-card group">
+            <div
+              key={index}
+              className="group"
+              style={{
+                opacity: inView ? 1 : 0,
+                transform: inView ? 'translateY(0) rotate(0deg)' : 'translateY(50px) rotate(-5deg)',
+                transition: `opacity 0.8s ease-out ${index * 0.3}s, transform 0.8s ease-out ${index * 0.3}s`,
+                animation: inView ? 'float 3s ease-in-out 1s infinite' : 'none',
+                animationDelay: `${index * 0.5}s`,
+              }}
+            >
               <div className="glass-card p-8 hover:scale-105 transition-all duration-500 relative">
                 <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{
                   background: 'var(--gradient-primary)'
