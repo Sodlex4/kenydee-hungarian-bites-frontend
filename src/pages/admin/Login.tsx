@@ -19,8 +19,7 @@ const Login = () => {
       return;
     }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 300));
-    const valid = login(password);
+    const valid = await login(password);
     if (valid) {
       navigate('/admin');
     } else {

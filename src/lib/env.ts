@@ -16,6 +16,9 @@ export const SITE_URL: string =
 export const GA_MEASUREMENT_ID: string =
   import.meta.env.VITE_GA_MEASUREMENT_ID || '';
 
+export const API_URL: string =
+  import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 export const ADMIN_PASSWORD: string =
   import.meta.env.VITE_ADMIN_PASSWORD || '';
 

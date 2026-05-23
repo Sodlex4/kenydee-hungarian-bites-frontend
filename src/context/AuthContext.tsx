@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import { ADMIN_PASSWORD } from '../lib/env';
+import { login as apiLogin, logout as apiLogout, isAuthenticated as checkAuth } from '../lib/api-auth';
 
 const AUTH_KEY = 'admin-auth';
 
@@ -13,20 +13,19 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    () => sessionStorage.getItem(AUTH_KEY) === 'true'
+    () => sessionStorage.getItem(AUTH_KEY) === 'true' && checkAuth()
   );
 
-  const login = useCallback((password: string): boolean => {
-    const valid = password === ADMIN_PASSWORD;
+  const login = useCallback(async (password: string): Promise<boolean> => {
+    const valid = await apiLogin('admin@hungarianbites.com', password);
     if (valid) {
-      sessionStorage.setItem(AUTH_KEY, 'true');
       setIsAuthenticated(true);
     }
     return valid;
   }, []);
 
   const logout = useCallback(() => {
-    sessionStorage.removeItem(AUTH_KEY);
+    apiLogout();
     setIsAuthenticated(false);
   }, []);
 
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = (): AuthContextType & { login: (password: string) => Promise<boolean> } => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
