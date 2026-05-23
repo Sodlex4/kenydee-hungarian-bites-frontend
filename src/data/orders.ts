@@ -1,4 +1,4 @@
-import { WHATSAPP_NUMBER, CONTACT_EMAIL, SITE_URL } from '../lib/env';
+import { WHATSAPP_NUMBER, CONTACT_EMAIL, SITE_URL, FACEBOOK_URL, INSTAGRAM_URL } from '../lib/env';
 
 export interface OrderItem {
   name: string;
@@ -376,8 +376,8 @@ const defaultSettings: AdminSettings = {
   businessEmail: CONTACT_EMAIL,
   phoneNumber: `+254 (0) ${WHATSAPP_NUMBER.slice(3)}`,
   location: "Murang'a, Kenya",
-  instagram: 'https://www.instagram.com/vdj_kenydee/',
-  facebook: 'https://facebook.com/hungarianbites',
+  instagram: INSTAGRAM_URL || 'https://www.instagram.com/vdj_kenydee/',
+  facebook: FACEBOOK_URL || 'https://facebook.com/hungarianbites',
   whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,
   website: SITE_URL,
 };

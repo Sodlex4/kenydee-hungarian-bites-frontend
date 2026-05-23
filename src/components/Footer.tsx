@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, MessageCircle, MapPin, Phone, Mail } from 'lucide-react';
-import { WHATSAPP_NUMBER } from '../lib/env';
+import { WHATSAPP_URL, CONTACT_EMAIL, PHONE_DISPLAY, FACEBOOK_URL, INSTAGRAM_URL } from '../lib/env';
 
 const Footer = () => {
   const scrollToSection = (sectionId: string) => {
@@ -35,10 +35,10 @@ const Footer = () => {
 
             <div className="flex space-x-4">
               {[
-                { icon: Facebook, href: 'https://facebook.com/hungarianbites', label: 'Facebook', color: 'hsl(var(--primary))' },
-                { icon: Instagram, href: 'https://www.instagram.com/vdj_kenydee/?next=%2F', label: 'Instagram', color: 'hsl(var(--primary))' },
+                { icon: Facebook, href: FACEBOOK_URL || '#', label: 'Facebook', color: 'hsl(var(--primary))' },
+                { icon: Instagram, href: INSTAGRAM_URL || '#', label: 'Instagram', color: 'hsl(var(--primary))' },
                 { icon: Twitter, href: 'https://twitter.com/hungarianbites', label: 'Twitter', color: 'hsl(var(--primary))' },
-                { icon: MessageCircle, href: `https://wa.me/${WHATSAPP_NUMBER}`, label: 'WhatsApp', color: 'hsl(var(--primary))' }
+                { icon: MessageCircle, href: WHATSAPP_URL, label: 'WhatsApp', color: 'hsl(var(--primary))' }
               ].map((social, index) => (
                 <a
                   key={index}
@@ -63,8 +63,8 @@ const Footer = () => {
             <h4 className="text-xl font-semibold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Get In Touch</h4>
             <div className="space-y-4">
               {[
-                { icon: Phone, text: '+254 (0) 759233065', color: 'hsl(var(--primary))' },
-                { icon: Mail, text: 'kennedygikonyo3@gmail.com', color: 'hsl(var(--primary))' },
+                { icon: Phone, text: PHONE_DISPLAY || '+254 (0) 759 233 065', color: 'hsl(var(--primary))' },
+                { icon: Mail, text: CONTACT_EMAIL || 'info@hungarianbites.co.ke', color: 'hsl(var(--primary))' },
                 { icon: MapPin, text: 'Murang\'a, Kenya', color: 'hsl(var(--primary))' }
               ].map((contact, index) => (
                 <div key={index} className="flex items-center space-x-3 group">
@@ -136,7 +136,7 @@ const Footer = () => {
                     <p className="text-center font-bold text-gradient-primary">
                     Order via WhatsApp: 24/7
                     <br />
-                    call us: +254 (0) 759 233 065
+                    call us: {PHONE_DISPLAY || '+254 (0) 759 233 065'}
                   </p>
                 </div>
               </div>
