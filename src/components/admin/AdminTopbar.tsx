@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Search, Bell, Sun, Moon, Menu, X } from 'lucide-react';
 import { useAdminProfile } from '@/context/AdminProfileContext';
@@ -14,8 +14,7 @@ interface AdminTopbarProps {
 
 const AdminTopbar: React.FC<AdminTopbarProps> = ({ onMenuToggle, onSearch, notificationCount }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { profile, updateProfile } = useAdminProfile();
+  const { profile } = useAdminProfile();
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('admin-theme') === 'dark';

@@ -192,7 +192,7 @@ const Cart = () => {
       });
 
       return () => clearTimeout(closeTimer);
-    } catch (err) {
+    } catch {
       setIsPlacingOrder(false);
       toast.error('Something went wrong saving your order. Please try again.');
     }

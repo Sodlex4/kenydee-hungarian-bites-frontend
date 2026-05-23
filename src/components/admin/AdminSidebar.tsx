@@ -40,6 +40,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
 
   const confirmLogout = () => {
     setLogoutConfirmOpen(false);
+    onClose?.();
     logout();
     navigate('/admin/login');
     toast.success('Logged out successfully');
@@ -54,10 +55,6 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) => {
     { icon: User, label: 'Profile', path: '/admin/profile' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
   ];
-
-  const handleNavClick = () => {
-    onClose?.();
-  };
 
   return (
     <aside className="w-64 min-h-screen backdrop-blur-sm border-r hidden md:flex md:flex-col" style={{

@@ -57,7 +57,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       try {
         const saved = localStorage.getItem(FORM_DRAFT_KEY);
         if (saved) return { ...JSON.parse(saved), deliveryTime: saved ? undefined : 'asap' };
-      } catch {}
+      } catch { /* ignore */ }
       return {
         deliveryTime: 'asap' as const,
         specialInstructions: '',
@@ -74,9 +74,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
-        const { scheduledTime, ...rest } = formValues;
-        localStorage.setItem(FORM_DRAFT_KEY, JSON.stringify(rest));
-      } catch {}
+        localStorage.setItem(FORM_DRAFT_KEY, JSON.stringify(formValues));
+      } catch { /* ignore */ }
     }, 500);
     return () => clearTimeout(timer);
   }, [formValues]);
