@@ -169,6 +169,12 @@ const Cart = () => {
       const waWindow = window.open(whatsappUrl, '_blank');
       if (!waWindow) {
         window.location.href = whatsappUrl;
+      } else {
+        setTimeout(() => {
+          if (waWindow.closed) {
+            window.location.href = whatsappUrl;
+          }
+        }, 2000);
       }
 
       setIsPlacingOrder(false);
@@ -422,7 +428,8 @@ const Cart = () => {
                             }
                             updateQuantity(item.id, item.quantity + 1);
                           }}
-                          className="w-11 h-11 rounded-full flex items-center justify-center transition-colors"
+                          disabled={item.stock !== undefined && item.quantity >= item.stock}
+                          className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors ${item.stock !== undefined && item.quantity >= item.stock ? 'opacity-40 cursor-not-allowed' : ''}`}
                           style={{ background: 'hsl(var(--muted))', color: 'hsl(var(--foreground))' }}
                           aria-label="Increase quantity"
                         >
@@ -488,6 +495,11 @@ const Cart = () => {
 
   return (
     <>
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {totalItems > 0
+          ? `Cart has ${totalItems} item${totalItems !== 1 ? 's' : ''}, totaling Ksh ${total.toLocaleString()}`
+          : 'Cart is empty'}
+      </div>
       <div className="md:hidden">
         <Drawer open={isCartOpen} onOpenChange={(open) => { if (!open) closeCart(); }}>
           <DrawerContent className="h-[95dvh] max-h-[95vh] [margin-top:0] pt-8 border-0 rounded-t-[10px]">

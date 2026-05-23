@@ -35,6 +35,7 @@ const App = () => (
   <TooltipProvider>
     <Toaster />
     <Sonner />
+    <div aria-live="assertive" aria-atomic="true" className="sr-only" role="status" />
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <AuthProvider>
         <AdminProfileProvider>

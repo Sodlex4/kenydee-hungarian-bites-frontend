@@ -156,6 +156,12 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             inputMode="numeric"
             autoCapitalize="none"
             {...register('phone', {
+              onChange: (e) => {
+                const formatted = formatPhone(e.target.value);
+                if (formatted !== e.target.value) {
+                  setValue('phone', formatted, { shouldDirty: true });
+                }
+              },
               onBlur: (e) => {
                 const formatted = formatPhone(e.target.value);
                 if (formatted !== e.target.value) {

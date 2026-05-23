@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
@@ -16,7 +16,26 @@ import MobileBottomNav from '../components/MobileBottomNav';
 import { CartProvider } from '../context/CartContext';
 
 const Index = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('has-visited')) {
+      return false;
+    }
+    return true;
+  });
+
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isLoading) {
+      const handleKey = (e: KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+        }
+      };
+      document.addEventListener('keydown', handleKey);
+      return () => document.removeEventListener('keydown', handleKey);
+    }
+  }, [isLoading]);
 
   const handleLoadingDone = useCallback(() => {
     setIsLoading(false);
@@ -26,20 +45,26 @@ const Index = () => {
     <CartProvider>
       <div className="min-h-screen" style={{ background: 'hsl(var(--background))' }}>
         {isLoading && <LoadingScreen onSkip={handleLoadingDone} />}
-        <Header />
-        <main>
-          <HeroSection />
-          <AboutSection />
-          <FeaturesSection />
-          <TestimonialsSection />
-          <FAQSection />
-          <OrderSection />
-        </main>
-        <Footer />
-        <Cart />
-        <FloatingWhatsApp />
-        <BackToTop />
-        <MobileBottomNav />
+        <div
+          ref={mainRef}
+          aria-hidden={isLoading}
+          {...(isLoading ? { inert: '' } : {}) as React.HTMLAttributes<HTMLDivElement>}
+        >
+          <Header />
+          <main>
+            <HeroSection />
+            <AboutSection />
+            <FeaturesSection />
+            <TestimonialsSection />
+            <FAQSection />
+            <OrderSection />
+          </main>
+          <Footer />
+          <Cart />
+          <FloatingWhatsApp />
+          <BackToTop />
+          <MobileBottomNav />
+        </div>
       </div>
     </CartProvider>
   );

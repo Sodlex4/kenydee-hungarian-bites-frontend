@@ -126,13 +126,8 @@ const Header = () => {
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className={`transition-all duration-300 relative group font-medium ${
-                activeSection === item.id ? 'font-semibold' : ''
-              }`}
-              style={{ color: activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'hsl(var(--foreground))'}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))';
-              }}
+                activeSection === item.id ? 'font-semibold text-foreground' : 'text-primary'
+              } hover:text-foreground focus-visible:text-foreground`}
               aria-label={`Navigate to ${item.label}`}
               aria-current={activeSection === item.id ? 'page' : undefined}
             >
@@ -152,20 +147,7 @@ const Header = () => {
           {/* Cart Icon */}
           <button
             onClick={toggleCart}
-            className="relative p-3 rounded-full transition-all duration-300 hover:scale-110 active:scale-95"
-            style={{
-              background: 'hsl(var(--primary) / 0.3)',
-              border: '1px solid hsl(var(--primary) / 0.4)',
-              backdropFilter: 'blur(12px)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'hsl(var(--primary) / 0.45)';
-              e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.6)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'hsl(var(--primary) / 0.3)';
-              e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
-            }}
+            className="relative p-3 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 bg-primary/30 hover:bg-primary/45 border border-primary/40 hover:border-primary/60 backdrop-blur-xl"
             aria-label={`Shopping cart, ${totalItems} items`}
           >
             <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'hsl(var(--primary-foreground))' }} />
@@ -182,20 +164,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-3 rounded-full transition-all duration-300"
-            style={{
-              background: 'hsl(var(--primary) / 0.3)',
-              border: '1px solid hsl(var(--primary) / 0.4)',
-              backdropFilter: 'blur(12px)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'hsl(var(--primary) / 0.45)';
-              e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.6)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'hsl(var(--primary) / 0.3)';
-              e.currentTarget.style.borderColor = 'hsl(var(--primary) / 0.4)';
-            }}
+            className="md:hidden p-3 rounded-full transition-all duration-300 bg-primary/30 hover:bg-primary/45 border border-primary/40 hover:border-primary/60 backdrop-blur-xl"
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMenuOpen}
           >
@@ -209,7 +178,7 @@ const Header = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className={`md:hidden accordion-grid ${isMenuOpen ? 'open' : ''}`}>
+      <div className={`md:hidden accordion-grid ${isMenuOpen ? 'open' : ''}`} aria-hidden={!isMenuOpen}>
         <div>
           <nav
             ref={mobileNavRef}
@@ -224,12 +193,12 @@ const Header = () => {
                 <button
                   key={item.id}
                   ref={item.ref}
+                  tabIndex={isMenuOpen ? 0 : -1}
                   onClick={() => scrollToSection(item.id)}
                   className={`transition-colors text-left py-2 text-lg font-medium ${
-                    activeSection === item.id ? 'font-semibold' : ''
-                  }`}
+                    activeSection === item.id ? 'font-semibold text-foreground' : 'text-primary'
+                  } hover:text-foreground focus-visible:text-foreground`}
                   style={{
-                    color: activeSection === item.id ? 'hsl(var(--foreground))' : 'hsl(var(--primary))',
                     borderBottom: activeSection === item.id ? '2px solid hsl(var(--primary))' : '2px solid transparent'
                   }}
                   aria-label={`Navigate to ${item.label}`}

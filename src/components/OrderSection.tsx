@@ -11,7 +11,7 @@ const OrderSection = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const { addToCartAndOpen } = useCart();
-  const imgVersion = useRef(Date.now());
+  const mountTime = useRef(Date.now());
 
   const packages = [
     { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 120 },
@@ -38,8 +38,12 @@ const OrderSection = () => {
 
     const selectedPackage = packages.find(pkg => pkg.id === selectedQuantity);
     if (selectedPackage) {
-      setIsAdding(true);
       const qty = getQty(selectedPackage.id);
+      if (selectedPackage.stock !== undefined && qty > selectedPackage.stock) {
+        toast.error(`Only ${selectedPackage.stock} available. Please reduce quantity.`);
+        return;
+      }
+      setIsAdding(true);
       addToCartAndOpen({
         id: selectedPackage.id,
         name: `Hungarian Hot Dog Rolls - ${selectedPackage.label}`,
@@ -139,9 +143,9 @@ const OrderSection = () => {
                     <div className="relative mb-4" style={{ minHeight: '128px' }}>
                       <div className={`absolute inset-0 rounded-xl bg-muted animate-pulse transition-opacity duration-500 ${loadedImages.has(pkg.id) ? 'opacity-0 pointer-events-none' : ''}`} />
                       <picture>
-                        <source srcSet={`${pkg.image}?v=${imgVersion.current}`} type="image/webp" />
+                        <source srcSet={`${pkg.image}?v=${mountTime.current}`} type="image/webp" />
                         <img
-                          src={`${pkg.fallback}?v=${imgVersion.current}`}
+                          src={`${pkg.fallback}?v=${mountTime.current}`}
                           alt={pkg.label}
                           className="w-full h-32 object-cover rounded-xl relative z-10"
                           width="300"
