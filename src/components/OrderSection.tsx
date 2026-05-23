@@ -1,11 +1,56 @@
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { Sparkles, MessageCircle, Plus, Minus } from 'lucide-react';
-import { WHATSAPP_NUMBER } from '../lib/env';
+import { WHATSAPP_NUMBER, API_URL } from '../lib/env';
+
+interface Package {
+  id: string;
+  label: string;
+  pieces: number;
+  price: number;
+  originalPrice: number;
+  savings?: number;
+  popular: boolean;
+  image: string;
+  fallback: string;
+  stock: number;
+}
+
+const defaultPackages: Package[] = [
+  { id: '5pieces', label: '5 Pieces', pieces: 5, price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 120 },
+  { id: '10pieces', label: '10 Pieces', pieces: 10, price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp', fallback: '/image/hotdog.jpg', stock: 85 },
+  { id: '20pieces', label: '20 Pieces', pieces: 20, price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 15 },
+];
+
+function parsePieces(name: string): number {
+  const match = name.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+function mapApiToPackages(api: { id: number; name: string; price: number; stock: number; image: string }[]): Package[] {
+  return api.map((p, i) => {
+    const pieces = parsePieces(p.name);
+    const basePrice = pieces * 70;
+    const originalPrice = p.price + (pieces * (i === 1 ? 5 : i === 2 ? 10 : 0));
+    return {
+      id: `${pieces}pieces`,
+      label: `${pieces} Pieces`,
+      pieces,
+      price: p.price,
+      originalPrice,
+      savings: originalPrice > p.price ? originalPrice - p.price : undefined,
+      popular: i === 1,
+      image: p.image,
+      fallback: p.image.replace(/\.webp$/, '.jpg'),
+      stock: p.stock,
+    };
+  });
+}
 
 const OrderSection = () => {
+  const [packages, setPackages] = useState<Package[]>(defaultPackages);
   const [selectedQuantity, setSelectedQuantity] = useState('');
   const [packageQty, setPackageQty] = useState<{ [key: string]: number }>({});
   const [isAdding, setIsAdding] = useState(false);
@@ -13,11 +58,14 @@ const OrderSection = () => {
   const { addToCartAndOpen } = useCart();
   const mountTime = useRef(Date.now());
 
-  const packages = [
-    { id: '5pieces', label: '5 Pieces', pieces: 5, price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 120 },
-    { id: '10pieces', label: '10 Pieces', pieces: 10, price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp', fallback: '/image/hotdog.jpg', stock: 85 },
-    { id: '20pieces', label: '20 Pieces', pieces: 20, price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 15 }
-  ];
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API_URL}/products`)
+      .then(res => { if (!res.ok) throw new Error('Failed to fetch'); return res.json(); })
+      .then(data => { if (!cancelled) setPackages(mapApiToPackages(data)); })
+      .catch(() => { if (!cancelled) setPackages(defaultPackages); })
+    return () => { cancelled = true; };
+  }, []);
 
   const getQty = (id: string) => packageQty[id] || 1;
 
