@@ -96,91 +96,98 @@ const Cart = () => {
   const handleCheckoutSubmit = useCallback(async (data: CheckoutFormData) => {
     setIsPlacingOrder(true);
 
-    const settings = await getAdminSettings();
-    const waMatch = settings.whatsapp.match(/wa\.me\/(\d+)/);
-    const waNumber = waMatch ? waMatch[1] : WHATSAPP_NUMBER;
+    try {
+      const settings = await getAdminSettings();
+      const waMatch = settings.whatsapp.match(/wa\.me\/(\d+)/);
+      const waNumber = waMatch ? waMatch[1] : WHATSAPP_NUMBER;
 
-    const cleanedPhone = data.phone.replace(/[\s\-()]/g, '');
-    const orderId = `#${Date.now().toString(36).toUpperCase()}`;
-    const order = {
-      id: orderId,
-      customer: {
-        name: data.name,
-        email: data.email || '',
-        phone: cleanedPhone,
-      },
-      items: cartItems.map(item => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      amount: total,
-      date: new Date().toISOString().split('T')[0],
-      status: 'Pending' as const,
-      deliveryAddress: data.deliveryAddress,
-    };
-
-    await addOrder(order);
-    await addNotification({
-      type: 'order',
-      title: 'New Order Received',
-      message: `Order ${orderId} from ${data.name} - ${cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`,
-      time: 'Just now',
-      read: false,
-    });
-
-    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      window.gtag('event', 'purchase', {
-        transaction_id: orderId,
-        currency: 'KES',
-        value: total,
+      const cleanedPhone = data.phone.replace(/[\s\-()]/g, '');
+      const orderId = `#${Date.now().toString(36).toUpperCase()}`;
+      const order = {
+        id: orderId,
+        customer: {
+          name: data.name,
+          email: data.email || '',
+          phone: cleanedPhone,
+        },
         items: cartItems.map(item => ({
-          item_id: item.id,
-          item_name: item.name,
+          name: item.name,
+          quantity: item.quantity,
           price: item.price,
-          quantity: item.quantity
-        }))
+        })),
+        amount: total,
+        date: new Date().toISOString().split('T')[0],
+        status: 'Pending' as const,
+        deliveryAddress: data.deliveryAddress,
+      };
+
+      await addOrder(order);
+      await addNotification({
+        type: 'order',
+        title: 'New Order Received',
+        message: `Order ${orderId} from ${data.name} - ${cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`,
+        time: 'Just now',
+        read: false,
       });
+
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        window.gtag('event', 'purchase', {
+          transaction_id: orderId,
+          currency: 'KES',
+          value: total,
+          items: cartItems.map(item => ({
+            item_id: item.id,
+            item_name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          }))
+        });
+      }
+
+      const timeInfo = data.deliveryTime === 'asap'
+        ? 'ASAP (within 2 hours)'
+        : data.scheduledTime
+          ? new Date(data.scheduledTime).toLocaleString('en-KE', {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+            })
+          : 'Scheduled';
+      const itemsList = cartItems.map(item =>
+        `• ${item.name} × ${item.quantity} = Ksh ${item.price * item.quantity}`
+      ).join('\n');
+      const notes = data.specialInstructions
+        ? `\n\n📝 Notes: ${data.specialInstructions}`
+        : '';
+      const emailLine = data.email ? `\n📧 *Email:* ${data.email}` : '';
+      const message = `*Hungarian Bites - Order Confirmation*\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${cleanedPhone}${emailLine}\n📍 *Delivery:* ${data.deliveryAddress}\n⏰ *Time:* ${timeInfo}\n\n*Items:*\n${itemsList}\n\n*Total: Ksh ${total.toLocaleString()}*${notes}\n\n_Please confirm my order and delivery details._`;
+
+      const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+      const waWindow = window.open(whatsappUrl, '_blank');
+      if (!waWindow) {
+        window.location.href = whatsappUrl;
+      }
+
+      setIsPlacingOrder(false);
+      setCheckoutStep('confirmed');
+
+      const closeTimer = setTimeout(() => {
+        clearCart();
+        closeCart();
+      }, 3500);
+
+      toast.success('Order saved! Please send the message in WhatsApp to confirm.', {
+        duration: 6000,
+      });
+
+      return () => clearTimeout(closeTimer);
+    } catch (err) {
+      setIsPlacingOrder(false);
+      toast.error('Something went wrong saving your order. Please try again.');
     }
-
-    const timeInfo = data.deliveryTime === 'asap'
-      ? 'ASAP (within 2 hours)'
-      : data.scheduledTime
-        ? new Date(data.scheduledTime).toLocaleString('en-KE', {
-            weekday: 'short',
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-          })
-        : 'Scheduled';
-    const itemsList = cartItems.map(item =>
-      `• ${item.name} × ${item.quantity} = Ksh ${item.price * item.quantity}`
-    ).join('\n');
-    const notes = data.specialInstructions
-      ? `\n\n📝 Notes: ${data.specialInstructions}`
-      : '';
-    const emailLine = data.email ? `\n📧 *Email:* ${data.email}` : '';
-    const message = `*Hungarian Bites - Order Confirmation*\n\n👤 *Name:* ${data.name}\n📞 *Phone:* ${cleanedPhone}${emailLine}\n📍 *Delivery:* ${data.deliveryAddress}\n⏰ *Time:* ${timeInfo}\n\n*Items:*\n${itemsList}\n\n*Total: Ksh ${total.toLocaleString()}*${notes}\n\n_Please confirm my order and delivery details._`;
-
-    const whatsappUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-    const waWindow = window.open(whatsappUrl, '_blank');
-    if (!waWindow || waWindow.closed) {
-      window.location.href = whatsappUrl;
-    }
-
-    setIsPlacingOrder(false);
-    setCheckoutStep('confirmed');
-
-    setTimeout(() => {
-      clearCart();
-      closeCart();
-    }, 3500);
-
-    toast.success('Order saved! Please send the message in WhatsApp to confirm.', {
-      duration: 6000,
-    });
   }, [cartItems, total, clearCart, closeCart]);
 
   const handleClose = useCallback(() => {

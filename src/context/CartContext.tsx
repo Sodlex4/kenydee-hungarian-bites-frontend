@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { toast } from 'sonner';
 
 export interface CartItem {
   id: string;
@@ -92,7 +93,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, []);
 
   const persistCart = (updated: CartItem[]) => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updated));
+    } catch {
+      toast.error('Unable to save cart. Storage may be full.');
+    }
   };
 
   const addToCart = (newItem: CartItem) => {
@@ -176,7 +181,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem(CART_STORAGE_KEY);
+    try {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    } catch {
+      // storage may be unavailable
+    }
   };
 
   const closeCart = () => {

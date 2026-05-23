@@ -39,7 +39,7 @@ const App = () => (
       <AuthProvider>
         <AdminProfileProvider>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><Index /></Suspense></ErrorBoundary>} />
             <Route path="/admin/login" element={<AdminLayout><AdminLogin /></AdminLayout>} />
             <Route element={<ProtectedRoute />}>
               <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />

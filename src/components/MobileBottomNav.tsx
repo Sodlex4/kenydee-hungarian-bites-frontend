@@ -53,7 +53,8 @@ const MobileBottomNav = () => {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden backdrop-blur-xl border-t"
+      aria-hidden={isCartOpen}
+      className={`fixed bottom-0 left-0 right-0 md:hidden backdrop-blur-xl border-t transition-opacity ${isCartOpen ? 'opacity-0 pointer-events-none z-0' : 'z-50'}`}
       style={{
         background: 'hsl(var(--background) / 0.95)',
         borderColor: 'hsl(var(--primary) / 0.15)',
