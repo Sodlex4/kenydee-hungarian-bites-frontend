@@ -44,6 +44,19 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   onSubmit,
   isSubmitting,
 }) => {
+  let initialDefaults: CheckoutFormData = {
+    deliveryTime: 'asap',
+    specialInstructions: '',
+    scheduledTime: '',
+  } as CheckoutFormData;
+  try {
+    const saved = localStorage.getItem(FORM_DRAFT_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      initialDefaults = { ...initialDefaults, ...parsed };
+    }
+  } catch { /* ignore */ }
+
   const {
     register,
     handleSubmit,
@@ -53,17 +66,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     formState: { errors },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
-    defaultValues: () => {
-      try {
-        const saved = localStorage.getItem(FORM_DRAFT_KEY);
-        if (saved) return { ...JSON.parse(saved), deliveryTime: saved ? undefined : 'asap' };
-      } catch { /* ignore */ }
-      return {
-        deliveryTime: 'asap' as const,
-        specialInstructions: '',
-        scheduledTime: '',
-      };
-    },
+    defaultValues: initialDefaults,
     mode: 'onChange',
   });
 
