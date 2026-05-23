@@ -14,9 +14,9 @@ const OrderSection = () => {
   const mountTime = useRef(Date.now());
 
   const packages = [
-    { id: '5pieces', label: '5 Pieces', price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 120 },
-    { id: '10pieces', label: '10 Pieces', price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp', fallback: '/image/hotdog.jpg', stock: 85 },
-    { id: '20pieces', label: '20 Pieces', price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 15 }
+    { id: '5pieces', label: '5 Pieces', pieces: 5, price: 350, originalPrice: 350, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 120 },
+    { id: '10pieces', label: '10 Pieces', pieces: 10, price: 650, originalPrice: 700, savings: 50, popular: true, image: '/image/cheese-dog-bread-rolls.webp', fallback: '/image/hotdog.jpg', stock: 85 },
+    { id: '20pieces', label: '20 Pieces', pieces: 20, price: 1200, originalPrice: 1400, savings: 200, popular: false, image: '/image/hotdog.webp', fallback: '/image/hotdog.jpg', stock: 15 }
   ];
 
   const getQty = (id: string) => packageQty[id] || 1;
@@ -189,7 +189,7 @@ const OrderSection = () => {
                     </div>
 
                     <div className="text-sm mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>
-                      Ksh {Math.round(pkg.price / parseInt(pkg.label))} per piece
+                      Ksh {Math.round(pkg.price / pkg.pieces)} per piece
                     </div>
 
                     {selectedQuantity === pkg.id && (

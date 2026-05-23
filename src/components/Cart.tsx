@@ -94,6 +94,8 @@ const Cart = () => {
   };
 
   const handleCheckoutSubmit = useCallback(async (data: CheckoutFormData) => {
+    const confirmed = window.confirm('Ready to place your order via WhatsApp? Make sure your details are correct before proceeding.');
+    if (!confirmed) return;
     setIsPlacingOrder(true);
 
     try {

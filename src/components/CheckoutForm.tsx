@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Package, Clock, MessageCircle, Lock, Shield, Truck, Loader2, Zap, CalendarClock, AlertCircle } from 'lucide-react';
 import type { CartItem } from '../context/CartContext';
+
+const FORM_DRAFT_KEY = 'hungarian-bites-checkout-draft';
 
 const checkoutSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -50,16 +53,33 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     formState: { errors },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
-    defaultValues: {
-      deliveryTime: 'asap',
-      specialInstructions: '',
-      scheduledTime: '',
+    defaultValues: () => {
+      try {
+        const saved = localStorage.getItem(FORM_DRAFT_KEY);
+        if (saved) return { ...JSON.parse(saved), deliveryTime: saved ? undefined : 'asap' };
+      } catch {}
+      return {
+        deliveryTime: 'asap' as const,
+        specialInstructions: '',
+        scheduledTime: '',
+      };
     },
     mode: 'onChange',
   });
 
   const deliveryTime = watch('deliveryTime');
   const specialInstructions = watch('specialInstructions');
+  const formValues = watch();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const { scheduledTime, ...rest } = formValues;
+        localStorage.setItem(FORM_DRAFT_KEY, JSON.stringify(rest));
+      } catch {}
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [formValues]);
 
   const eta = new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleTimeString('en-KE', { hour: 'numeric', minute: '2-digit' });
 
@@ -332,7 +352,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               color: 'hsl(var(--foreground))',
             }}
           />
-          <p className="text-xs mt-1 text-right" style={{ color: (specialInstructions?.length || 0) > 180 ? 'hsl(var(--destructive))' : 'hsl(var(--muted-foreground))' }}>
+          <p className="text-xs mt-1 text-right" style={{ color: (specialInstructions?.length || 0) > 180 ? 'hsl(var(--destructive))' : (specialInstructions?.length || 0) > 150 ? '#eab308' : 'hsl(var(--muted-foreground))' }}>
             {(specialInstructions?.length || 0)}/200
           </p>
         </div>
