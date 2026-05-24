@@ -18,6 +18,12 @@ class ApiClientError extends Error {
   }
 }
 
+let onUnauthorized: (() => void) | null = null;
+
+export function setOnUnauthorized(cb: () => void): void {
+  onUnauthorized = cb;
+}
+
 function getToken(): string | null {
   try {
     return sessionStorage.getItem('api-token');
@@ -49,7 +55,8 @@ async function request<T>(
       err = { status: res.status, message: parsed.error || res.statusText, details: parsed.details };
     } catch {}
     if (res.status === 401) {
-      try { sessionStorage.removeItem('api-token'); } catch {}
+      sessionStorage.removeItem('api-token');
+      onUnauthorized?.();
     }
     throw new ApiClientError(err);
   }

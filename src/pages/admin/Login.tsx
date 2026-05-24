@@ -19,11 +19,11 @@ const Login = () => {
       return;
     }
     setLoading(true);
-    const valid = await login(password);
-    if (valid) {
+    const result = await login(password);
+    if (result.success) {
       navigate('/admin');
     } else {
-      setError('Incorrect password');
+      setError(result.error || 'Login failed');
     }
     setLoading(false);
   };

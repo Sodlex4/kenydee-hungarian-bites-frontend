@@ -1,18 +1,28 @@
-import { api } from './api-client';
+import { api, ApiClientError } from './api-client';
 
 interface LoginResponse {
   token: string;
   user: { email: string; role: string };
 }
 
-export async function login(email: string, password: string): Promise<boolean> {
+function decodeToken(token: string): { exp: number } | null {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
+  }
+}
+
+export async function login(email: string, password: string): Promise<{ success: boolean; error?: string }> {
   try {
     const res = await api.post<LoginResponse>('/auth/login', { email, password });
     sessionStorage.setItem('api-token', res.token);
-    sessionStorage.setItem('admin-auth', 'true');
-    return true;
-  } catch {
-    return false;
+    return { success: true };
+  } catch (err) {
+    if (err instanceof ApiClientError) {
+      return { success: false, error: err.message };
+    }
+    return { success: false, error: 'Network error. Check your connection.' };
   }
 }
 
@@ -21,10 +31,13 @@ export async function changePassword(currentPassword: string, newPassword: strin
 }
 
 export function isAuthenticated(): boolean {
-  return !!sessionStorage.getItem('api-token');
+  const token = sessionStorage.getItem('api-token');
+  if (!token) return false;
+  const payload = decodeToken(token);
+  if (!payload) return false;
+  return payload.exp * 1000 > Date.now();
 }
 
 export function logout(): void {
   sessionStorage.removeItem('api-token');
-  sessionStorage.removeItem('admin-auth');
 }
