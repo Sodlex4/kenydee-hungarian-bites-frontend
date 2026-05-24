@@ -17,6 +17,10 @@ const NotificationPanel = () => {
 
   useEffect(() => {
     getNotifications().then(result => setNotifications(result.slice(0, 3)));
+    const interval = setInterval(() => {
+      getNotifications().then(result => setNotifications(result.slice(0, 3)));
+    }, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return (

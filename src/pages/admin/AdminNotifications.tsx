@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
@@ -38,6 +38,11 @@ const iconColors: Record<string, string> = {
 const AdminNotifications = () => {
   const { data: notifications, refresh: refreshNotifications } = useApiData(getNotifications, [] as Notification[]);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const interval = setInterval(refreshNotifications, 30000);
+    return () => clearInterval(interval);
+  }, [refreshNotifications]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 

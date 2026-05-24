@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { WHATSAPP_NUMBER } from '../lib/env';
+import { WHATSAPP_NUMBER, API_URL } from '../lib/env';
 
 const FloatingWhatsApp = () => {
   const { isCartOpen } = useCart();
@@ -14,6 +14,17 @@ const FloatingWhatsApp = () => {
   }, []);
 
   const handleOpenWhatsApp = () => {
+    fetch(`${API_URL}/notifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'order',
+        title: 'New WhatsApp Inquiry',
+        message: 'A customer is inquiring about products via WhatsApp.',
+        time: 'Just now',
+        read: false,
+      }),
+    }).catch(() => {});
     const message = "Hello! I'd like to order Hungarian Hot Dog Rolls. Please confirm availability and delivery details.";
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank', 'noopener,noreferrer');

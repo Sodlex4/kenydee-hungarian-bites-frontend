@@ -121,6 +121,17 @@ const OrderSection = () => {
   };
 
   const handleQuickWhatsApp = () => {
+    fetch(`${API_URL}/notifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'order',
+        title: 'New WhatsApp Inquiry',
+        message: 'A customer is inquiring about products via WhatsApp.',
+        time: 'Just now',
+        read: false,
+      }),
+    }).catch(() => {});
     const message = `Hello! I'd like to order Hungarian Hot Dog Rolls. Please confirm availability and delivery details.`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');

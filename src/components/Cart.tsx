@@ -124,13 +124,6 @@ const Cart = () => {
       };
 
       await addOrder(order);
-      await addNotification({
-        type: 'order',
-        title: 'New Order Received',
-        message: `Order ${orderId} from ${data.name} - ${cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ')}`,
-        time: 'Just now',
-        read: false,
-      });
 
       if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
         window.gtag('event', 'purchase', {
