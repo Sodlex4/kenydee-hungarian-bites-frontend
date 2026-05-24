@@ -19,9 +19,14 @@ class ApiClientError extends Error {
 }
 
 let onUnauthorized: (() => void) | null = null;
+let refreshHandler: (() => Promise<string | null>) | null = null;
 
 export function setOnUnauthorized(cb: () => void): void {
   onUnauthorized = cb;
+}
+
+export function setRefreshHandler(cb: () => Promise<string | null>): void {
+  refreshHandler = cb;
 }
 
 function getToken(): string | null {
@@ -36,6 +41,7 @@ async function request<T>(
   method: string,
   path: string,
   body?: unknown,
+  isRetry = false,
 ): Promise<T> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   const token = getToken();
@@ -55,7 +61,14 @@ async function request<T>(
       err = { status: res.status, message: parsed.error || res.statusText, details: parsed.details };
     } catch {}
     if (res.status === 401) {
+      if (!isRetry && refreshHandler) {
+        const newToken = await refreshHandler();
+        if (newToken) {
+          return request<T>(method, path, body, true);
+        }
+      }
       sessionStorage.removeItem('api-token');
+      sessionStorage.removeItem('refresh-token');
       onUnauthorized?.();
     }
     throw new ApiClientError(err);
