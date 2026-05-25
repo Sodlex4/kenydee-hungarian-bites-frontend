@@ -150,10 +150,10 @@ const Footer = () => {
               &copy; {new Date().getFullYear()} Hungarian Bites. All rights reserved.
             </p>
             <p style={{ color: 'hsl(var(--muted-foreground))' }}>
-              Made BY{" "}
-              <span className="font-bold text-gradient-primary">trainWithSteve</span>
-              <span className="text-pink-400 inline-block mx-3">❤</span>
-              in Kenya
+              Built with{" "}
+              <span className="text-pink-400 inline-block mx-1">❤</span>
+              {" "}by{" "}
+              <span className="font-bold text-gradient-primary">ODONDE</span>
             </p>
           </div>
         </div>
