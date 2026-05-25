@@ -7,10 +7,39 @@ const FloatingWhatsApp = () => {
   const { isCartOpen } = useCart();
   const [isVisible, setIsVisible] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [footerOffset, setFooterOffset] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 1000);
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
+
+  useEffect(() => {
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const overlap = entry.boundingClientRect.bottom - window.innerHeight;
+          setFooterOffset(Math.max(0, overlap + 100));
+        } else {
+          setFooterOffset(0);
+        }
+      },
+      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5] }
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
   }, []);
 
   const handleOpenWhatsApp = () => {
@@ -32,11 +61,19 @@ const FloatingWhatsApp = () => {
 
   if (!isVisible) return null;
 
+  const baseBottom = isDesktop
+    ? '1.5rem'
+    : 'calc(4.5rem + env(safe-area-inset-bottom, 0px))';
+  const bottom = footerOffset > 0
+    ? `calc(${footerOffset}px + ${baseBottom})`
+    : baseBottom;
+
   return (
     <div
-      className={`fixed z-[60] md:bottom-6 bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:right-6 right-4 group transition-all duration-300 ${
+      className={`fixed z-[60] md:right-6 right-4 group transition-all duration-300 ${
         isCartOpen ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'
       }`}
+      style={{ bottom }}
       {...(isCartOpen ? { 'aria-hidden': true, tabIndex: -1 } : {})}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
