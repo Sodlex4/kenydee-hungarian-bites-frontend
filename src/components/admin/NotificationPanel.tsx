@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Package, User, AlertCircle, DollarSign } from 'lucide-react';
-import { getNotifications } from '@/lib/api';
-import type { Notification } from '@/lib/api';
+import { useNotificationSSE } from '@/hooks/useNotificationSSE';
 
 const iconMap: Record<string, React.ElementType> = {
   order: Package,
@@ -13,15 +12,7 @@ const iconMap: Record<string, React.ElementType> = {
 
 const NotificationPanel = () => {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-
-  useEffect(() => {
-    getNotifications().then(result => setNotifications(result.slice(0, 3)));
-    const interval = setInterval(() => {
-      getNotifications().then(result => setNotifications(result.slice(0, 3)));
-    }, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  const { notifications } = useNotificationSSE();
 
   return (
     <div className="backdrop-blur-sm border rounded-xl p-6" style={{
@@ -37,7 +28,7 @@ const NotificationPanel = () => {
 
       <div className="space-y-4">
         {notifications.length > 0 ? (
-          notifications.map((notification) => {
+          notifications.slice(0, 3).map((notification) => {
             const Icon = iconMap[notification.type] || Bell;
             return (
               <div

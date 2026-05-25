@@ -1,11 +1,10 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/components/admin/AdminLayout';
 import Pagination from '@/components/admin/Pagination';
-import { useApiData } from '@/hooks/useApiData';
-import { getNotifications, markNotificationRead, markAllNotificationsRead, deleteNotification } from '@/lib/api';
-import type { Notification } from '@/lib/api';
+import { markNotificationRead, markAllNotificationsRead, deleteNotification } from '@/lib/api';
+import { useNotificationSSE } from '@/hooks/useNotificationSSE';
 import { Bell, Package, User, AlertCircle, DollarSign, Check, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -36,13 +35,8 @@ const iconColors: Record<string, string> = {
 };
 
 const AdminNotifications = () => {
-  const { data: notifications, refresh: refreshNotifications } = useApiData(getNotifications, [] as Notification[]);
+  const { notifications } = useNotificationSSE();
   const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    const interval = setInterval(refreshNotifications, 30000);
-    return () => clearInterval(interval);
-  }, [refreshNotifications]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
@@ -68,13 +62,11 @@ const AdminNotifications = () => {
 
   const handleMarkRead = async (id: number) => {
     await markNotificationRead(id);
-    refreshNotifications();
   };
 
   const handleMarkAllRead = async () => {
     await markAllNotificationsRead();
     toast.success('All notifications marked as read');
-    refreshNotifications();
   };
 
   const handleDelete = (id: number) => {
@@ -86,7 +78,6 @@ const AdminNotifications = () => {
     await deleteNotification(deleteTarget);
     toast.success('Notification deleted');
     setDeleteTarget(null);
-    refreshNotifications();
   };
 
   return (

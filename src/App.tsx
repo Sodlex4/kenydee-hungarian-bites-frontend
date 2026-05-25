@@ -22,6 +22,7 @@ const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const TermsPage = lazy(() => import("./pages/legal/Terms"));
 const PrivacyPage = lazy(() => import("./pages/legal/Privacy"));
 const AboutPage = lazy(() => import("./pages/legal/About"));
+const TrackOrder = lazy(() => import("./pages/TrackOrder"));
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => (
   <ErrorBoundary>
@@ -51,6 +52,8 @@ const App = () => (
               <Route path="/admin/profile" element={<AdminLayout><AdminProfile /></AdminLayout>} />
               <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
             </Route>
+            <Route path="/track" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><TrackOrder /></Suspense></ErrorBoundary>} />
+            <Route path="/track/:id" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><TrackOrder /></Suspense></ErrorBoundary>} />
             <Route path="/legal/terms" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><TermsPage /></Suspense></ErrorBoundary>} />
             <Route path="/legal/privacy" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><PrivacyPage /></Suspense></ErrorBoundary>} />
             <Route path="/legal/about" element={<ErrorBoundary><Suspense fallback={<RouteLoading />}><AboutPage /></Suspense></ErrorBoundary>} />
