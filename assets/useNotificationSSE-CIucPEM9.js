@@ -1,0 +1,6 @@
+import{c as p,a as o,A as y}from"./index-Dk2njo01.js";import{r as n}from"./vendor-ui-BOOqW7iA.js";/**
+ * @license lucide-react v0.462.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const N=p("DollarSign",[["line",{x1:"12",x2:"12",y1:"2",y2:"22",key:"7eqyqh"}],["path",{d:"M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6",key:"1b0p4s"}]]),m={order:"order",info:"user",alert:"alert"};async function h(){return(await o.get("/notifications")).map(e=>({...e,type:m[e.type]||"alert"}))}async function E(t){await o.patch(`/notifications/${t}/read`)}async function R(){await o.patch("/notifications/read-all")}async function w(t){await o.delete(`/notifications/${t}`)}const S={order:"order",info:"user",alert:"alert"};function $(){const[t,e]=n.useState([]),[f,i]=n.useState(!1),s=n.useRef(null);return n.useEffect(()=>{const r=sessionStorage.getItem("api-token");if(!r)return;const l=`${y}/notifications/stream?token=${encodeURIComponent(r)}`,a=new EventSource(l);return s.current=a,a.addEventListener("update",u=>{try{const d=JSON.parse(u.data);e(d.map(c=>({...c,type:S[c.type]||"alert"}))),i(!0)}catch{}}),a.addEventListener("error",()=>{i(!1)}),()=>{a.close(),s.current=null,i(!1)}},[]),{notifications:t,connected:f}}export{N as D,E as a,w as d,h as g,R as m,$ as u};
