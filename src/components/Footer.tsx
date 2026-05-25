@@ -153,7 +153,14 @@ const Footer = () => {
               Built with{" "}
               <span className="text-pink-400 inline-block mx-1">❤</span>
               {" "}by{" "}
-              <span className="font-bold text-gradient-primary">ODONDE</span>
+              <a
+                href="https://github.com/Sodlex4"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-gradient-primary hover:underline"
+              >
+                ODONDE
+              </a>
             </p>
           </div>
         </div>
